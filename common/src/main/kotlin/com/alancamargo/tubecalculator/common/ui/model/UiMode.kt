@@ -1,31 +1,13 @@
 package com.alancamargo.tubecalculator.common.ui.model
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
+import com.alancamargo.tubecalculator.core.design.R
 
-enum class UiMode(
-    @DrawableRes val iconRes: Int,
-    @StringRes val labelRes: Int
-) {
+enum class UiMode(@DrawableRes val iconRes: Int) {
 
-    DLR(
-        iconRes = 0,
-        labelRes = 0
-    ),
-    ELIZABETH_LINE(
-        iconRes = 0,
-        labelRes = 0
-    ),
-    NATIONAL_RAIL(
-        iconRes = 0,
-        labelRes = 0
-    ),
-    OVERGROUND(
-        iconRes = 0,
-        labelRes = 0
-    ),
-    UNDERGROUND(
-        iconRes = 0,
-        labelRes = 0
-    )
+    DLR(iconRes = R.drawable.ic_dlr),
+    ELIZABETH_LINE(iconRes = R.drawable.ic_elizabeth_line),
+    NATIONAL_RAIL(iconRes = R.drawable.ic_national_rail),
+    OVERGROUND(iconRes = R.drawable.ic_overground),
+    UNDERGROUND(iconRes = R.drawable.ic_underground)
 }

@@ -22,5 +22,7 @@ android {
 }
 
 dependencies {
+    implementation project(':core-design')
+
     implementation "$android_core"
 }
