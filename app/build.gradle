@@ -41,8 +41,8 @@ android {
 }
 
 dependencies {
-    implementation project(':core')
     implementation project(':core-design')
+    implementation project(':feature-search')
 
     implementation "$hilt_android"
 

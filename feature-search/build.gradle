@@ -33,6 +33,7 @@ android {
 dependencies {
     implementation project(':core')
     implementation project(':core-design')
+    implementation project(':common')
 
     implementation "$android_activity"
     implementation "$android_appcompat"
