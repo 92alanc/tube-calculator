@@ -1,0 +1,23 @@
+apply from: 'versions.gradle'
+
+ext {
+    android_activity = "androidx.activity:activity-ktx:$android_activity_version"
+    android_appcompat = "androidx.appcompat:appcompat:$android_appcompat_version"
+    android_core = "androidx.core:core-ktx:$android_core_version"
+    coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+    hilt_android = "com.google.dagger:hilt-android:$hilt_version"
+    hilt_compiler = "com.google.dagger:hilt-compiler:$hilt_version"
+    junit = "junit:junit:$junit_version"
+    kotlin_serialisation = "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialisation_version"
+    kotlin_serialisation_converter = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$kotlin_serialisation_converter_version"
+    lifecycle_view_model = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_view_model_version"
+    logging_interceptor = "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+    material = "com.google.android.material:material:$material_version"
+    mockk_android = "io.mockk:mockk-android:$mockk_version"
+    okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
+    retrofit = "com.squareup.retrofit2:retrofit:$retrofit_version"
+    security_crypto = "androidx.security:security-crypto:$security_crypto_version"
+    shimmer = "com.facebook.shimmer:shimmer:$shimmer_version"
+    truth = "com.google.truth:truth:$truth_version"
+    turbine = "app.cash.turbine:turbine:$turbine_version"
+}
