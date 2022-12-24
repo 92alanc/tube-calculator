@@ -43,4 +43,9 @@ dependencies {
     kapt "$hilt_compiler"
 
     testImplementation project(':core-test')
+
+    testImplementation "$coroutines_test"
+    testImplementation "$mockk_android"
+    testImplementation "$truth"
+    testImplementation "$turbine"
 }

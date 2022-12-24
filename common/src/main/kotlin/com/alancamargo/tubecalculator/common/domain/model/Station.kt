@@ -4,5 +4,5 @@ data class Station(
     val id: String,
     val name: String,
     val modes: List<Mode>,
-    val zones: List<Int>
+    val zones: List<Int>?
 )

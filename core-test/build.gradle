@@ -21,8 +21,5 @@ android {
 }
 
 dependencies {
-    api "$coroutines_test"
-    api "$junit"
-    api "$mockk_android"
-    api "$truth"
+    implementation "$coroutines_test"
 }

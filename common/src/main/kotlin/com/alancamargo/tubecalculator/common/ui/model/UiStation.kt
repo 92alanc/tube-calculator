@@ -8,5 +8,5 @@ data class UiStation(
     val id: String,
     val name: String,
     val modes: List<UiMode>,
-    val zones: List<Int>
+    val zones: List<Int>?
 ) : Parcelable
