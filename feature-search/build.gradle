@@ -1,21 +1,21 @@
 plugins {
     id 'com.android.library'
+    id 'com.google.dagger.hilt.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
-    namespace 'com.alancamargo.tubecalculator.core'
+    namespace 'com.alancamargo.tubecalculator.search'
     compileSdk target_sdk_version
 
     defaultConfig {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        buildConfigField "String", "BASE_URL", "\"$tube_calculator_base_url\""
-        buildConfigField "String", "APP_ID", "\"$tube_calculator_app_id\""
-        buildConfigField "String", "APP_KEY", "\"$tube_calculator_app_key\""
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -24,18 +24,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
-    implementation "$android_appcompat"
-    implementation "$hilt_android"
-    implementation "$kotlin_serialisation_converter"
-    implementation "$logging_interceptor"
-    implementation "$okhttp"
+    implementation project(':core')
+    implementation project(':core-design')
 
-    api "$android_activity"
-    api "$kotlin_serialisation"
-    api "$retrofit"
+    implementation "$android_activity"
+    implementation "$android_appcompat"
+    implementation "$android_material"
+    implementation "$hilt_android"
 
     kapt "$hilt_compiler"
+
+    testImplementation project(':core-test')
 }

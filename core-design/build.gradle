@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.alancamargo.core.design'
+    namespace 'com.alancamargo.tubecalculator.core.design'
     compileSdk target_sdk_version
 
     defaultConfig {

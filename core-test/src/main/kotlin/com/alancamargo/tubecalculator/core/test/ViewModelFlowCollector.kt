@@ -1,4 +1,4 @@
-package com.alancamargo.core.test
+package com.alancamargo.tubecalculator.core.test
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
