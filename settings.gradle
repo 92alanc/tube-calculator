@@ -19,3 +19,4 @@ rootProject.name = "Tube Calculator"
 include ':app'
 include ':core-design'
 include ':core'
+include ':core-test'
