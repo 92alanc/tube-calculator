@@ -9,4 +9,6 @@
     <string name="search_how_many_bus_tram_journeys">How many bus and/or tram journeys?</string>
     <string name="search_bus_tram_journeys_info">If your bus/tram journeys are all within the space of an hour, you should consider them as a single journey</string>
     <string name="search_calculate">Calculate</string>
+    <string name="search_content_description_more">More</string>
+    <string name="search_content_description_less">Less</string>
 </resources>

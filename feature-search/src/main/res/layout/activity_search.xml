@@ -5,9 +5,181 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/spacing_16"
     tools:context=".ui.SearchActivity">
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btCalculate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_16">
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtOrigin"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/search_where_are_you_travelling_from"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/tilOrigin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilOrigin"
+                style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:hint="@string/search_label_origin"
+                app:layout_constraintTop_toBottomOf="@id/txtOrigin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtOrigin"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:imeOptions="actionSearch"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewOrigin"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/tilOrigin"
+                app:layout_constraintBottom_toTopOf="@+id/txtDestination"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtDestination"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/search_where_are_you_travelling_to"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewOrigin"
+                app:layout_constraintBottom_toTopOf="@+id/tilDestination"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilDestination"
+                style="@style/Widget.MaterialComponents.TextInputEditText.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:hint="@string/search_label_destination"
+                app:layout_constraintTop_toBottomOf="@id/txtDestination"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:imeOptions="actionSearch"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewDestination"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/tilDestination"
+                app:layout_constraintBottom_toTopOf="@+id/txtBusAndTramJourneyCountLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtBusAndTramJourneyCountLabel"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/search_how_many_bus_tram_journeys"
+                android:drawablePadding="@dimen/spacing_8"
+                app:drawableStartCompat="@drawable/ic_bus"
+                app:drawableEndCompat="@drawable/ic_tram"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewDestination"
+                app:layout_constraintBottom_toTopOf="@+id/txtBusAndTramJourneyCountInfo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtBusAndTramJourneyCountInfo"
+                style="@style/TextAppearance.MaterialComponents.Caption"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
+                android:text="@string/search_bus_tram_journeys_info"
+                app:layout_constraintTop_toBottomOf="@id/txtBusAndTramJourneyCountLabel"
+                app:layout_constraintBottom_toTopOf="@+id/btUp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/txtBusAndTramJourneyCount"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_16"
+                android:gravity="center"
+                android:background="@drawable/shape_rounded_corners_outline"
+                app:layout_constraintTop_toTopOf="@id/btUp"
+                app:layout_constraintBottom_toBottomOf="@+id/btDown"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btUp"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                tools:text="0"/>
+
+            <ImageButton
+                android:id="@+id/btUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_16"
+                android:layout_marginStart="@dimen/spacing_16"
+                android:padding="@dimen/spacing_8"
+                android:background="@drawable/shape_circular_outline"
+                android:src="@drawable/ic_arrow_up"
+                android:contentDescription="@string/search_content_description_more"
+                app:layout_constraintTop_toBottomOf="@id/txtBusAndTramJourneyCountInfo"
+                app:layout_constraintBottom_toTopOf="@+id/btDown"
+                app:layout_constraintStart_toEndOf="@id/txtBusAndTramJourneyCount"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintVertical_chainStyle="packed"/>
+
+            <ImageButton
+                android:id="@+id/btDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/spacing_16"
+                android:padding="@dimen/spacing_8"
+                android:background="@drawable/shape_circular_outline"
+                android:src="@drawable/ic_arrow_down"
+                android:contentDescription="@string/search_content_description_less"
+                app:layout_constraintTop_toBottomOf="@id/btUp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/btUp"
+                app:layout_constraintEnd_toEndOf="@id/btUp"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btCalculate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_16"
+        android:text="@string/search_calculate"
+        app:layout_constraintTop_toBottomOf="@id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
