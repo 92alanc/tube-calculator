@@ -39,6 +39,7 @@ dependencies {
     implementation "$android_appcompat"
     implementation "$android_material"
     implementation "$hilt_android"
+    implementation "$shimmer"
 
     kapt "$hilt_compiler"
 
