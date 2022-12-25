@@ -26,6 +26,7 @@ internal class SearchViewModel @Inject constructor(
 
     private var origin: UiStation? = null
     private var destination: UiStation? = null
+    private var busAndTramJourneyCount = 0
 
     val state: StateFlow<SearchViewState> = _state
     val action: SharedFlow<SearchViewAction> = _action
@@ -59,6 +60,7 @@ internal class SearchViewModel @Inject constructor(
             return
         }
 
+        busAndTramJourneyCount = count
         viewModelScope.launch(dispatcher) {
             _state.update { it.onUpdateBusAndTramJourneyCount(count) }
         }
@@ -68,6 +70,14 @@ internal class SearchViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             _action.emit(SearchViewAction.ShowAppInfo)
         }
+    }
+
+    fun onOriginSelected(origin: UiStation) {
+        this.origin = origin
+    }
+
+    fun onDestinationSelected(destination: UiStation) {
+        this.destination = destination
     }
 
     fun onCalculateClicked() {
@@ -82,7 +92,7 @@ internal class SearchViewModel @Inject constructor(
                 val action = SearchViewAction.NavigateToFares(
                     origin = origin!!,
                     destination = destination!!,
-                    busAndTramJourneyCount = _state.value.busAndTramJourneyCount
+                    busAndTramJourneyCount = busAndTramJourneyCount
                 )
                 _action.emit(action)
             }

@@ -8,6 +8,7 @@ internal enum class UiSearchError(
     @StringRes val messageRes: Int
 ) {
 
+    // TODO
     MISSING_ORIGIN_OR_DESTINATION(
         iconRes = 0,
         messageRes = 0
