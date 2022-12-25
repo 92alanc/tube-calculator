@@ -1,8 +1,8 @@
-package com.alancamargo.tubecalculator.search.data.repository
+package com.alancamargo.tubecalculator.search.domain.usecase
 
 import app.cash.turbine.test
-import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.repository.SearchRepository
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -13,19 +13,19 @@ import org.junit.Test
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class SearchRepositoryImplTest {
+class SearchStationUseCaseImplTest {
 
-    private val mockRemoteDataSource = mockk<SearchRemoteDataSource>()
-    private val repository = SearchRepositoryImpl(mockRemoteDataSource)
+    private val mockRepository = mockk<SearchRepository>()
+    private val useCase = SearchStationUseCaseImpl(mockRepository)
 
     @Test
-    fun `searchStation should get result from remote data source`() = runBlocking {
+    fun `invoke should get result from repository`() = runBlocking {
         // GIVEN
         val expected = StationListResult.Empty
-        every { mockRemoteDataSource.searchStation(SEARCH_QUERY) } returns flowOf(expected)
+        every { mockRepository.searchStation(SEARCH_QUERY) } returns flowOf(expected)
 
         // WHEN
-        val result = repository.searchStation(SEARCH_QUERY)
+        val result = useCase(SEARCH_QUERY)
 
         // THEN
         result.test {
