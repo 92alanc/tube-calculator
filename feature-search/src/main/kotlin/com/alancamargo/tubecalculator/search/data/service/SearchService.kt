@@ -12,6 +12,7 @@ internal interface SearchService {
     suspend fun searchStation(
         @Path("query") query: String,
         @Query("modes") modes: String = "dlr,elizabeth-line,national-rail,overground,tube",
-        @Query("oysterOnly") isOysterOnly: Boolean = true
+        @Query("oysterOnly") isOysterOnly: Boolean = true,
+        @Query("faresOnly") isLondonFaresOnly: Boolean = true
     ): Response<StationSearchResultsResponse>
 }
