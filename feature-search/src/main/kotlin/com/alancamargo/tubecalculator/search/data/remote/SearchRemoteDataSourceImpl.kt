@@ -4,7 +4,7 @@ import com.alancamargo.tubecalculator.core.extensions.isRequestError
 import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.search.data.mapping.toDomain
 import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
-import com.alancamargo.tubecalculator.search.data.service.SearchService
+import com.alancamargo.tubecalculator.search.data.api.SearchService
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector

@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.search.di
 
 import com.alancamargo.tubecalculator.core.network.ApiProvider
-import com.alancamargo.tubecalculator.search.data.service.SearchService
+import com.alancamargo.tubecalculator.search.data.api.SearchService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -2,7 +2,7 @@ package com.alancamargo.tubecalculator.search.data.remote
 
 import app.cash.turbine.test
 import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
-import com.alancamargo.tubecalculator.search.data.service.SearchService
+import com.alancamargo.tubecalculator.search.data.api.SearchService
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSearchResultsResponse

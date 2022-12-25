@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.data.service
+package com.alancamargo.tubecalculator.search.data.api
 
 import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
 import retrofit2.Response
