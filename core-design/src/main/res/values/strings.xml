@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Tube Calculator</string>
+    <string name="message_network_error">Please check your internet connection and try again</string>
+    <string name="message_server_error">Something is wrong on the TfL service. Please try again later</string>
+    <string name="message_generic_error">Something doesn\'t look right, we\'ll sort it - no need to text the British Transport Police this time</string>
 </resources>

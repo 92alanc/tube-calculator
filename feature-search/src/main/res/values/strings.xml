@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_error_missing_origin_destination">Either the origin or the destination is missing</string>
+    <string name="search_error_same_origin_destination">The origin and the destination must not be the same station</string>
+</resources>
