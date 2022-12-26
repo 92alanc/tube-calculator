@@ -1,264 +1,24 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
-import com.alancamargo.tubecalculator.search.domain.model.StationListResult
-import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
-import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
-import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulSearchFlow
 import com.alancamargo.tubecalculator.search.testtools.stubUiStation
-import com.alancamargo.tubecalculator.search.testtools.stubUiStationList
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-    private val mockSearchStationUseCase = mockk<SearchStationUseCase>()
     private val dispatcher = TestCoroutineDispatcher()
-    private val viewModel = SearchViewModel(
-        mockSearchStationUseCase,
-        dispatcher
-    )
+    private val viewModel = SearchViewModel(dispatcher)
 
     private val collector = ViewModelFlowCollector(
         stateFlow = viewModel.state,
         actionFlow = viewModel.action,
         dispatcher = dispatcher
     )
-
-    @Test
-    fun `when use case returns Success searchOrigin should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns stubSuccessfulSearchFlow()
-
-            // WHEN
-            viewModel.searchOrigin(SEARCH_QUERY)
-
-            // THEN
-            val stations = stubUiStationList()
-            val expected = listOf(
-                SearchViewState(isLoadingOriginSearchResults = true),
-                SearchViewState(
-                    isLoadingOriginSearchResults = true,
-                    originSearchResults = stations
-                ),
-                SearchViewState(originSearchResults = stations)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns Empty searchOrigin should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
-
-            // WHEN
-            viewModel.searchOrigin(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingOriginSearchResults = true),
-                SearchViewState(
-                    isLoadingOriginSearchResults = true,
-                    showOriginEmptyState = true
-                ),
-                SearchViewState(showOriginEmptyState = true)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns NetworkError searchOrigin should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.NetworkError)
-
-            // WHEN
-            viewModel.searchOrigin(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingOriginSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.NETWORK)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
-
-    @Test
-    fun `when use case returns ServerError searchOrigin should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.ServerError)
-
-            // WHEN
-            viewModel.searchOrigin(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingOriginSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.SERVER)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
-
-    @Test
-    fun `when use case returns GenericError searchOrigin should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.GenericError)
-
-            // WHEN
-            viewModel.searchOrigin(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingOriginSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
-
-    @Test
-    fun `when use case returns Success searchDestination should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns stubSuccessfulSearchFlow()
-
-            // WHEN
-            viewModel.searchDestination(SEARCH_QUERY)
-
-            // THEN
-            val stations = stubUiStationList()
-            val expected = listOf(
-                SearchViewState(isLoadingDestinationSearchResults = true),
-                SearchViewState(
-                    isLoadingDestinationSearchResults = true,
-                    destinationSearchResults = stations
-                ),
-                SearchViewState(destinationSearchResults = stations)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns Empty searchDestination should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
-
-            // WHEN
-            viewModel.searchDestination(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingDestinationSearchResults = true),
-                SearchViewState(
-                    isLoadingDestinationSearchResults = true,
-                    showDestinationEmptyState = true
-                ),
-                SearchViewState(showDestinationEmptyState = true)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns NetworkError searchDestination should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.NetworkError)
-
-            // WHEN
-            viewModel.searchDestination(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingDestinationSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.NETWORK)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
-
-    @Test
-    fun `when use case returns ServerError searchDestination should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.ServerError)
-
-            // WHEN
-            viewModel.searchDestination(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingDestinationSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.SERVER)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
-
-    @Test
-    fun `when use case returns GenericError searchDestination should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flowOf(StationListResult.GenericError)
-
-            // WHEN
-            viewModel.searchDestination(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                SearchViewState(isLoadingDestinationSearchResults = true),
-                SearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
-            val expectedAction = SearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
-            assertThat(actions).contains(expectedAction)
-        }
-    }
 
     @Test
     fun `with negative count onUpdateBusAndTramJourneyCount should not update state`() {
@@ -301,10 +61,10 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.onOriginSelected(origin)
+            viewModel.setOrigin(origin)
 
             val destination = stubUiStation(name = "Westminster")
-            viewModel.onDestinationSelected(destination)
+            viewModel.setDestination(destination)
 
             val busAndTramJourneyCount = 3
             viewModel.onUpdateBusAndTramJourneyCount(busAndTramJourneyCount)
@@ -327,7 +87,7 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val destination = stubUiStation(name = "Westminster")
-            viewModel.onDestinationSelected(destination)
+            viewModel.setDestination(destination)
 
             // WHEN
             viewModel.onCalculateClicked()
@@ -345,7 +105,7 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.onOriginSelected(origin)
+            viewModel.setOrigin(origin)
 
             // WHEN
             viewModel.onCalculateClicked()
@@ -363,8 +123,8 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.onOriginSelected(origin)
-            viewModel.onDestinationSelected(origin)
+            viewModel.setOrigin(origin)
+            viewModel.setDestination(origin)
 
             // WHEN
             viewModel.onCalculateClicked()

@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
+import com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch.StationSearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 
@@ -21,6 +23,7 @@ internal class StationSearchFragment : Fragment() {
         get() = _binding!!
 
     private val args by args<Args>()
+    private val viewModel by viewModels<StationSearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
