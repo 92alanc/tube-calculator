@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.ui.viewmodel
+package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

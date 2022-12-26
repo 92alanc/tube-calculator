@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
-import com.alancamargo.tubecalculator.search.ui.viewmodel.SearchViewModel
+import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

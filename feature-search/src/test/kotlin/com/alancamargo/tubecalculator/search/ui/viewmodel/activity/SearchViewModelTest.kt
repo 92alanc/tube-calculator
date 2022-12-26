@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.ui.viewmodel
+package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult

@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.ui.viewmodel
+package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
