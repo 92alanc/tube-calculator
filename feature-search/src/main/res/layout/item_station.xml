@@ -10,7 +10,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/spacing_8">
+        android:paddingVertical="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_8">
 
         <HorizontalScrollView
             android:id="@+id/scrollView"

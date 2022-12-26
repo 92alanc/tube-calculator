@@ -4,4 +4,9 @@
     <string name="message_server_error">Something is wrong on the TfL service. Please try again later</string>
     <string name="message_generic_error">Something doesn\'t look right, we\'ll sort it - no need to text the British Transport Police this time</string>
     <string name="ok">OK</string>
+    <string name="content_description_dlr">DLR</string>
+    <string name="content_description_elizabeth_line">Elizabeth Line</string>
+    <string name="content_description_national_rail">National Rail</string>
+    <string name="content_description_overground">Overground</string>
+    <string name="content_description_underground">Underground</string>
 </resources>
