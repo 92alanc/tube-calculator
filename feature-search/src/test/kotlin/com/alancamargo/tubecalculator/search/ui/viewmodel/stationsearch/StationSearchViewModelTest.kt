@@ -5,6 +5,7 @@ import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulSearchFlow
+import com.alancamargo.tubecalculator.search.testtools.stubUiStation
 import com.alancamargo.tubecalculator.search.testtools.stubUiStationList
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
@@ -142,6 +143,19 @@ class StationSearchViewModelTest {
 
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
             assertThat(actions).contains(expectedAction)
+        }
+    }
+
+    @Test
+    fun `onStationSelected should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            val station = stubUiStation(name = "Tottenham Court Road")
+            viewModel.onStationSelected(station)
+
+            // THEN
+            val expected = StationSearchViewState(selectedStation = station)
+            assertThat(states).contains(expected)
         }
     }
 }

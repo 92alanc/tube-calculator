@@ -27,7 +27,8 @@ internal class StationSearchViewModel @Inject constructor(
     val state: StateFlow<StationSearchViewState> = _state
     val action: SharedFlow<StationSearchViewAction> = _action
 
-    private var station: UiStation? = null
+    var station: UiStation? = null
+        private set
 
     fun searchStation(query: String) {
         viewModelScope.launch(dispatcher) {
