@@ -36,88 +36,23 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/spacing_8"
                 app:layout_constraintTop_toBottomOf="@id/originContainer"
-                app:layout_constraintBottom_toTopOf="@+id/txtBusAndTramJourneyCountLabel"
+                app:layout_constraintBottom_toTopOf="@+id/busAndTramJourneysContainer"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:layout_height="220dp"
                 tools:layout="@layout/fragment_station_search"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txtBusAndTramJourneyCountLabel"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/busAndTramJourneysContainer"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="@dimen/spacing_8"
-                android:gravity="center_horizontal"
-                android:text="@string/search_how_many_bus_tram_journeys"
-                android:drawablePadding="@dimen/spacing_8"
-                app:drawableStartCompat="@drawable/ic_bus"
-                app:drawableEndCompat="@drawable/ic_tram"
                 app:layout_constraintTop_toBottomOf="@id/destinationContainer"
-                app:layout_constraintBottom_toTopOf="@+id/txtBusAndTramJourneyCountInfo"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txtBusAndTramJourneyCountInfo"
-                style="@style/TextAppearance.MaterialComponents.Caption"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_8"
-                android:text="@string/search_bus_tram_journeys_info"
-                app:layout_constraintTop_toBottomOf="@id/txtBusAndTramJourneyCountLabel"
-                app:layout_constraintBottom_toTopOf="@+id/btUp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/txtBusAndTramJourneyCount"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="@dimen/width_bus_and_tram_journey_count"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/spacing_16"
-                android:gravity="center"
-                android:background="@drawable/shape_rounded_corners_outline"
-                app:layout_constraintTop_toTopOf="@id/btUp"
-                app:layout_constraintBottom_toBottomOf="@+id/btDown"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btUp"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                tools:text="0"/>
-
-            <ImageButton
-                android:id="@+id/btUp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_16"
-                android:layout_marginStart="@dimen/spacing_16"
-                android:padding="@dimen/spacing_8"
-                android:background="@drawable/shape_circular_outline"
-                android:src="@drawable/ic_arrow_up"
-                android:contentDescription="@string/search_content_description_more"
-                app:layout_constraintTop_toBottomOf="@id/txtBusAndTramJourneyCountInfo"
-                app:layout_constraintBottom_toTopOf="@+id/btDown"
-                app:layout_constraintStart_toEndOf="@id/txtBusAndTramJourneyCount"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintVertical_bias="0"
-                app:layout_constraintVertical_chainStyle="packed"/>
-
-            <ImageButton
-                android:id="@+id/btDown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/spacing_16"
-                android:padding="@dimen/spacing_8"
-                android:background="@drawable/shape_circular_outline"
-                android:src="@drawable/ic_arrow_down"
-                android:contentDescription="@string/search_content_description_less"
-                app:layout_constraintTop_toBottomOf="@id/btUp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/btUp"
-                app:layout_constraintEnd_toEndOf="@id/btUp"
-                app:layout_constraintHorizontal_bias="0"
-                app:layout_constraintVertical_bias="0"/>
-
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_height="wrap_content"
+                tools:layout="@layout/fragment_bus_and_tram_journeys"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

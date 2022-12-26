@@ -43,10 +43,6 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpUi() {
-        with(binding) {
-            btUp.setOnClickListener {  }
-            btDown.setOnClickListener {  }
-            btCalculate.setOnClickListener { viewModel.onCalculateClicked() }
-        }
+        binding.btCalculate.setOnClickListener { viewModel.onCalculateClicked() }
     }
 }

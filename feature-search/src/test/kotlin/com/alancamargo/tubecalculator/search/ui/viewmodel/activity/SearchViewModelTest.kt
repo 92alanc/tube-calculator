@@ -15,35 +15,10 @@ class SearchViewModelTest {
     private val viewModel = SearchViewModel(dispatcher)
 
     private val collector = ViewModelFlowCollector(
-        stateFlow = viewModel.state,
+        stateFlow = viewModel.action,
         actionFlow = viewModel.action,
         dispatcher = dispatcher
     )
-
-    @Test
-    fun `with negative count onUpdateBusAndTramJourneyCount should not update state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onUpdateBusAndTramJourneyCount(count = -1)
-
-            // THEN
-            val expected = listOf(SearchViewState())
-            assertThat(states).isEqualTo(expected)
-        }
-    }
-
-    @Test
-    fun `with positive count onUpdateBusAndTramJourneyCount should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            val expectedCount = 1
-            viewModel.onUpdateBusAndTramJourneyCount(expectedCount)
-
-            // THEN
-            val expected = SearchViewState(busAndTramJourneyCount = expectedCount)
-            assertThat(states).contains(expected)
-        }
-    }
 
     @Test
     fun `onAppInfoClicked should send ShowAppInfo action`() {
@@ -67,7 +42,7 @@ class SearchViewModelTest {
             viewModel.setDestination(destination)
 
             val busAndTramJourneyCount = 3
-            viewModel.onUpdateBusAndTramJourneyCount(busAndTramJourneyCount)
+            viewModel.setBusAndTramJourneyCount(busAndTramJourneyCount)
 
             // WHEN
             viewModel.onCalculateClicked()

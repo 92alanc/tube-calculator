@@ -7,7 +7,8 @@ import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,14 +17,12 @@ internal class SearchViewModel @Inject constructor(
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(SearchViewState())
     private val _action = MutableSharedFlow<SearchViewAction>()
 
     private var origin: UiStation? = null
     private var destination: UiStation? = null
     private var busAndTramJourneyCount = 0
 
-    val state: StateFlow<SearchViewState> = _state
     val action: SharedFlow<SearchViewAction> = _action
 
     fun setOrigin(origin: UiStation?) {
@@ -34,15 +33,8 @@ internal class SearchViewModel @Inject constructor(
         this.destination = destination
     }
 
-    fun onUpdateBusAndTramJourneyCount(count: Int) {
-        if (count < 0) {
-            return
-        }
-
-        busAndTramJourneyCount = count
-        viewModelScope.launch(dispatcher) {
-            _state.update { it.onUpdateBusAndTramJourneyCount(count) }
-        }
+    fun setBusAndTramJourneyCount(busAndTramJourneyCount: Int) {
+        this.busAndTramJourneyCount = busAndTramJourneyCount
     }
 
     fun onAppInfoClicked() {
