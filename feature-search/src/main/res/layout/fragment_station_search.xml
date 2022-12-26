@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:text="@string/search_where_are_you_travelling_from"/>
+        tools:text="@sample/search_screen.json/data/label"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -27,7 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/txtLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:hint="@string/search_label_origin">
+        tools:hint="@sample/search_screen.json/data/hint">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtSearch"
             android:layout_width="match_parent"
