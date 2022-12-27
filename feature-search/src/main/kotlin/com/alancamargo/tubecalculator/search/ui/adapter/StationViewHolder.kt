@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.search.ui.adapter
 
 import android.content.Context
+import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -20,7 +21,7 @@ internal class StationViewHolder(
         root.setOnClickListener { onItemClick(station) }
     }
 
-    private fun LinearLayout.addIconsForModes(modes: List<UiMode>) = modes.forEach { mode ->
+    private fun GridLayout.addIconsForModes(modes: List<UiMode>) = modes.forEach { mode ->
         val imageView = makeImageView(context, mode)
         addView(imageView)
     }

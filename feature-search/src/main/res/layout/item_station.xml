@@ -14,20 +14,16 @@
         android:paddingStart="0dp"
         android:paddingEnd="@dimen/spacing_8">
 
-        <HorizontalScrollView
-            android:id="@+id/scrollView"
+        <GridLayout
+            android:id="@+id/imageContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:rowCount="4"
+            android:columnCount="2"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline">
-            <LinearLayout
-                android:id="@+id/imageContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"/>
-        </HorizontalScrollView>
+            app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
