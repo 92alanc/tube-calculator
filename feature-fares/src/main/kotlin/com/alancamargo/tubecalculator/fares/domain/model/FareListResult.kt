@@ -4,6 +4,8 @@ internal sealed class FareListResult {
 
     data class Success(val fareList: FareListRoot) : FareListResult()
 
+    object Empty : FareListResult()
+
     object NetworkError : FareListResult()
 
     object ServerError : FareListResult()
