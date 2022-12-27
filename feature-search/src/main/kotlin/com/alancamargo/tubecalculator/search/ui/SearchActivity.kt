@@ -1,11 +1,14 @@
 package com.alancamargo.tubecalculator.search.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.search.R
@@ -145,5 +148,9 @@ internal class SearchActivity : AppCompatActivity() {
             .setNeutralButton(R2.string.ok, null)
             .setIcon(R2.mipmap.ic_launcher)
             .show()
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = context.createIntent(SearchActivity::class)
     }
 }
