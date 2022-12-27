@@ -51,6 +51,7 @@ internal class StationSearchViewModel @Inject constructor(
         if (query.isNullOrBlank()) {
             _state.update { it.disableSearchButton() }
             _state.update { it.clearSearchResults() }
+            selectedStation = null
         } else {
             _state.update { it.enableSearchButton() }
         }
