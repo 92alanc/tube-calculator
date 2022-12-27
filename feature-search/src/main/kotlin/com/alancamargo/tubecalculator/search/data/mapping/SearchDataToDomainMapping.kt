@@ -8,7 +8,11 @@ import com.alancamargo.tubecalculator.search.data.model.StationResponse
 private const val REGEX_ZONE_SEPARATORS = "[+/]"
 
 internal fun StationResponse.toDomain(): Station {
-    val zones = zone?.split(REGEX_ZONE_SEPARATORS.toRegex())?.map { it.toInt() }
+    val zones = zone?.takeUnless {
+        it == "NA"
+    }?.split(REGEX_ZONE_SEPARATORS.toRegex())?.map {
+        it.toInt()
+    }
 
     return Station(
         id = id,

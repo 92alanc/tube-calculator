@@ -27,6 +27,8 @@
         app:endIconDrawable="@drawable/ic_clear"
         app:endIconContentDescription="@string/clear"
         app:endIconMode="clear_text"
+        app:boxBackgroundMode="outline"
+        app:boxBackgroundColor="?colorOnPrimary"
         app:layout_constraintTop_toBottomOf="@id/txtLabel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btSearch"
