@@ -11,6 +11,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.design.R
+import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
@@ -24,6 +26,7 @@ import com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch.StationS
 import com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch.StationSearchViewState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
+import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class StationSearchFragment : Fragment() {
@@ -35,6 +38,9 @@ internal class StationSearchFragment : Fragment() {
     private val args by args<Args>()
     private val viewModel by viewModels<StationSearchViewModel>()
     private val adapter by lazy { StationAdapter(viewModel::onStationSelected) }
+
+    @Inject
+    lateinit var dialogueHelper: DialogueHelper
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +91,11 @@ internal class StationSearchFragment : Fragment() {
     }
 
     private fun showErrorDialogue(error: UiSearchError) {
-        // TODO
+        dialogueHelper.showDialogue(
+            context = requireContext(),
+            titleRes = R.string.error,
+            messageRes = error.messageRes
+        )
     }
 
     private fun getQueryTextWatcher() = object : TextWatcher {
