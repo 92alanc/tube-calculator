@@ -13,7 +13,7 @@ internal fun StationResponse.toDomain(): Station {
     return Station(
         id = id,
         name = name,
-        modes = modes.map { it.toDomain() },
+        modes = modes.filterNot { it == ModeResponse.BUS }.map { it.toDomain() },
         zones = zones
     )
 }
@@ -24,4 +24,5 @@ private fun ModeResponse.toDomain() = when (this) {
     ModeResponse.NATIONAL_RAIL -> Mode.NATIONAL_RAIL
     ModeResponse.OVERGROUND -> Mode.OVERGROUND
     ModeResponse.UNDERGROUND -> Mode.UNDERGROUND
+    else -> throw IllegalArgumentException("Invalid mode")
 }

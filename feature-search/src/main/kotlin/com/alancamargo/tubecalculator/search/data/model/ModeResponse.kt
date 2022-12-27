@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal enum class ModeResponse {
 
+    @SerialName("bus")
+    BUS,
+
     @SerialName("dlr")
     DLR,
 
