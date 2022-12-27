@@ -4,6 +4,8 @@ import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.fares.data.repository.FaresRepositoryImpl
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
+import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCase
+import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,4 +23,8 @@ internal abstract class FaresModule {
     @Binds
     @ViewModelScoped
     abstract fun bindFaresRepository(impl: FaresRepositoryImpl): FaresRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetFaresUseCase(impl: GetFaresUseCaseImpl): GetFaresUseCase
 }
