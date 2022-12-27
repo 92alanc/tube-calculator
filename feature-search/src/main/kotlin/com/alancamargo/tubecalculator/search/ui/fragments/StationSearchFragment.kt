@@ -2,6 +2,8 @@ package com.alancamargo.tubecalculator.search.ui.fragments
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,10 +65,11 @@ internal class StationSearchFragment : Fragment() {
             val query = edtSearch.text?.toString().orEmpty()
             viewModel.searchStation(query)
         }
+        edtSearch.addTextChangedListener(getQueryTextWatcher())
     }
 
     private fun handleState(state: StationSearchViewState) = with(state) {
-        //binding.btSearch.isEnabled = isSearchButtonEnabled
+        binding.btSearch.isEnabled = isSearchButtonEnabled
         binding.shimmer.isVisible = isLoading
         binding.recyclerView.isVisible = searchResults != null
         binding.emptyState.isVisible = showEmptyState
@@ -81,6 +84,16 @@ internal class StationSearchFragment : Fragment() {
 
     private fun showErrorDialogue(error: UiSearchError) {
         // TODO
+    }
+
+    private fun getQueryTextWatcher() = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+            viewModel.onQueryChanged(text?.toString())
+        }
+
+        override fun afterTextChanged(s: Editable?) {}
     }
 
     @Parcelize

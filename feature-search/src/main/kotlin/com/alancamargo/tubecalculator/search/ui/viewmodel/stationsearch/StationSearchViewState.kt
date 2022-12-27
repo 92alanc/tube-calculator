@@ -6,13 +6,13 @@ internal data class StationSearchViewState(
     val isLoading: Boolean = false,
     val searchResults: List<UiStation>? = null,
     val showEmptyState: Boolean = false,
-    val selectedStation: UiStation? = null,
     val isSearchButtonEnabled: Boolean = false
 ) {
 
     fun onLoading() = copy(
         isLoading = true,
-        showEmptyState = false
+        showEmptyState = false,
+        searchResults = null
     )
 
     fun onStopLoading() = copy(isLoading = false)
@@ -22,11 +22,18 @@ internal data class StationSearchViewState(
         showEmptyState = false
     )
 
-    fun onEmptyState() = copy(showEmptyState = true)
+    fun onEmptyState() = copy(
+        showEmptyState = true,
+        searchResults = null
+    )
 
-    fun onSelectedStation(selectedStation: UiStation) = copy(selectedStation = selectedStation)
+    fun onSelectedStation(selectedStation: UiStation) = copy(
+        searchResults = listOf(selectedStation)
+    )
 
     fun enableSearchButton() = copy(isSearchButtonEnabled = true)
 
     fun disableSearchButton() = copy(isSearchButtonEnabled = false)
+
+    fun clearSearchResults() = copy(searchResults = null)
 }

@@ -154,7 +154,7 @@ class StationSearchViewModelTest {
             viewModel.onStationSelected(station)
 
             // THEN
-            val expected = StationSearchViewState(selectedStation = station)
+            val expected = StationSearchViewState(searchResults = listOf(station))
             assertThat(states).contains(expected)
         }
     }
