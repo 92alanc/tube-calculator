@@ -16,6 +16,7 @@ internal class StationViewHolder(
 ) : ViewHolder(binding.root) {
 
     fun bindTo(station: UiStation) = with(binding) {
+        imageContainer.removeAllViews()
         imageContainer.addIconsForModes(station.modes)
         txtName.text = station.name
         root.setOnClickListener { onItemClick(station) }

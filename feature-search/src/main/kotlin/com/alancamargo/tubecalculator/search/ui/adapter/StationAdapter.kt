@@ -13,7 +13,7 @@ internal class StationAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemStationBinding.inflate(inflater, parent, false)
-        return StationViewHolder(binding, onItemClick).apply { setIsRecyclable(false) }
+        return StationViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
