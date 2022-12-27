@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class FareRootResponse(
+internal data class FareListRootResponse(
     @SerialName("header") val header: String,
     @SerialName("rows") val fares: List<FareResponse>
 )
