@@ -15,6 +15,10 @@ import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewAct
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+private const val TAG_ORIGIN = "origin_frag"
+private const val TAG_DESTINATION = "destination_frag"
+private const val TAG_BUS_AND_TRAM_JOURNEYS = "bus_and_tram_journeys_frag"
+
 @AndroidEntryPoint
 internal class SearchActivity : AppCompatActivity() {
 
@@ -88,10 +92,29 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun ActivitySearchBinding.setUpFragments() {
+        val origin = supportFragmentManager.findFragmentByTag(TAG_ORIGIN)
+        val destination = supportFragmentManager.findFragmentByTag(TAG_DESTINATION)
+        val busAndTramJourneys = supportFragmentManager.findFragmentByTag(TAG_BUS_AND_TRAM_JOURNEYS)
+
+        if (origin == null || destination == null || busAndTramJourneys == null) {
+            addFragments()
+        }
+    }
+
+    private fun ActivitySearchBinding.addFragments() {
         supportFragmentManager.beginTransaction()
-            .replace(originContainer.id, originFragment)
-            .replace(destinationContainer.id, destinationFragment)
-            .replace(busAndTramJourneysContainer.id, busAndTramJourneysFragment)
-            .commit()
+            .replace(
+                originContainer.id,
+                originFragment,
+                TAG_ORIGIN
+            ).replace(
+                destinationContainer.id,
+                destinationFragment,
+                TAG_DESTINATION
+            ).replace(
+                busAndTramJourneysContainer.id,
+                busAndTramJourneysFragment,
+                TAG_BUS_AND_TRAM_JOURNEYS
+            ).commit()
     }
 }
