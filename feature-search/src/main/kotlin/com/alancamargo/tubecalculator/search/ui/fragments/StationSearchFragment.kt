@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.extensions.args
+import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -62,6 +63,7 @@ internal class StationSearchFragment : Fragment() {
         textInputLayout.hint = getString(args.searchType.hintRes)
         recyclerView.adapter = adapter
         btSearch.setOnClickListener {
+            it.hideKeyboard()
             val query = edtSearch.text?.toString().orEmpty()
             viewModel.searchStation(query)
         }
