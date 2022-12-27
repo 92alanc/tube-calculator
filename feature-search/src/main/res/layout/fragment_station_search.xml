@@ -48,6 +48,7 @@
         android:src="@drawable/ic_search"
         android:contentDescription="@string/search"
         android:background="@android:color/transparent"
+        app:tint="?colorOnBackground"
         app:layout_constraintTop_toTopOf="@id/textInputLayout"
         app:layout_constraintBottom_toBottomOf="@id/textInputLayout"
         app:layout_constraintStart_toEndOf="@id/textInputLayout"
