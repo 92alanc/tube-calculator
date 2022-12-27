@@ -81,9 +81,7 @@ internal class StationSearchViewModel @Inject constructor(
                 }
             }
 
-            is StationListResult.Empty -> {
-                _state.update { it.onEmptyState() }
-            }
+            is StationListResult.Empty -> _state.update { it.onEmptyState() }
 
             is StationListResult.NetworkError -> {
                 val error = UiSearchError.NETWORK

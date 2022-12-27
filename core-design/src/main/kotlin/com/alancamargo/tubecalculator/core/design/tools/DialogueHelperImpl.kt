@@ -41,5 +41,6 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
             .setTitle(titleRes)
             .setMessage(messageRes)
             .setNeutralButton(R.string.ok, null)
+            .setCancelable(false)
     }
 }

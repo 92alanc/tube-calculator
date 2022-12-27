@@ -6,6 +6,8 @@ import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.*
 
 internal const val STATION_ID = "12345"
+internal const val BUS_AND_TRAM_JOURNEY_COUNT = 2
+internal const val BUS_AND_TRAM_FARE = "£3.30"
 
 private const val HEADER = "Single fare finder"
 
