@@ -5,6 +5,7 @@ import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import kotlinx.coroutines.flow.Flow
+import java.math.BigDecimal
 import javax.inject.Inject
 
 internal class FaresRepositoryImpl @Inject constructor(
@@ -13,5 +14,9 @@ internal class FaresRepositoryImpl @Inject constructor(
 
     override fun getFares(origin: Station, destination: Station): Flow<FareListResult> {
         return remoteDataSource.getFares(origin, destination)
+    }
+
+    override fun getBusAndTramBaseFare(): BigDecimal {
+        return BigDecimal("1.65") // TODO: fetch from remote config
     }
 }
