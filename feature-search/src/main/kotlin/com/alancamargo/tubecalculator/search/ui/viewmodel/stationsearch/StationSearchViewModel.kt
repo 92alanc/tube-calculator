@@ -71,7 +71,14 @@ internal class StationSearchViewModel @Inject constructor(
         when (result) {
             is StationListResult.Success -> {
                 val stations = result.stations.map { it.toUi() }
-                _state.update { it.onReceivedSearchResults(stations) }
+
+                if (stations.size == 1) {
+                    val station = stations.first()
+                    selectedStation = station
+                    _state.update { it.onSelectedStation(station) }
+                } else {
+                    _state.update { it.onReceivedSearchResults(stations) }
+                }
             }
 
             is StationListResult.Empty -> {
