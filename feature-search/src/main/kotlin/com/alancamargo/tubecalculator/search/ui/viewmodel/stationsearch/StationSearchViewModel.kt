@@ -27,7 +27,7 @@ internal class StationSearchViewModel @Inject constructor(
     val state: StateFlow<StationSearchViewState> = _state
     val action: SharedFlow<StationSearchViewAction> = _action
 
-    var station: UiStation? = null
+    var selectedStation: UiStation? = null
         private set
 
     fun searchStation(query: String) {
@@ -43,8 +43,16 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onStationSelected(station: UiStation) {
-        this.station = station
+        this.selectedStation = station
         _state.update { it.onSelectedStation(station) }
+    }
+
+    fun onQueryChanged(query: String?) {
+        if (query.isNullOrBlank()) {
+            _state.update { it.disableSearchButton() }
+        } else {
+            _state.update { it.enableSearchButton() }
+        }
     }
 
     private suspend fun handleThrowable(throwable: Throwable) {

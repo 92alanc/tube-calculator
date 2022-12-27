@@ -22,7 +22,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/originContainer"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/destinationContainer"
                 app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +33,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/destinationContainer"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_8"
                 app:layout_constraintTop_toBottomOf="@id/originContainer"
                 app:layout_constraintBottom_toTopOf="@+id/busAndTramJourneysContainer"
@@ -45,7 +45,7 @@
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/busAndTramJourneysContainer"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_8"
                 app:layout_constraintTop_toBottomOf="@id/destinationContainer"
                 app:layout_constraintBottom_toBottomOf="parent"

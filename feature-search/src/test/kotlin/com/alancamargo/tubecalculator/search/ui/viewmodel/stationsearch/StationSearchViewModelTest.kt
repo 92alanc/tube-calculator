@@ -158,4 +158,28 @@ class StationSearchViewModelTest {
             assertThat(states).contains(expected)
         }
     }
+
+    @Test
+    fun `when query is empty onQueryChanged should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onQueryChanged(query = "")
+
+            // THEN
+            val expected = StationSearchViewState()
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when query is not empty onQueryChanged should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onQueryChanged(query = "holborn")
+
+            // THEN
+            val expected = StationSearchViewState(isSearchButtonEnabled = true)
+            assertThat(states).contains(expected)
+        }
+    }
 }

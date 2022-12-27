@@ -13,4 +13,6 @@
     <string name="search_content_description_less">Less</string>
     <string name="search_about">About</string>
     <string name="search_app_info">App developed by Alan Camargo</string>
+    <string name="search">Search</string>
+    <string name="clear">Clear</string>
 </resources>

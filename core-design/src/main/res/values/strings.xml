@@ -9,4 +9,5 @@
     <string name="content_description_national_rail">National Rail</string>
     <string name="content_description_overground">Overground</string>
     <string name="content_description_underground">Underground</string>
+    <string name="no_results">No results</string>
 </resources>

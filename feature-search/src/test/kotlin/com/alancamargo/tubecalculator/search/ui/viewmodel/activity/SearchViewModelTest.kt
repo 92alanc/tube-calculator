@@ -36,16 +36,11 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.setOrigin(origin)
-
             val destination = stubUiStation(name = "Westminster")
-            viewModel.setDestination(destination)
-
             val busAndTramJourneyCount = 3
-            viewModel.setBusAndTramJourneyCount(busAndTramJourneyCount)
 
             // WHEN
-            viewModel.onCalculateClicked()
+            viewModel.onCalculateClicked(origin, destination, busAndTramJourneyCount)
 
             // THEN
             val expected = SearchViewAction.NavigateToFares(
@@ -62,10 +57,13 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val destination = stubUiStation(name = "Westminster")
-            viewModel.setDestination(destination)
 
             // WHEN
-            viewModel.onCalculateClicked()
+            viewModel.onCalculateClicked(
+                origin = null,
+                destination = destination,
+                busAndTramJourneyCount = 0
+            )
 
             // THEN
             val expected = SearchViewAction.ShowErrorDialogue(
@@ -80,10 +78,13 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.setOrigin(origin)
 
             // WHEN
-            viewModel.onCalculateClicked()
+            viewModel.onCalculateClicked(
+                origin = origin,
+                destination = null,
+                busAndTramJourneyCount = 0
+            )
 
             // THEN
             val expected = SearchViewAction.ShowErrorDialogue(
@@ -98,11 +99,13 @@ class SearchViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")
-            viewModel.setOrigin(origin)
-            viewModel.setDestination(origin)
 
             // WHEN
-            viewModel.onCalculateClicked()
+            viewModel.onCalculateClicked(
+                origin = origin,
+                destination = origin,
+                busAndTramJourneyCount = 0
+            )
 
             // THEN
             val expected = SearchViewAction.ShowErrorDialogue(

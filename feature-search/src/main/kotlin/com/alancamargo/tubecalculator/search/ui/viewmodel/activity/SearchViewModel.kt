@@ -19,23 +19,7 @@ internal class SearchViewModel @Inject constructor(
 
     private val _action = MutableSharedFlow<SearchViewAction>()
 
-    private var origin: UiStation? = null
-    private var destination: UiStation? = null
-    private var busAndTramJourneyCount = 0
-
     val action: SharedFlow<SearchViewAction> = _action
-
-    fun setOrigin(origin: UiStation?) {
-        this.origin = origin
-    }
-
-    fun setDestination(destination: UiStation?) {
-        this.destination = destination
-    }
-
-    fun setBusAndTramJourneyCount(busAndTramJourneyCount: Int) {
-        this.busAndTramJourneyCount = busAndTramJourneyCount
-    }
 
     fun onAppInfoClicked() {
         viewModelScope.launch(dispatcher) {
@@ -43,7 +27,11 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onCalculateClicked() {
+    fun onCalculateClicked(
+        origin: UiStation?,
+        destination: UiStation?,
+        busAndTramJourneyCount: Int
+    ) {
         viewModelScope.launch(dispatcher) {
             if (origin == null || destination == null) {
                 val error = UiSearchError.MISSING_ORIGIN_OR_DESTINATION
@@ -53,8 +41,8 @@ internal class SearchViewModel @Inject constructor(
                 _action.emit(SearchViewAction.ShowErrorDialogue(error))
             } else {
                 val action = SearchViewAction.NavigateToFares(
-                    origin = origin!!,
-                    destination = destination!!,
+                    origin = origin,
+                    destination = destination,
                     busAndTramJourneyCount = busAndTramJourneyCount
                 )
                 _action.emit(action)

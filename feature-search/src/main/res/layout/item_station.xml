@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingVertical="@dimen/spacing_8"
+        android:paddingStart="0dp"
         android:paddingEnd="@dimen/spacing_8">
 
         <HorizontalScrollView
@@ -45,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Romford"/>
+            tools:text="@sample/stations.json/data/name"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

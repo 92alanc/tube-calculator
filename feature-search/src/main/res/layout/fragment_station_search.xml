@@ -24,26 +24,45 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
+        app:endIconDrawable="@drawable/ic_clear"
+        app:endIconContentDescription="@string/clear"
+        app:endIconMode="clear_text"
         app:layout_constraintTop_toBottomOf="@id/txtLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btSearch"
         tools:hint="@sample/search_screen.json/data/hint">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionSearch"/>
+            android:imeOptions="actionSearch"
+            tools:text="@sample/stations.json/data/query"/>
     </com.google.android.material.textfield.TextInputLayout>
+
+    <ImageButton
+        android:id="@+id/btSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:padding="@dimen/spacing_8"
+        android:src="@drawable/ic_search"
+        android:contentDescription="@string/search"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="@id/textInputLayout"
+        app:layout_constraintBottom_toBottomOf="@id/textInputLayout"
+        app:layout_constraintStart_toEndOf="@id/textInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/textInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:itemCount="2"
-        tools:visibility="invisible"/>
+        tools:listitem="@layout/item_station"/>
 
     <FrameLayout
         android:id="@+id/shimmer"
@@ -52,8 +71,21 @@
         android:layout_marginTop="@dimen/spacing_8"
         app:layout_constraintTop_toBottomOf="@id/textInputLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone">
         <include layout="@layout/shimmer_search" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/emptyState"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        app:layout_constraintTop_toBottomOf="@id/textInputLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone">
+        <include layout="@layout/search_empty_state" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
