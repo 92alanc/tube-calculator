@@ -10,4 +10,5 @@
     <string name="content_description_overground">Overground</string>
     <string name="content_description_underground">Underground</string>
     <string name="no_results">No results</string>
+    <string name="error">Error</string>
 </resources>

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
@@ -16,9 +17,9 @@ import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
 import com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
+import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewAction
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewModel
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import com.alancamargo.tubecalculator.core.design.R as R2
@@ -42,6 +43,9 @@ internal class SearchActivity : AppCompatActivity() {
 
     @Inject
     lateinit var faresActivityNavigation: FaresActivityNavigation
+
+    @Inject
+    lateinit var dialogueHelper: DialogueHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,11 +79,9 @@ internal class SearchActivity : AppCompatActivity() {
                 busAndTramJourneyCount = action.busAndTramJourneyCount
             )
 
-            is SearchViewAction.ShowAppInfo -> showAppInfo()
+            is SearchViewAction.ShowAppInfo -> showAppInfoDialogue()
 
-            is SearchViewAction.ShowErrorDialogue -> {
-                // TODO
-            }
+            is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
         }
     }
 
@@ -142,12 +144,21 @@ internal class SearchActivity : AppCompatActivity() {
         )
     }
 
-    private fun showAppInfo() {
-        MaterialAlertDialogBuilder(this).setTitle(R2.string.app_name)
-            .setMessage(R.string.search_app_info)
-            .setNeutralButton(R2.string.ok, null)
-            .setIcon(R2.mipmap.ic_launcher)
-            .show()
+    private fun showAppInfoDialogue() {
+        dialogueHelper.showDialogue(
+            context = this,
+            iconRes = R2.mipmap.ic_launcher,
+            titleRes = R2.string.app_name,
+            messageRes = R.string.search_app_info
+        )
+    }
+
+    private fun showErrorDialogue(error: UiSearchError) {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R2.string.error,
+            messageRes = error.messageRes
+        )
     }
 
     companion object {
