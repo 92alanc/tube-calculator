@@ -29,8 +29,7 @@ internal fun stubFareListRoot() = stubFareListRootResponse().toDomain()
 internal fun stubStation() = Station(
     id = STATION_ID,
     name = "Romford",
-    modes = listOf(Mode.ELIZABETH_LINE, Mode.OVERGROUND, Mode.NATIONAL_RAIL),
-    zones = listOf(6)
+    modes = listOf(Mode.ELIZABETH_LINE, Mode.OVERGROUND, Mode.NATIONAL_RAIL)
 )
 
 private fun stubFareResponseList() = listOf(

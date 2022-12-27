@@ -7,6 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class UiStation(
     val id: String,
     val name: String,
-    val modes: List<UiMode>,
-    val zones: List<Int>?
+    val modes: List<UiMode>
 ) : Parcelable

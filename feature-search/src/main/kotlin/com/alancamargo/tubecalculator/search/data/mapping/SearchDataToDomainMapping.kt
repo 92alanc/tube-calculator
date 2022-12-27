@@ -5,22 +5,11 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.data.model.StationResponse
 
-private const val REGEX_ZONE_SEPARATORS = "[+/]"
-
-internal fun StationResponse.toDomain(): Station {
-    val zones = zone?.takeUnless {
-        it == "NA"
-    }?.split(REGEX_ZONE_SEPARATORS.toRegex())?.map {
-        it.toInt()
-    }
-
-    return Station(
-        id = id,
-        name = name,
-        modes = modes.filterNot { it == ModeResponse.BUS }.map { it.toDomain() },
-        zones = zones
-    )
-}
+internal fun StationResponse.toDomain() = Station(
+    id = id,
+    name = name,
+    modes = modes.filterNot { it == ModeResponse.BUS }.map { it.toDomain() }
+)
 
 private fun ModeResponse.toDomain() = when (this) {
     ModeResponse.DLR -> Mode.DLR
