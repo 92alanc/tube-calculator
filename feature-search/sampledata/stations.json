@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "query": "camden",
+      "name": "Camden Road"
+    },
+    {
+      "query": "camden",
+      "name": "Camden Town"
+    },
+    {
+      "query": "wharf",
+      "name": "Canary Wharf"
+    },
+    {
+      "query": "wharf",
+      "name": "Imperial Wharf"
+    }
+  ]
+}

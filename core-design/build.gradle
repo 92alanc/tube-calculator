@@ -1,10 +1,12 @@
 plugins {
     id 'com.android.library'
+    id 'com.google.dagger.hilt.android'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
-    namespace 'com.alancamargo.core.design'
+    namespace 'com.alancamargo.tubecalculator.core.design'
     compileSdk target_sdk_version
 
     defaultConfig {
@@ -22,4 +24,7 @@ android {
 
 dependencies {
     implementation "$android_material"
+    implementation "$hilt_android"
+
+    kapt "$hilt_compiler"
 }

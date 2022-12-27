@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Tube Calculator</string>
+    <string name="message_network_error">Please check your internet connection and try again</string>
+    <string name="message_server_error">Something is wrong on the TfL service. Please try again later</string>
+    <string name="message_generic_error">Something doesn\'t look right, we\'ll sort it - no need to text the British Transport Police this time</string>
+    <string name="ok">OK</string>
+    <string name="content_description_dlr">DLR</string>
+    <string name="content_description_elizabeth_line">Elizabeth Line</string>
+    <string name="content_description_national_rail">National Rail</string>
+    <string name="content_description_overground">Overground</string>
+    <string name="content_description_underground">Underground</string>
+    <string name="no_results">No results</string>
+    <string name="error">Error</string>
 </resources>

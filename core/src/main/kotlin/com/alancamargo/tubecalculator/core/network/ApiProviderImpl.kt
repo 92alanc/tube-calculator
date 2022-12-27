@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.core.network
 
-import com.alancamargo.core.BuildConfig
+import com.alancamargo.tubecalculator.core.BuildConfig
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
