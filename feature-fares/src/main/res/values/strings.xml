@@ -5,4 +5,6 @@
     <string name="fares_to_format">To: %s</string>
     <string name="fares_passenger_type_format">Passenger type: %s</string>
     <string name="fares_cost_format">£%s</string>
+    <string name="fares_new_search">New search</string>
+    <string name="fares_bus_and_tram_journey_count_format">Bus and tram fares: £%s</string>
 </resources>
