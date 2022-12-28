@@ -10,6 +10,5 @@ internal data class FareResponse(
     @SerialName("to") val destination: String,
     @SerialName("routeDescription") val description: String,
     @SerialName("passengerType") val passengerType: String,
-    @SerialName("ticketsAvailable") val tickets: List<TicketResponse>,
-    @SerialName("messages") val messages: List<FareMessageResponse>
+    @SerialName("ticketsAvailable") val tickets: List<TicketResponse>
 )

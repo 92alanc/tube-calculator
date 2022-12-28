@@ -6,6 +6,5 @@ internal data class Fare(
     val destination: String,
     val description: String,
     val passengerType: String,
-    val tickets: List<Ticket>,
-    val messages: List<String>
+    val tickets: List<Ticket>
 )

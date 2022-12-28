@@ -11,7 +11,8 @@ import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
 
 internal fun FareListRootResponse.toDomain() = FareListRoot(
     header = header,
-    fares = fares.map { it.toDomain() }
+    fares = fares.map { it.toDomain() },
+    messages = messages.map { it.message }
 )
 
 private fun FareResponse.toDomain() = Fare(
@@ -20,8 +21,7 @@ private fun FareResponse.toDomain() = Fare(
     destination = destination,
     description = description,
     passengerType = passengerType,
-    tickets = tickets.map { it.toDomain() },
-    messages = messages.map { it.message }
+    tickets = tickets.map { it.toDomain() }
 )
 
 private fun TicketResponse.toDomain() = Ticket(

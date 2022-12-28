@@ -13,7 +13,8 @@ private const val HEADER = "Single fare finder"
 
 internal fun stubFareListRootResponse() = FareListRootResponse(
     header = HEADER,
-    fares = stubFareResponseList()
+    fares = stubFareResponseList(),
+    messages = stubFareMessageResponseList()
 )
 
 internal fun stubFareListRoot() = stubFareListRootResponse().toDomain()
@@ -31,8 +32,7 @@ private fun stubFareResponseList() = listOf(
         destination = "Camden Road",
         description = "Default route",
         passengerType = "Adult",
-        tickets = stubTicketResponseList(),
-        messages = stubFareMessageResponseList()
+        tickets = stubTicketResponseList()
     )
 )
 
