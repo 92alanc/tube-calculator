@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation "$android_appcompat"
+    implementation "$android_material"
     implementation "$hilt_android"
     implementation "$kotlin_serialisation_converter"
     implementation "$logging_interceptor"
