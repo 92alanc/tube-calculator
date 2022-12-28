@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "type": "Pay as you go",
+      "time_label": "Off Peak",
+      "time_description": "At all other times including public holidays.",
+      "cost": "£3.50"
+    },
+    {
+      "type": "Pay as you go",
+      "time_label": "Peak",
+      "time_description": "Monday to Friday from 0630 to 0930 and from 1600 to 1900.",
+      "cost": "£5.50"
+    },
+    {
+      "type": "Pay as you go",
+      "time_label": "Off Peak",
+      "time_description": "At all other times including public holidays.",
+      "cost": "£2.70"
+    },
+    {
+      "type": "Pay as you go",
+      "time_label": "Peak",
+      "time_description": "Monday to Friday from 0630 to 0930 and from 1600 to 1900.",
+      "cost": "£3.30"
+    }
+  ]
+}
