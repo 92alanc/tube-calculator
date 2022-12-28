@@ -32,15 +32,19 @@ dependencies {
 
     implementation "$android_appcompat"
     implementation "$android_material"
+    implementation "$firebase_config"
     implementation "$hilt_android"
     implementation "$kotlin_serialisation_converter"
     implementation "$logging_interceptor"
     implementation "$okhttp"
-    implementation "$firebase_config"
 
     api "$android_activity"
     api "$kotlin_serialisation"
     api "$retrofit"
 
     kapt "$hilt_compiler"
+
+    testImplementation "$junit"
+    testImplementation "$mockk_android"
+    testImplementation "$truth"
 }
