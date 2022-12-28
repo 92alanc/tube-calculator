@@ -78,8 +78,9 @@ internal class FaresViewModel @Inject constructor(
     }
 
     private fun calculateBusAndTramFare(busAndTramJourneyCount: Int) {
-        val busAndTramFare = calculateBusAndTramFareUseCase(busAndTramJourneyCount)
-        _state.update { it.onReceivedBusAndTramFare(busAndTramFare) }
+        calculateBusAndTramFareUseCase(busAndTramJourneyCount)?.let { busAndTramFare ->
+            _state.update { it.onReceivedBusAndTramFare(busAndTramFare) }
+        }
     }
 
     private suspend fun handleThrowable(throwable: Throwable) {

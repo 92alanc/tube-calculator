@@ -9,9 +9,14 @@ internal class CalculateBusAndTramFareUseCaseImpl @Inject constructor(
     private val repository: FaresRepository
 ) : CalculateBusAndTramFareUseCase {
 
-    override fun invoke(busAndTramJourneyCount: Int): String {
+    override fun invoke(busAndTramJourneyCount: Int): String? {
         val fare = BigDecimal(busAndTramJourneyCount) * repository.getBusAndTramBaseFare()
-        val formattedValue = fare.setScale(2, RoundingMode.HALF_UP)
-        return "£$formattedValue"
+
+        return if (fare.toDouble() == 0.0) {
+            null
+        } else {
+            val formattedValue = fare.setScale(2, RoundingMode.HALF_UP)
+            "£$formattedValue"
+        }
     }
 }
