@@ -9,9 +9,17 @@ import javax.inject.Inject
 internal class BulletListFormatterImpl @Inject constructor() : BulletListFormatter {
 
     override fun getBulletList(strings: List<String>): CharSequence {
+        val gapWidth = 16
+
         val bullets = strings.map { rawText ->
-            rawText.toSpannable().apply {
-                setSpan(BulletSpan(), 0, rawText.lastIndex, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            "$rawText\n\n".toSpannable().apply {
+                setSpan(
+                    BulletSpan(gapWidth),
+                    0,
+                    rawText.lastIndex,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
             }
         }.toTypedArray()
 
