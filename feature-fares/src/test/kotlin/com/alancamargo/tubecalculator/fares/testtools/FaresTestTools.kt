@@ -11,18 +11,10 @@ internal const val BUS_AND_TRAM_FARE = "£3.30"
 
 private const val HEADER = "Single fare finder"
 
-internal fun stubFareListRootResponse(emptyFareList: Boolean = false): FareListRootResponse {
-    val fares = if (emptyFareList) {
-        emptyList()
-    } else {
-        stubFareResponseList()
-    }
-
-    return FareListRootResponse(
-        header = HEADER,
-        fares = fares
-    )
-}
+internal fun stubFareListRootResponse() = FareListRootResponse(
+    header = HEADER,
+    fares = stubFareResponseList()
+)
 
 internal fun stubFareListRoot() = stubFareListRootResponse().toDomain()
 

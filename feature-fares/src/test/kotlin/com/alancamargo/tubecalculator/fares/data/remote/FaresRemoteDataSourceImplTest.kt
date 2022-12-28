@@ -25,7 +25,7 @@ class FaresRemoteDataSourceImplTest {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
-        } returns Response.success(stubFareListRootResponse())
+        } returns Response.success(listOf(stubFareListRootResponse()))
 
         // WHEN
         val station = stubStation()
@@ -34,7 +34,7 @@ class FaresRemoteDataSourceImplTest {
         // THEN
         result.test {
             val fareList = stubFareListRoot()
-            val expected = FareListResult.Success(fareList)
+            val expected = FareListResult.Success(listOf(fareList))
             val actual = awaitItem()
             assertThat(actual).isEqualTo(expected)
             awaitComplete()
@@ -66,7 +66,7 @@ class FaresRemoteDataSourceImplTest {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
-        } returns Response.success(stubFareListRootResponse(emptyFareList = true))
+        } returns Response.success(emptyList())
 
         // WHEN
         val station = stubStation()

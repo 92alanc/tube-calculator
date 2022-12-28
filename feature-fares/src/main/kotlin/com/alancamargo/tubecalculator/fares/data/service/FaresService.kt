@@ -11,5 +11,5 @@ internal interface FaresService {
     suspend fun getFares(
         @Path("origin") originId: String,
         @Path("destination") destinationId: String
-    ): Response<FareListRootResponse>
+    ): Response<List<FareListRootResponse>>
 }

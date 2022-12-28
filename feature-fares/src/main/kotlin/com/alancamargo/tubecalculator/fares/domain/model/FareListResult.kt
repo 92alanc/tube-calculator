@@ -2,7 +2,7 @@ package com.alancamargo.tubecalculator.fares.domain.model
 
 internal sealed class FareListResult {
 
-    data class Success(val fareList: FareListRoot) : FareListResult()
+    data class Success(val fareList: List<FareListRoot>) : FareListResult()
 
     object Empty : FareListResult()
 

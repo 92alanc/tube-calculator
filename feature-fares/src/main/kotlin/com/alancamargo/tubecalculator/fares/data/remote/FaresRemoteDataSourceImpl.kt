@@ -17,7 +17,10 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
     private val service: FaresService
 ) : FaresRemoteDataSource {
 
-    override fun getFares(origin: Station, destination: Station): Flow<FareListResult> = flow {
+    override fun getFares(
+        origin: Station,
+        destination: Station
+    ): Flow<FareListResult> = flow {
         val response = service.getFares(
             originId = origin.id,
             destinationId = destination.id
@@ -31,13 +34,13 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
     }
 
     private suspend fun FlowCollector<FareListResult>.handleSuccess(
-        response: Response<FareListRootResponse>
+        response: Response<List<FareListRootResponse>>
     ) {
         response.body()?.let { body ->
-            if (body.fares.isEmpty()) {
+            if (body.isEmpty()) {
                 emit(FareListResult.Empty)
             } else {
-                val fareList = body.toDomain()
+                val fareList = body.map { it.toDomain() }
                 emit(FareListResult.Success(fareList))
             }
         } ?: run {
@@ -46,7 +49,7 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
     }
 
     private suspend fun FlowCollector<FareListResult>.handleError(
-        response: Response<FareListRootResponse>
+        response: Response<List<FareListRootResponse>>
     ) {
         if (response.isRequestError()) {
             emit(FareListResult.GenericError)

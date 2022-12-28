@@ -53,7 +53,7 @@ class FaresViewModelTest {
             // GIVEN
             every {
                 mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.Success(stubFareListRoot()))
+            } returns flowOf(FareListResult.Success(listOf(stubFareListRoot())))
 
             // WHEN
             viewModel.onCreate(
@@ -63,7 +63,7 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val railFares = stubFareListRoot()
+            val railFares = listOf(stubFareListRoot())
             val expected = listOf(
                 FaresViewState(isLoading = true),
                 FaresViewState(railFares = railFares, busAndTramFare = BUS_AND_TRAM_FARE)

@@ -5,7 +5,7 @@ import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
 internal data class FaresViewState(
     val isLoading: Boolean = false,
     val showEmptyState: Boolean = false,
-    val railFares: FareListRoot? = null,
+    val railFares: List<FareListRoot>? = null,
     val busAndTramFare: String? = null
 ) {
 
@@ -22,7 +22,7 @@ internal data class FaresViewState(
         railFares = null
     )
 
-    fun onReceivedRailFares(railFares: FareListRoot) = copy(
+    fun onReceivedRailFares(railFares: List<FareListRoot>) = copy(
         railFares = railFares,
         showEmptyState = false
     )
