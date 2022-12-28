@@ -10,8 +10,8 @@ internal class FaresActivityNavigationImpl @Inject constructor() : FaresActivity
 
     override fun startActivity(
         context: Context,
-        origin: UiStation,
-        destination: UiStation,
+        origin: UiStation?,
+        destination: UiStation?,
         busAndTramJourneyCount: Int
     ) {
         val intent = FaresActivity.getIntent(

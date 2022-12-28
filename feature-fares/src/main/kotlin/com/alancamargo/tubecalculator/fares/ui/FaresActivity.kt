@@ -111,16 +111,16 @@ internal class FaresActivity : AppCompatActivity() {
 
     @Parcelize
     data class Args(
-        val origin: UiStation,
-        val destination: UiStation,
+        val origin: UiStation?,
+        val destination: UiStation?,
         val busAndTramJourneyCount: Int
     ) : Parcelable
 
     companion object {
         fun getIntent(
             context: Context,
-            origin: UiStation,
-            destination: UiStation,
+            origin: UiStation?,
+            destination: UiStation?,
             busAndTramJourneyCount: Int
         ): Intent {
             val args = Args(origin, destination, busAndTramJourneyCount)

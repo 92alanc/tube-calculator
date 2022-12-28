@@ -33,10 +33,10 @@ internal class SearchViewModel @Inject constructor(
         busAndTramJourneyCount: Int
     ) {
         viewModelScope.launch(dispatcher) {
-            if (origin == null || destination == null) {
+            if ((origin == null || destination == null) && busAndTramJourneyCount == 0) {
                 val error = UiSearchError.MISSING_ORIGIN_OR_DESTINATION
                 _action.emit(SearchViewAction.ShowErrorDialogue(error))
-            } else if (origin == destination) {
+            } else if (origin != null && destination != null && origin == destination) {
                 val error = UiSearchError.SAME_ORIGIN_AND_DESTINATION
                 _action.emit(SearchViewAction.ShowErrorDialogue(error))
             } else {

@@ -7,8 +7,8 @@ interface FaresActivityNavigation {
 
     fun startActivity(
         context: Context,
-        origin: UiStation,
-        destination: UiStation,
+        origin: UiStation?,
+        destination: UiStation?,
         busAndTramJourneyCount: Int
     )
 }
