@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.tools.GenericDiffCallback
 import com.alancamargo.tubecalculator.search.databinding.ItemStationBinding
 
 internal class StationAdapter(
     private val onItemClick: (UiStation) -> Unit
-) : ListAdapter<UiStation, StationViewHolder>(StationDiffUtil()) {
+) : ListAdapter<UiStation, StationViewHolder>(GenericDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val inflater = LayoutInflater.from(parent.context)

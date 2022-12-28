@@ -7,6 +7,5 @@ import kotlinx.serialization.Serializable
 internal data class StationResponse(
     @SerialName("id") val id: String,
     @SerialName("name") val name: String,
-    @SerialName("modes") val modes: List<ModeResponse>,
-    @SerialName("zone") val zone: String?
+    @SerialName("modes") val modes: List<ModeResponse>
 )

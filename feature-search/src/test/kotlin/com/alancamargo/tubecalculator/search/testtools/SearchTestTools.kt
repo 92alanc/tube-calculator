@@ -26,14 +26,12 @@ internal fun stubSearchResultsResponse() = StationSearchResultsResponse(
         StationResponse(
             id = "12345",
             name = "Camden Road",
-            modes = listOf(ModeResponse.OVERGROUND),
-            zone = "2"
+            modes = listOf(ModeResponse.OVERGROUND)
         ),
         StationResponse(
             id = "67890",
             name = "Camden Town",
-            modes = listOf(ModeResponse.UNDERGROUND),
-            zone = "2"
+            modes = listOf(ModeResponse.UNDERGROUND)
         )
     )
 )
@@ -42,20 +40,17 @@ internal fun stubStationList() = listOf(
     Station(
         id = "12345",
         name = "Camden Road",
-        modes = listOf(Mode.OVERGROUND),
-        zones = listOf(2)
+        modes = listOf(Mode.OVERGROUND)
     ),
     Station(
         id = "67890",
         name = "Camden Town",
-        modes = listOf(Mode.UNDERGROUND),
-        zones = listOf(2)
+        modes = listOf(Mode.UNDERGROUND)
     )
 )
 
 internal fun stubUiStation(name: String) = UiStation(
     id = "123",
     name = name,
-    modes = listOf(UiMode.ELIZABETH_LINE, UiMode.NATIONAL_RAIL, UiMode.OVERGROUND),
-    zones = listOf(6)
+    modes = listOf(UiMode.ELIZABETH_LINE, UiMode.NATIONAL_RAIL, UiMode.OVERGROUND)
 )

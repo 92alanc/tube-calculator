@@ -10,9 +10,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 class SearchStationUseCaseImplTest {
 
     private val mockRepository = mockk<SearchRepository>()

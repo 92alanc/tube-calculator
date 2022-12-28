@@ -1,8 +1,8 @@
 package com.alancamargo.tubecalculator.search.data.remote
 
 import app.cash.turbine.test
-import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
 import com.alancamargo.tubecalculator.search.data.api.SearchService
+import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSearchResultsResponse
@@ -14,9 +14,7 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import retrofit2.Response
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalTime::class)
 class SearchRemoteDataSourceImplTest {
 
     private val mockService = mockk<SearchService>()
@@ -48,6 +46,26 @@ class SearchRemoteDataSourceImplTest {
         coEvery {
             mockService.searchStation(query = SEARCH_QUERY)
         } returns Response.success(null)
+
+        // WHEN
+        val result = remoteDataSource.searchStation(SEARCH_QUERY)
+
+        // THEN
+        result.test {
+            val expected = StationListResult.Empty
+            val actual = awaitItem()
+            assertThat(actual).isEqualTo(expected)
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `when service returns empty list searchStation should return Empty`() = runBlocking {
+        // GIVEN
+        val body = StationSearchResultsResponse(matches = emptyList())
+        coEvery {
+            mockService.searchStation(query = SEARCH_QUERY)
+        } returns Response.success(body)
 
         // WHEN
         val result = remoteDataSource.searchStation(SEARCH_QUERY)

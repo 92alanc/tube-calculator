@@ -1,0 +1,18 @@
+{
+  "data": [
+    {
+      "label": "Default Route",
+      "description": "Default Route",
+      "origin": "From: Romford",
+      "destination": "To: Camden Road",
+      "passenger_type": "Passenger type: Adult"
+    },
+    {
+      "label": "Alternative Route",
+      "description": "Avoiding Zone 1 via Stratford",
+      "origin": "From: Romford",
+      "destination": "To: Camden Road",
+      "passenger_type": "Passenger type: Adult"
+    }
+  ]
+}

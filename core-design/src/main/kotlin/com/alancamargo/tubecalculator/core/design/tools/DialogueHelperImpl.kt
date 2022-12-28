@@ -22,7 +22,12 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         builder.setIcon(iconRes).show()
     }
 
-    override fun showDialogue(context: Context, titleRes: Int, messageRes: Int) {
+    override fun showDialogue(
+        context: Context,
+        titleRes: Int,
+        messageRes: Int,
+        onDismiss: (() -> Unit)?
+    ) {
         val builder = getBuilder(
             context = context,
             titleRes = titleRes,
@@ -32,14 +37,48 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         builder.show()
     }
 
+    override fun showDialogue(context: Context, titleRes: Int, message: CharSequence) {
+        val builder = getBuilder(
+            context = context,
+            titleRes = titleRes,
+            message = message
+        )
+
+        builder.show()
+    }
+
     private fun getBuilder(
         context: Context,
         titleRes: Int,
-        messageRes: Int
+        messageRes: Int,
+        onDismiss: (() -> Unit)? = null
+    ): MaterialAlertDialogBuilder {
+        val builder = MaterialAlertDialogBuilder(context)
+            .setTitle(titleRes)
+            .setMessage(messageRes)
+            .setCancelable(false)
+
+        onDismiss?.let {
+            builder.setNeutralButton(R.string.ok) { dialogue, _ ->
+                it()
+                dialogue.dismiss()
+            }
+        } ?: run {
+            builder.setNeutralButton(R.string.ok, null)
+        }
+
+        return builder
+    }
+
+    private fun getBuilder(
+        context: Context,
+        titleRes: Int,
+        message: CharSequence
     ): MaterialAlertDialogBuilder {
         return MaterialAlertDialogBuilder(context)
             .setTitle(titleRes)
-            .setMessage(messageRes)
+            .setMessage(message)
             .setNeutralButton(R.string.ok, null)
+            .setCancelable(false)
     }
 }

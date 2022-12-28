@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.library'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    namespace 'com.alancamargo.tubecalculator.fares'
+    compileSdk target_sdk_version
+
+    defaultConfig {
+        minSdk min_sdk_version
+        targetSdk target_sdk_version
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation project(':core')
+    implementation project(':core-design')
+    implementation project(':common')
+    implementation project(':navigation')
+
+    implementation "$android_activity"
+    implementation "$android_appcompat"
+    implementation "$android_material"
+    implementation "$hilt_android"
+    implementation "$shimmer"
+
+    kapt "$hilt_compiler"
+
+    testImplementation project(':core-test')
+
+    testImplementation "$coroutines_test"
+    testImplementation "$mockk_android"
+    testImplementation "$truth"
+    testImplementation "$turbine"
+}

@@ -16,6 +16,13 @@ interface DialogueHelper {
     fun showDialogue(
         context: Context,
         @StringRes titleRes: Int,
-        @StringRes messageRes: Int
+        @StringRes messageRes: Int,
+        onDismiss: (() -> Unit)? = null
+    )
+
+    fun showDialogue(
+        context: Context,
+        @StringRes titleRes: Int,
+        message: CharSequence
     )
 }

@@ -8,8 +8,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 fun Station.toUi() = UiStation(
     id = id,
     name = name,
-    modes = modes.map { it.toUi() },
-    zones = zones
+    modes = modes.map { it.toUi() }
 )
 
 private fun Mode.toUi() = when (this) {
