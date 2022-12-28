@@ -7,6 +7,8 @@ ext {
     android_fragment = "androidx.fragment:fragment-ktx:$android_fragment_version"
     android_material = "com.google.android.material:material:$android_material_version"
     coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
+    firebase_bom = "com.google.firebase:firebase-bom:$firebase_bom_version"
+    firebase_config = "com.google.firebase:firebase-config"
     hilt_android = "com.google.dagger:hilt-android:$hilt_version"
     hilt_compiler = "com.google.dagger:hilt-compiler:$hilt_version"
     junit = "junit:junit:$junit_version"
