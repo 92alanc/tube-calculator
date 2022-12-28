@@ -42,7 +42,7 @@ class FaresRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `when service returns null body getFares should return Empty`() = runBlocking {
+    fun `when service returns null body getFares should return GenericError`() = runBlocking {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
@@ -54,7 +54,7 @@ class FaresRemoteDataSourceImplTest {
 
         // THEN
         result.test {
-            val expected = FareListResult.Empty
+            val expected = FareListResult.GenericError
             val actual = awaitItem()
             assertThat(actual).isEqualTo(expected)
             awaitComplete()
@@ -62,7 +62,7 @@ class FaresRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `when service returns empty list getFares should return Empty`() = runBlocking {
+    fun `when service returns empty list getFares should return GenericError`() = runBlocking {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
@@ -74,7 +74,7 @@ class FaresRemoteDataSourceImplTest {
 
         // THEN
         result.test {
-            val expected = FareListResult.Empty
+            val expected = FareListResult.GenericError
             val actual = awaitItem()
             assertThat(actual).isEqualTo(expected)
             awaitComplete()

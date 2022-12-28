@@ -19,7 +19,7 @@ class FaresRepositoryImplTest {
     @Test
     fun `getFares should get result from remote data source`() = runBlocking {
         // GIVEN
-        val expected = FareListResult.Empty
+        val expected = FareListResult.GenericError
         val station = stubStation()
         every {
             mockRemoteDataSource.getFares(origin = station, destination = station)

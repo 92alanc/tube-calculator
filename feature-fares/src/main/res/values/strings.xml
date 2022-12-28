@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="fares_content_description_messages">Messages</string>
+    <string name="fares_messages">Messages</string>
     <string name="fares_from_format">From: %s</string>
     <string name="fares_to_format">To: %s</string>
     <string name="fares_passenger_type_format">Passenger type: %s</string>
     <string name="fares_cost_format">£%s</string>
     <string name="fares_new_search">New search</string>
-    <string name="fares_bus_and_tram_journey_count_format">Bus and tram fares: £%s</string>
+    <string name="fares_bus_and_tram_journey_count_format">Bus and tram fares: %s</string>
 </resources>

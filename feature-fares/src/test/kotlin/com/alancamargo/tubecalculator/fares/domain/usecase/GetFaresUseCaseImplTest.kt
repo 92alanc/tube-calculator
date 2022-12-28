@@ -19,7 +19,7 @@ class GetFaresUseCaseImplTest {
     @Test
     fun `invoke should get result from repository`() = runBlocking {
         // GIVEN
-        val expected = FareListResult.Empty
+        val expected = FareListResult.GenericError
         val station = stubStation()
         every {
             mockRepository.getFares(origin = station, destination = station)

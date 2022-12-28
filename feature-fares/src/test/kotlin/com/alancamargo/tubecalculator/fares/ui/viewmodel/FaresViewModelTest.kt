@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
+import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
@@ -24,10 +25,12 @@ class FaresViewModelTest {
 
     private val mockGetFaresUseCase = mockk<GetFaresUseCase>()
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
+    private val mockBulletListFormatter = mockk<BulletListFormatter>()
     private val dispatcher = TestCoroutineDispatcher()
     private val viewModel = FaresViewModel(
         mockGetFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
+        mockBulletListFormatter,
         dispatcher
     )
 
@@ -67,30 +70,6 @@ class FaresViewModelTest {
             val expected = listOf(
                 FaresViewState(isLoading = true),
                 FaresViewState(railFares = railFares, busAndTramFare = BUS_AND_TRAM_FARE)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns Empty searchStation should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.Empty)
-
-            // WHEN
-            viewModel.onCreate(
-                origin = uiStation,
-                destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
-            )
-
-            // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(showEmptyState = true, busAndTramFare = BUS_AND_TRAM_FARE)
             )
             assertThat(states).containsAtLeastElementsIn(expected)
         }
@@ -190,6 +169,22 @@ class FaresViewModelTest {
 
             // THEN
             assertThat(actions).contains(FaresViewAction.NavigateToSearch)
+        }
+    }
+
+    @Test
+    fun `onMessagesButtonClicked should send ShowMessagesDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            val messages = listOf("Message 1", "Message 2", "Message 3")
+            val expected = "Bullet list"
+            every { mockBulletListFormatter.getBulletList(messages) } returns expected
+
+            // WHEN
+            viewModel.onMessagesButtonClicked(messages)
+
+            // THEN
+            assertThat(actions).contains(FaresViewAction.ShowMessagesDialogue(expected))
         }
     }
 }

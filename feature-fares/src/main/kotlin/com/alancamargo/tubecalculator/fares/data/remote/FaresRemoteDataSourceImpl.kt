@@ -38,13 +38,13 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
     ) {
         response.body()?.let { body ->
             if (body.isEmpty()) {
-                emit(FareListResult.Empty)
+                emit(FareListResult.GenericError)
             } else {
                 val fareList = body.map { it.toDomain() }
                 emit(FareListResult.Success(fareList))
             }
         } ?: run {
-            emit(FareListResult.Empty)
+            emit(FareListResult.GenericError)
         }
     }
 

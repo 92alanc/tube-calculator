@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_8"
             android:src="@drawable/ic_messages"
-            android:contentDescription="@string/fares_content_description_messages"
+            android:contentDescription="@string/fares_messages"
             android:background="?colorOnPrimary"
             app:tint="?colorOnBackground"
             app:layout_constraintTop_toTopOf="@id/txtHeader"

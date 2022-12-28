@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
@@ -20,6 +21,7 @@ import javax.inject.Inject
 internal class FaresViewModel @Inject constructor(
     private val getFaresUseCase: GetFaresUseCase,
     private val calculateBusAndTramFareUseCase: CalculateBusAndTramFareUseCase,
+    private val bulletListFormatter: BulletListFormatter,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -49,6 +51,13 @@ internal class FaresViewModel @Inject constructor(
     fun onNewSearchClicked() {
         viewModelScope.launch(dispatcher) {
             _action.emit(FaresViewAction.NavigateToSearch)
+        }
+    }
+
+    fun onMessagesButtonClicked(messages: List<String>) {
+        viewModelScope.launch(dispatcher) {
+            val text = bulletListFormatter.getBulletList(messages)
+            _action.emit(FaresViewAction.ShowMessagesDialogue(text))
         }
     }
 
@@ -86,8 +95,6 @@ internal class FaresViewModel @Inject constructor(
     private suspend fun handleResult(result: FareListResult) {
         when (result) {
             is FareListResult.Success -> _state.update { it.onReceivedRailFares(result.fareList) }
-
-            is FareListResult.Empty -> _state.update { it.onEmptyState() }
 
             is FareListResult.NetworkError -> {
                 val error = UiFaresError.NETWORK
