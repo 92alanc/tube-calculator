@@ -5,7 +5,7 @@ import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.databinding.ItemTicketBinding
 import com.alancamargo.tubecalculator.fares.domain.model.Ticket
 
-internal class TicketHolder(private val binding: ItemTicketBinding) : ViewHolder(binding.root) {
+internal class TicketViewHolder(private val binding: ItemTicketBinding) : ViewHolder(binding.root) {
 
     fun bindTo(ticket: Ticket) = with(binding) {
         txtType.text = ticket.type
