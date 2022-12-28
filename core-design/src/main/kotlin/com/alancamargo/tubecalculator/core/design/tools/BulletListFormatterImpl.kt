@@ -11,7 +11,7 @@ internal class BulletListFormatterImpl @Inject constructor() : BulletListFormatt
     override fun getBulletList(strings: List<String>): CharSequence {
         val bullets = strings.map { rawText ->
             rawText.toSpannable().apply {
-                setSpan(BulletSpan(), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                setSpan(BulletSpan(), 0, rawText.lastIndex, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
         }.toTypedArray()
 

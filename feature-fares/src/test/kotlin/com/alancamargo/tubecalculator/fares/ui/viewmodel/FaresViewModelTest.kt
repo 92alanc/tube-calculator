@@ -67,11 +67,12 @@ class FaresViewModelTest {
 
             // THEN
             val railFares = listOf(stubFareListRoot())
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(railFares = railFares, busAndTramFare = BUS_AND_TRAM_FARE)
+            val expected = FaresViewState(
+                isLoading = true,
+                railFares = railFares,
+                busAndTramFare = BUS_AND_TRAM_FARE
             )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            assertThat(states).contains(expected)
         }
     }
 
@@ -91,11 +92,8 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(busAndTramFare = BUS_AND_TRAM_FARE)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
+            assertThat(states).contains(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK))
         }
     }
@@ -116,11 +114,8 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(busAndTramFare = BUS_AND_TRAM_FARE)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
+            assertThat(states).contains(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.SERVER))
         }
     }
@@ -141,11 +136,8 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(busAndTramFare = BUS_AND_TRAM_FARE)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
+            assertThat(states).contains(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC))
         }
     }

@@ -37,8 +37,8 @@ internal class FaresViewModel @Inject constructor(
         busAndTramJourneyCount: Int
     ) {
         viewModelScope.launch(dispatcher) {
-            getRailFares(origin, destination)
             calculateBusAndTramFare(busAndTramJourneyCount)
+            getRailFares(origin, destination)
         }
     }
 
