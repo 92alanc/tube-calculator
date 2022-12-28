@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.fares.data.repository
 
 import app.cash.turbine.test
+import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.testtools.stubStation
@@ -10,11 +11,15 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import java.math.BigDecimal
+
+private const val KEY = "bus_and_tram_base_fare"
 
 class FaresRepositoryImplTest {
 
     private val mockRemoteDataSource = mockk<FaresRemoteDataSource>()
-    private val repository = FaresRepositoryImpl(mockRemoteDataSource)
+    private val mockRemoteConfigManager = mockk<RemoteConfigManager>()
+    private val repository = FaresRepositoryImpl(mockRemoteDataSource, mockRemoteConfigManager)
 
     @Test
     fun `getFares should get result from remote data source`() = runBlocking {
@@ -34,5 +39,18 @@ class FaresRepositoryImplTest {
             assertThat(actual).isEqualTo(expected)
             awaitComplete()
         }
+    }
+
+    @Test
+    fun `getBusAndTramBaseFare should get base fare from remote config`() {
+        // GIVEN
+        val expected = 1.65
+        every { mockRemoteConfigManager.getDouble(KEY) } returns expected
+
+        // WHEN
+        val actual = repository.getBusAndTramBaseFare()
+
+        // THEN
+        assertThat(actual).isEqualTo(BigDecimal.valueOf(expected))
     }
 }

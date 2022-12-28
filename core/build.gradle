@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'com.google.gms.google-services'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.plugin.serialization'
@@ -27,8 +28,11 @@ android {
 }
 
 dependencies {
+    implementation platform("$firebase_bom")
+
     implementation "$android_appcompat"
     implementation "$android_material"
+    implementation "$firebase_config"
     implementation "$hilt_android"
     implementation "$kotlin_serialisation_converter"
     implementation "$logging_interceptor"
@@ -39,4 +43,8 @@ dependencies {
     api "$retrofit"
 
     kapt "$hilt_compiler"
+
+    testImplementation "$junit"
+    testImplementation "$mockk_android"
+    testImplementation "$truth"
 }
