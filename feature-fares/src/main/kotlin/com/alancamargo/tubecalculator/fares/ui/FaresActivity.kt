@@ -69,6 +69,7 @@ internal class FaresActivity : AppCompatActivity() {
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
         binding.txtBusAndTramFares.isVisible = busAndTramFare != null
+        binding.recyclerView.isVisible = !showOnlyBusAndTramFare
         busAndTramFare?.let {
             binding.txtBusAndTramFares.text = getString(
                 R.string.fares_bus_and_tram_journey_count_format,
