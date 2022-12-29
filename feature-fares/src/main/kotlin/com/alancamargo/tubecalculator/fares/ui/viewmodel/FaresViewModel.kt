@@ -40,6 +40,8 @@ internal class FaresViewModel @Inject constructor(
             calculateBusAndTramFare(busAndTramJourneyCount)
             if (origin != null && destination != null) {
                 getRailFares(origin, destination)
+            } else {
+                _state.update { it.onShowOnlyBusAndTramFare() }
             }
         }
     }
