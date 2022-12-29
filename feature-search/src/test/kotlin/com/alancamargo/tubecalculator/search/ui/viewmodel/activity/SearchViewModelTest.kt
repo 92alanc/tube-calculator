@@ -53,7 +53,55 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `when origin is null onCalculateClicked should send ShowErrorDialogue action`() {
+    fun `when origin is null onCalculateClicked should send NavigateToFares action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            val origin = stubUiStation(name = "Romford")
+            val busAndTramJourneyCount = 1
+
+            // WHEN
+            viewModel.onCalculateClicked(
+                origin = origin,
+                destination = null,
+                busAndTramJourneyCount = busAndTramJourneyCount
+            )
+
+            // THEN
+            val expected = SearchViewAction.NavigateToFares(
+                origin = origin,
+                destination = null,
+                busAndTramJourneyCount = busAndTramJourneyCount
+            )
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when destination is null onCalculateClicked should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            val destination = stubUiStation(name = "Romford")
+            val busAndTramJourneyCount = 1
+
+            // WHEN
+            viewModel.onCalculateClicked(
+                origin = null,
+                destination = destination,
+                busAndTramJourneyCount = busAndTramJourneyCount
+            )
+
+            // THEN
+            val expected = SearchViewAction.NavigateToFares(
+                origin = null,
+                destination = destination,
+                busAndTramJourneyCount = busAndTramJourneyCount
+            )
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when origin is null and bus and tram journey count is zero onCalculateClicked should send ShowErrorDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             val destination = stubUiStation(name = "Westminster")
@@ -74,7 +122,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `when destination is null onCalculateClicked should send ShowErrorDialogue action`() {
+    fun `when destination is null and bus and tram journey count is zero onCalculateClicked should send ShowErrorDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             val origin = stubUiStation(name = "Romford")

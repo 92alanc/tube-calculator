@@ -132,8 +132,8 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun navigateToFares(
-        origin: UiStation,
-        destination: UiStation,
+        origin: UiStation?,
+        destination: UiStation?,
         busAndTramJourneyCount: Int
     ) {
         faresActivityNavigation.startActivity(

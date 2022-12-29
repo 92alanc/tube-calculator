@@ -32,13 +32,17 @@ internal class FaresViewModel @Inject constructor(
     val action: SharedFlow<FaresViewAction> = _action
 
     fun onCreate(
-        origin: UiStation,
-        destination: UiStation,
+        origin: UiStation?,
+        destination: UiStation?,
         busAndTramJourneyCount: Int
     ) {
         viewModelScope.launch(dispatcher) {
             calculateBusAndTramFare(busAndTramJourneyCount)
-            getRailFares(origin, destination)
+            if (origin != null && destination != null) {
+                getRailFares(origin, destination)
+            } else {
+                _state.update { it.onShowOnlyBusAndTramFare() }
+            }
         }
     }
 

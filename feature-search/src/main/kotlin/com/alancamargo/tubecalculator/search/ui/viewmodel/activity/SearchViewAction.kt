@@ -6,8 +6,8 @@ import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 internal sealed class SearchViewAction {
 
     data class NavigateToFares(
-        val origin: UiStation,
-        val destination: UiStation,
+        val origin: UiStation?,
+        val destination: UiStation?,
         val busAndTramJourneyCount: Int
     ) : SearchViewAction()
 

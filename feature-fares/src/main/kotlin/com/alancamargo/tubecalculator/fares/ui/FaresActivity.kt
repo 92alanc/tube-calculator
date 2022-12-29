@@ -69,6 +69,7 @@ internal class FaresActivity : AppCompatActivity() {
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
         binding.txtBusAndTramFares.isVisible = busAndTramFare != null
+        binding.recyclerView.isVisible = !showOnlyBusAndTramFare
         busAndTramFare?.let {
             binding.txtBusAndTramFares.text = getString(
                 R.string.fares_bus_and_tram_journey_count_format,
@@ -111,16 +112,16 @@ internal class FaresActivity : AppCompatActivity() {
 
     @Parcelize
     data class Args(
-        val origin: UiStation,
-        val destination: UiStation,
+        val origin: UiStation?,
+        val destination: UiStation?,
         val busAndTramJourneyCount: Int
     ) : Parcelable
 
     companion object {
         fun getIntent(
             context: Context,
-            origin: UiStation,
-            destination: UiStation,
+            origin: UiStation?,
+            destination: UiStation?,
             busAndTramJourneyCount: Int
         ): Intent {
             val args = Args(origin, destination, busAndTramJourneyCount)

@@ -51,7 +51,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns Success onCreate should set correct states`() {
+    fun `when use case returns Success onCreate should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
             every {
@@ -77,7 +77,27 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `with only bus and tram fare onCreate should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onCreate(
+                origin = null,
+                destination = null,
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            )
+
+            // THEN
+            val expected = FaresViewState(
+                railFares = null,
+                busAndTramFare = BUS_AND_TRAM_FARE,
+                showOnlyBusAndTramFare = true
+            )
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when use case returns NetworkError searchStation should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -99,7 +119,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `when use case returns ServerError searchStation should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -121,7 +141,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `when use case returns GenericError searchStation should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
