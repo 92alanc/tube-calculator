@@ -4,7 +4,7 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.core.extensions.isRequestError
 import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
-import com.alancamargo.tubecalculator.fares.data.model.FareListRootResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareListRootResponse
 import com.alancamargo.tubecalculator.fares.data.service.FaresService
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import kotlinx.coroutines.flow.Flow

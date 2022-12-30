@@ -1,9 +1,9 @@
 package com.alancamargo.tubecalculator.fares.data.mapping
 
-import com.alancamargo.tubecalculator.fares.data.model.FareListRootResponse
-import com.alancamargo.tubecalculator.fares.data.model.FareResponse
-import com.alancamargo.tubecalculator.fares.data.model.TicketResponse
-import com.alancamargo.tubecalculator.fares.data.model.TicketTimeResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareListRootResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTimeResponse
 import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
 import com.alancamargo.tubecalculator.fares.domain.model.Ticket

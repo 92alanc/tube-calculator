@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.fares.data.service
 
-import com.alancamargo.tubecalculator.fares.data.model.FareListRootResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareListRootResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

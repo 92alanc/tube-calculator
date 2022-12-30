@@ -3,7 +3,7 @@ package com.alancamargo.tubecalculator.fares.testtools
 import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
-import com.alancamargo.tubecalculator.fares.data.model.*
+import com.alancamargo.tubecalculator.fares.data.model.responses.*
 
 internal const val STATION_ID = "12345"
 internal const val BUS_AND_TRAM_JOURNEY_COUNT = 2
