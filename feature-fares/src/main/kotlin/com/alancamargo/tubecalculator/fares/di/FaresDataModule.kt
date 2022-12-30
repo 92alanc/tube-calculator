@@ -1,6 +1,9 @@
 package com.alancamargo.tubecalculator.fares.di
 
+import com.alancamargo.tubecalculator.core.database.DatabaseProvider
 import com.alancamargo.tubecalculator.core.network.ApiProvider
+import com.alancamargo.tubecalculator.fares.data.database.FaresDao
+import com.alancamargo.tubecalculator.fares.data.database.FaresDatabase
 import com.alancamargo.tubecalculator.fares.data.service.FaresService
 import dagger.Module
 import dagger.Provides
@@ -16,5 +19,16 @@ internal object FaresDataModule {
     @Singleton
     fun provideFaresService(apiProvider: ApiProvider): FaresService {
         return apiProvider.provideService(FaresService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFaresDao(databaseProvider: DatabaseProvider): FaresDao {
+        val database = databaseProvider.provideDatabase(
+            clazz = FaresDatabase::class,
+            databaseName = "fares"
+        )
+
+        return database.getFaresDao()
     }
 }
