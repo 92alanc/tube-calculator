@@ -1,23 +1,13 @@
 package com.alancamargo.tubecalculator.fares.data.model.database
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import java.util.*
 
-@Entity(
-    tableName = "FARES",
-    foreignKeys = [
-        ForeignKey(
-            entity = DbQuery::class,
-            parentColumns = ["id"],
-            childColumns = ["queryId"]
-        )
-    ]
-)
+@Entity(tableName = "FARES")
 internal data class DbFareListRoot(
-    @PrimaryKey val id: String = UUID.randomUUID().toString(),
-    val queryId: String,
+    @PrimaryKey val id: String,
+    val originId: String,
+    val destinationId: String,
     val jsonResponse: String,
     val creationDate: Long = System.currentTimeMillis()
 )

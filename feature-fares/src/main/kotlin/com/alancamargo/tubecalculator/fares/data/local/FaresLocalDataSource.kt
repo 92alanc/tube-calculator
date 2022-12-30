@@ -9,5 +9,5 @@ internal interface FaresLocalDataSource {
 
     fun getFares(origin: Station, destination: Station): Flow<FareListResult>
 
-    fun saveFares(fares: List<FareListRoot>): Flow<Unit>
+    fun saveFares(origin: Station, destination: Station, fares: List<FareListRoot>): Flow<Unit>
 }
