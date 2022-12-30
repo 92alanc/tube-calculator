@@ -18,5 +18,6 @@ import java.util.*
 internal data class DbFareListRoot(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val queryId: String,
-    val jsonResponse: String
+    val jsonResponse: String,
+    val creationDate: Long = System.currentTimeMillis()
 )
