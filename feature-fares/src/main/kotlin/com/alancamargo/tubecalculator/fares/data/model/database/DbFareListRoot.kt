@@ -8,6 +8,5 @@ internal data class DbFareListRoot(
     @PrimaryKey val id: String,
     val originId: String,
     val destinationId: String,
-    val jsonResponse: String,
-    val creationDate: Long = System.currentTimeMillis()
+    val jsonResponse: String
 )
