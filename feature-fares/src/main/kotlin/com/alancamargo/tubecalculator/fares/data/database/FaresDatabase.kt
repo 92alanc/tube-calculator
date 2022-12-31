@@ -5,10 +5,7 @@ import androidx.room.RoomDatabase
 import com.alancamargo.tubecalculator.fares.data.model.database.DbFareListRoot
 
 @Database(
-    entities = [
-        DbQuery::class,
-        DbFareListRoot::class
-    ],
+    entities = [DbFareListRoot::class],
     version = 1,
     exportSchema = false
 )

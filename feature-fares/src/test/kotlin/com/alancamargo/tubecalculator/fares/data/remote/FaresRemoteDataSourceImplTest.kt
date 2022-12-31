@@ -1,6 +1,5 @@
 package com.alancamargo.tubecalculator.fares.data.remote
 
-import app.cash.turbine.test
 import com.alancamargo.tubecalculator.fares.data.service.FaresService
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.testtools.STATION_ID
@@ -21,7 +20,7 @@ class FaresRemoteDataSourceImplTest {
     private val remoteDataSource = FaresRemoteDataSourceImpl(mockService)
 
     @Test
-    fun `when service returns success getFares should return Success`() = runBlocking {
+    fun `when service returns success getFares should return Success`() {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
@@ -29,20 +28,18 @@ class FaresRemoteDataSourceImplTest {
 
         // WHEN
         val station = stubStation()
-        val result = remoteDataSource.getFares(origin = station, destination = station)
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
+        }
 
         // THEN
-        result.test {
-            val fareList = stubFareListRoot()
-            val expected = FareListResult.Success(listOf(fareList))
-            val actual = awaitItem()
-            assertThat(actual).isEqualTo(expected)
-            awaitComplete()
-        }
+        val fareList = stubFareListRoot()
+        val expected = FareListResult.Success(listOf(fareList))
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `when service returns null body getFares should return GenericError`() = runBlocking {
+    fun `when service returns null body getFares should return GenericError`() {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
@@ -50,19 +47,17 @@ class FaresRemoteDataSourceImplTest {
 
         // WHEN
         val station = stubStation()
-        val result = remoteDataSource.getFares(origin = station, destination = station)
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
+        }
 
         // THEN
-        result.test {
-            val expected = FareListResult.GenericError
-            val actual = awaitItem()
-            assertThat(actual).isEqualTo(expected)
-            awaitComplete()
-        }
+        val expected = FareListResult.GenericError
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `when service returns empty list getFares should return GenericError`() = runBlocking {
+    fun `when service returns empty list getFares should return GenericError`() {
         // GIVEN
         coEvery {
             mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
@@ -70,83 +65,69 @@ class FaresRemoteDataSourceImplTest {
 
         // WHEN
         val station = stubStation()
-        val result = remoteDataSource.getFares(origin = station, destination = station)
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
+        }
 
         // THEN
-        result.test {
-            val expected = FareListResult.GenericError
-            val actual = awaitItem()
-            assertThat(actual).isEqualTo(expected)
-            awaitComplete()
-        }
+        val expected = FareListResult.GenericError
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when service returns request error getFares should return GenericError`() {
-        runBlocking {
-            // GIVEN
-            val body = "".toResponseBody()
-            coEvery {
-                mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
-            } returns Response.error(404, body)
+        // GIVEN
+        val body = "".toResponseBody()
+        coEvery {
+            mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
+        } returns Response.error(404, body)
 
-            // WHEN
-            val station = stubStation()
-            val result = remoteDataSource.getFares(origin = station, destination = station)
-
-            // THEN
-            result.test {
-                val expected = FareListResult.GenericError
-                val actual = awaitItem()
-                assertThat(actual).isEqualTo(expected)
-                awaitComplete()
-            }
+        // WHEN
+        val station = stubStation()
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
         }
+
+        // THEN
+        val expected = FareListResult.GenericError
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when service returns server error getFares should return ServerError`() {
-        runBlocking {
-            // GIVEN
-            val body = "".toResponseBody()
-            coEvery {
-                mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
-            } returns Response.error(500, body)
+        // GIVEN
+        val body = "".toResponseBody()
+        coEvery {
+            mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
+        } returns Response.error(500, body)
 
-            // WHEN
-            val station = stubStation()
-            val result = remoteDataSource.getFares(origin = station, destination = station)
-
-            // THEN
-            result.test {
-                val expected = FareListResult.ServerError
-                val actual = awaitItem()
-                assertThat(actual).isEqualTo(expected)
-                awaitComplete()
-            }
+        // WHEN
+        val station = stubStation()
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
         }
+
+        // THEN
+        val expected = FareListResult.ServerError
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `when service returns random error getFares should return GenericError`() {
-        runBlocking {
-            // GIVEN
-            val body = "".toResponseBody()
-            coEvery {
-                mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
-            } returns Response.error(600, body)
+        // GIVEN
+        val body = "".toResponseBody()
+        coEvery {
+            mockService.getFares(originId = STATION_ID, destinationId = STATION_ID)
+        } returns Response.error(600, body)
 
-            // WHEN
-            val station = stubStation()
-            val result = remoteDataSource.getFares(origin = station, destination = station)
-
-            // THEN
-            result.test {
-                val expected = FareListResult.GenericError
-                val actual = awaitItem()
-                assertThat(actual).isEqualTo(expected)
-                awaitComplete()
-            }
+        // WHEN
+        val station = stubStation()
+        val actual = runBlocking {
+            remoteDataSource.getFares(origin = station, destination = station)
         }
+
+        // THEN
+        val expected = FareListResult.GenericError
+        assertThat(actual).isEqualTo(expected)
     }
 }
