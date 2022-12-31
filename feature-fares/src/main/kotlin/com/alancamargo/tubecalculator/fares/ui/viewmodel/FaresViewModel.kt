@@ -65,10 +65,7 @@ internal class FaresViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getRailFares(
-        origin: UiStation,
-        destination: UiStation
-    ) {
+    private suspend fun getRailFares(origin: UiStation, destination: UiStation) {
         getFaresUseCase.invoke(
             origin = origin.toDomain(),
             destination = destination.toDomain()

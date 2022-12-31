@@ -17,6 +17,7 @@ ext {
     mockk_version = '1.13.3'
     okhttp_version = '4.10.0'
     retrofit_version = '2.9.0'
+    room_version = '2.4.3'
     security_crypto_version = '1.0.0'
     shimmer_version = '0.5.0'
     truth_version = '1.1.3'

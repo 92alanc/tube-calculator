@@ -37,12 +37,16 @@ dependencies {
     implementation "$kotlin_serialisation_converter"
     implementation "$logging_interceptor"
     implementation "$okhttp"
+    implementation "$room"
+    implementation "$room_runtime"
+    implementation "androidx.room:room-runtime:$room_version"
 
     api "$android_activity"
     api "$kotlin_serialisation"
     api "$retrofit"
 
     kapt "$hilt_compiler"
+    kapt "$room_compiler"
 
     testImplementation "$junit"
     testImplementation "$mockk_android"

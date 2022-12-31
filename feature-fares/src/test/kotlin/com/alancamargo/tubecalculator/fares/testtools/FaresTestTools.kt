@@ -3,13 +3,26 @@ package com.alancamargo.tubecalculator.fares.testtools
 import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
-import com.alancamargo.tubecalculator.fares.data.model.*
+import com.alancamargo.tubecalculator.fares.data.model.database.DbFareListRoot
+import com.alancamargo.tubecalculator.fares.data.model.responses.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 internal const val STATION_ID = "12345"
 internal const val BUS_AND_TRAM_JOURNEY_COUNT = 2
 internal const val BUS_AND_TRAM_FARE = "£3.30"
 
 private const val HEADER = "Single fare finder"
+
+internal fun stubDbFareListRoot(): DbFareListRoot {
+    val json = Json.encodeToString(listOf(stubFareListRootResponse()))
+    return DbFareListRoot(
+        id = "$STATION_ID#$STATION_ID",
+        originId = STATION_ID,
+        destinationId = STATION_ID,
+        jsonResponse = json
+    )
+}
 
 internal fun stubFareListRootResponse() = FareListRootResponse(
     header = HEADER,

@@ -1,6 +1,9 @@
 package com.alancamargo.tubecalculator.core.di
 
+import android.content.Context
 import com.alancamargo.tubecalculator.core.R
+import com.alancamargo.tubecalculator.core.database.DatabaseProvider
+import com.alancamargo.tubecalculator.core.database.DatabaseProviderImpl
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
@@ -9,6 +12,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -29,4 +33,10 @@ internal object CoreModule {
 
         return RemoteConfigManagerImpl(firebaseRemoteConfig)
     }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseProvider(
+        @ApplicationContext context: Context
+    ): DatabaseProvider = DatabaseProviderImpl(context)
 }

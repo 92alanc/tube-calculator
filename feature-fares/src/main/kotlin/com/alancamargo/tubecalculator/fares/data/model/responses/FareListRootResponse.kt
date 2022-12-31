@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.fares.data.model
+package com.alancamargo.tubecalculator.fares.data.model.responses
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
