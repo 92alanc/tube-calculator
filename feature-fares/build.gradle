@@ -44,6 +44,7 @@ dependencies {
     implementation "$room"
     implementation "$room_runtime"
     implementation "$shimmer"
+    implementation "$work"
 
     kapt "$hilt_compiler"
     kapt "$room_compiler"

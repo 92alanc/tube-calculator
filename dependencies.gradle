@@ -26,4 +26,5 @@ ext {
     shimmer = "com.facebook.shimmer:shimmer:$shimmer_version"
     truth = "com.google.truth:truth:$truth_version"
     turbine = "app.cash.turbine:turbine:$turbine_version"
+    work = "androidx.work:work-runtime:$work_version"
 }
