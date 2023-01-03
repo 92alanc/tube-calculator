@@ -50,4 +50,8 @@ internal class FaresLocalDataSourceImpl @Inject constructor(
             dao.insertFares(dbFareListRoot)
         }
     }
+
+    override suspend fun clearCache() {
+        dao.deleteAllFares()
+    }
 }

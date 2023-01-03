@@ -9,4 +9,6 @@ internal interface FaresLocalDataSource {
     suspend fun getFares(origin: Station, destination: Station): FareListResult
 
     suspend fun saveFares(origin: Station, destination: Station, fares: List<FareListRoot>)
+
+    suspend fun clearCache()
 }

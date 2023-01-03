@@ -81,4 +81,13 @@ class FaresLocalDataSourceImplTest {
         coVerify { mockDao.insertFares(fare = any()) }
         coVerify(exactly = 0) { mockDao.updateFares(fare = any()) }
     }
+
+    @Test
+    fun `clearCache should delete all fares from database`() {
+        // WHEN
+        runBlocking { localDataSource.clearCache() }
+
+        // THEN
+        coVerify { mockDao.deleteAllFares() }
+    }
 }
