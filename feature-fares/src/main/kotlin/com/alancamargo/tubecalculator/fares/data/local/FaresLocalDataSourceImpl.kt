@@ -42,9 +42,9 @@ internal class FaresLocalDataSourceImpl @Inject constructor(
             jsonResponse = Json.encodeToString(fares.map { it.toData() })
         )
 
-        val fare = dao.getFare(id)
+        val count = dao.getFareCount(id)
 
-        if (fare != null) {
+        if (count > 0) {
             dao.updateFares(dbFareListRoot)
         } else {
             dao.insertFares(dbFareListRoot)
