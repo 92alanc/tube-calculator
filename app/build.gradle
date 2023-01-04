@@ -41,11 +41,14 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
     implementation project(':core-design')
     implementation project(':feature-search')
     implementation project(':feature-fares')
 
     implementation "$hilt_android"
+    implementation "$hilt_work"
+    implementation "$work"
 
     kapt "$hilt_compiler"
 }

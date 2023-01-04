@@ -51,9 +51,8 @@ class FaresLocalDataSourceImplTest {
     @Test
     fun `when fares are present on database saveFares should update value`() {
         // GIVEN
-        val expected = stubDbFareListRoot()
         val station = stubStation()
-        coEvery { mockDao.getFare(id = any()) } returns expected
+        coEvery { mockDao.getFareCount(id = any()) } returns 1
 
         // WHEN
         val fares = listOf(stubFareListRoot())
@@ -70,7 +69,7 @@ class FaresLocalDataSourceImplTest {
     fun `when fares are not present on database saveFares should insert value`() {
         // GIVEN
         val station = stubStation()
-        coEvery { mockDao.getFare(id = any()) } returns null
+        coEvery { mockDao.getFareCount(id = any()) } returns 0
 
         // WHEN
         val fares = listOf(stubFareListRoot())
@@ -81,5 +80,14 @@ class FaresLocalDataSourceImplTest {
         // THEN
         coVerify { mockDao.insertFares(fare = any()) }
         coVerify(exactly = 0) { mockDao.updateFares(fare = any()) }
+    }
+
+    @Test
+    fun `clearCache should delete all fares from database`() {
+        // WHEN
+        runBlocking { localDataSource.clearCache() }
+
+        // THEN
+        coVerify { mockDao.deleteAllFares() }
     }
 }

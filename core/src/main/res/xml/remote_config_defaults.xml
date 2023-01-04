@@ -4,4 +4,8 @@
     <key>bus_and_tram_base_fare</key>
     <value>1.65</value>
   </entry>
+  <entry>
+    <key>should_clear_cache</key>
+    <value>false</value>
+  </entry>
 </defaults>

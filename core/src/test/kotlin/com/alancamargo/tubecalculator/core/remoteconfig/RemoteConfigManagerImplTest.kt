@@ -25,4 +25,16 @@ class RemoteConfigManagerImplTest {
         // THEN
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `getBoolean should get boolean value from firebase`() {
+        // GIVEN
+        every { mockFirebaseRemoteConfig.getBoolean(KEY) } returns true
+
+        // WHEN
+        val actual = remoteConfigManager.getBoolean(KEY)
+
+        // THEN
+        assertThat(actual).isTrue()
+    }
 }
