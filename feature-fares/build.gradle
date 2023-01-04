@@ -41,6 +41,7 @@ dependencies {
     implementation "$android_appcompat"
     implementation "$android_material"
     implementation "$hilt_android"
+    implementation "$hilt_work"
     implementation "$room"
     implementation "$room_runtime"
     implementation "$shimmer"

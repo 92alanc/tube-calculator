@@ -1,7 +1,5 @@
 package com.alancamargo.tubecalculator.fares.di
 
-import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSource
-import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSourceImpl
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.fares.data.repository.FaresRepositoryImpl
@@ -37,10 +35,4 @@ internal abstract class FaresModule {
     abstract fun bindCalculateBusAndTramFareUseCase(
         impl: CalculateBusAndTramFareUseCaseImpl
     ): CalculateBusAndTramFareUseCase
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindFaresLocalDataSource(
-        impl: FaresLocalDataSourceImpl
-    ): FaresLocalDataSource
 }

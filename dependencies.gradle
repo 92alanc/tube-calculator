@@ -10,6 +10,7 @@ ext {
     firebase_bom = "com.google.firebase:firebase-bom:$firebase_bom_version"
     firebase_config = "com.google.firebase:firebase-config"
     hilt_android = "com.google.dagger:hilt-android:$hilt_version"
+    hilt_work = "androidx.hilt:hilt-work:$hilt_work_version"
     hilt_compiler = "com.google.dagger:hilt-compiler:$hilt_version"
     junit = "junit:junit:$junit_version"
     kotlin_serialisation = "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialisation_version"

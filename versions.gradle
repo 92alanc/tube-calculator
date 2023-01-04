@@ -9,6 +9,7 @@ ext {
     firebase_bom_version = '31.1.1'
     google_services_version = '4.3.14'
     hilt_version = '2.44.2'
+    hilt_work_version = '1.0.0'
     junit_version = '4.13.2'
     kotlin_version = '1.7.20'
     kotlin_serialisation_version = '1.4.1'
