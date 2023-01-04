@@ -1,8 +1,6 @@
 package com.alancamargo.tubecalculator.di
 
 import android.content.Context
-import androidx.startup.Initializer
-import androidx.work.Configuration
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
@@ -13,17 +11,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object WorkManagerModule : Initializer<WorkManager> {
+internal object WorkManagerModule {
 
     @Provides
     @Singleton
-    override fun create(@ApplicationContext context: Context): WorkManager {
-        val config = Configuration.Builder().build()
-        WorkManager.initialize(context, config)
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         return WorkManager.getInstance(context)
-    }
-
-    override fun dependencies(): List<Class<out Initializer<*>>> {
-        return emptyList()
     }
 }
