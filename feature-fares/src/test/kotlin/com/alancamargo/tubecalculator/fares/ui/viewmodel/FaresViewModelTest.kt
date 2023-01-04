@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCase
@@ -14,6 +15,7 @@ import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -26,11 +28,13 @@ class FaresViewModelTest {
     private val mockGetFaresUseCase = mockk<GetFaresUseCase>()
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
     private val mockBulletListFormatter = mockk<BulletListFormatter>()
+    private val mockFaresCacheWorkScheduler = mockk<FaresCacheWorkScheduler>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
     private val viewModel = FaresViewModel(
         mockGetFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
         mockBulletListFormatter,
+        mockFaresCacheWorkScheduler,
         dispatcher
     )
 
@@ -48,6 +52,24 @@ class FaresViewModelTest {
         every {
             mockCalculateBusAndTramFareUseCase(BUS_AND_TRAM_JOURNEY_COUNT)
         } returns BUS_AND_TRAM_FARE
+    }
+
+    @Test
+    fun `onCreate should schedule fares cache background work`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = any(), destination = any())
+        } returns flowOf(FareListResult.NetworkError)
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // WHEN
+        verify { mockFaresCacheWorkScheduler.scheduleFaresCacheBackgroundWork() }
     }
 
     @Test

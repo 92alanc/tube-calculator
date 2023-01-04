@@ -40,6 +40,7 @@ dependencies {
     implementation "$room"
     implementation "$room_runtime"
     implementation "androidx.room:room-runtime:$room_version"
+    implementation "$work"
 
     api "$android_activity"
     api "$kotlin_serialisation"

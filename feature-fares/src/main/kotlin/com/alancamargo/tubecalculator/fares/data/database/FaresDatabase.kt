@@ -6,7 +6,7 @@ import com.alancamargo.tubecalculator.fares.data.model.database.DbFareListRoot
 
 @Database(
     entities = [DbFareListRoot::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 internal abstract class FaresDatabase : RoomDatabase() {

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
+import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCase
@@ -22,6 +23,7 @@ internal class FaresViewModel @Inject constructor(
     private val getFaresUseCase: GetFaresUseCase,
     private val calculateBusAndTramFareUseCase: CalculateBusAndTramFareUseCase,
     private val bulletListFormatter: BulletListFormatter,
+    private val faresCacheWorkScheduler: FaresCacheWorkScheduler,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -43,6 +45,8 @@ internal class FaresViewModel @Inject constructor(
             } else {
                 _state.update { it.onShowOnlyBusAndTramFare() }
             }
+
+            faresCacheWorkScheduler.scheduleFaresCacheBackgroundWork()
         }
     }
 
