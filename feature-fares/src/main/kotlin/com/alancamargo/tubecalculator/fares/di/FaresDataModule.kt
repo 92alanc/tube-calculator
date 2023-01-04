@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.fares.di
 
-import androidx.work.WorkManager
+import android.content.Context
 import com.alancamargo.tubecalculator.core.database.DatabaseProvider
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.fares.data.database.FaresDao
@@ -13,6 +13,7 @@ import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkSchedulerImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -40,8 +41,8 @@ internal object FaresDataModule {
     @Provides
     @Singleton
     fun provideFaresCacheWorkScheduler(
-        workManager: WorkManager
-    ): FaresCacheWorkScheduler = FaresCacheWorkSchedulerImpl(workManager)
+        @ApplicationContext context: Context
+    ): FaresCacheWorkScheduler = FaresCacheWorkSchedulerImpl(context)
 
     @Provides
     @Singleton

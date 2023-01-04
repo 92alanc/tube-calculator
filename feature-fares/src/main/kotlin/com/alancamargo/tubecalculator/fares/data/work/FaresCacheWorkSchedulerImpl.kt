@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.fares.data.work
 
+import android.content.Context
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -9,10 +10,11 @@ import javax.inject.Inject
 private const val WORK_NAME = "fares_cache"
 
 internal class FaresCacheWorkSchedulerImpl @Inject constructor(
-    private val workManager: WorkManager
+    private val context: Context
 ) : FaresCacheWorkScheduler {
 
     override fun scheduleFaresCacheBackgroundWork() {
+        val workManager = WorkManager.getInstance(context)
         val request = PeriodicWorkRequestBuilder<FaresCacheWorker>(
             15,
             TimeUnit.MINUTES

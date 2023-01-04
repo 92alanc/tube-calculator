@@ -1,7 +1,6 @@
 package com.alancamargo.tubecalculator.fares.data.work
 
 import android.content.Context
-import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -22,14 +21,8 @@ internal class FaresCacheWorker @AssistedInject constructor(
     private val localDataSource: FaresLocalDataSource
 ) : CoroutineWorker(context, workerParameters) {
 
-    init {
-        Log.d("TEST_ALAN", "Worker created")
-    }
-
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val shouldClearCache = remoteConfigManager.getBoolean(REMOTE_CONFIG_KEY)
-        Log.d("TEST_ALAN", "Remote: ${remoteConfigManager.hashCode()}")
-        Log.d("TEST_ALAN", "Local: ${localDataSource.hashCode()}")
 
         if (shouldClearCache) {
             localDataSource.clearCache()

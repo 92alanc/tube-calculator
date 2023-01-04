@@ -47,6 +47,7 @@ dependencies {
     implementation "$shimmer"
     implementation "$work"
 
+    kapt "$android_hilt_compiler"
     kapt "$hilt_compiler"
     kapt "$room_compiler"
 
