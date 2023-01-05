@@ -10,6 +10,8 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.log.LoggerImpl
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
+import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
+import com.alancamargo.tubecalculator.core.preferences.PreferencesManagerImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -60,4 +62,10 @@ internal object CoreModule {
         val crashlytics = Firebase.crashlytics
         return LoggerImpl(crashlytics)
     }
+
+    @Provides
+    @Singleton
+    fun providePreferencesManager(
+        @ApplicationContext context: Context
+    ): PreferencesManager = PreferencesManagerImpl(context)
 }
