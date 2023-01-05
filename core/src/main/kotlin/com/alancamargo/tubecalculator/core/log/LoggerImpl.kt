@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.tools
+package com.alancamargo.tubecalculator.core.log
 
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics

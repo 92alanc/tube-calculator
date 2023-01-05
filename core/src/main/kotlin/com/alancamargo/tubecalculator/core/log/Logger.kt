@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.tools
+package com.alancamargo.tubecalculator.core.log
 
 interface Logger {
 
