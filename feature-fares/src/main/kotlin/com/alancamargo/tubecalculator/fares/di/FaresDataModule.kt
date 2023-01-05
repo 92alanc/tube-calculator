@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.fares.di
 
 import android.content.Context
-import com.alancamargo.tubecalculator.core.database.DatabaseProvider
+import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.fares.data.database.FaresDao
 import com.alancamargo.tubecalculator.fares.data.database.FaresDatabase
@@ -29,8 +29,8 @@ internal object FaresDataModule {
 
     @Provides
     @Singleton
-    fun provideFaresDao(databaseProvider: DatabaseProvider): FaresDao {
-        val database = databaseProvider.provideDatabase(
+    fun provideFaresDao(localDatabaseProvider: LocalDatabaseProvider): FaresDao {
+        val database = localDatabaseProvider.provideDatabase(
             clazz = FaresDatabase::class,
             databaseName = "fares"
         )

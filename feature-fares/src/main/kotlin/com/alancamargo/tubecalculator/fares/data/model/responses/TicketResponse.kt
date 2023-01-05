@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class TicketResponse(
-    @SerialName("ticketType") val type: TicketTypeResponse,
-    @SerialName("ticketTime") val time: TicketTimeResponse,
-    @SerialName("cost") val cost: String
+    @SerialName("ticketType") val type: TicketTypeResponse = TicketTypeResponse(),
+    @SerialName("ticketTime") val time: TicketTimeResponse = TicketTimeResponse(),
+    @SerialName("cost") val cost: String = ""
 )

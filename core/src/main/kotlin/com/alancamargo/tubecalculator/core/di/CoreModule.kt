@@ -2,12 +2,16 @@ package com.alancamargo.tubecalculator.core.di
 
 import android.content.Context
 import com.alancamargo.tubecalculator.core.R
-import com.alancamargo.tubecalculator.core.database.DatabaseProvider
-import com.alancamargo.tubecalculator.core.database.DatabaseProviderImpl
+import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
+import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderImpl
+import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
+import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabaseImpl
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
@@ -36,7 +40,14 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideDatabaseProvider(
+    fun provideLocalDatabaseProvider(
         @ApplicationContext context: Context
-    ): DatabaseProvider = DatabaseProviderImpl(context)
+    ): LocalDatabaseProvider = LocalDatabaseProviderImpl(context)
+
+    @Provides
+    @Singleton
+    fun provideRemoteDatabase(): RemoteDatabase {
+        val firestore = Firebase.firestore
+        return RemoteDatabaseImpl(firestore)
+    }
 }

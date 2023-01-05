@@ -4,4 +4,4 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class FareMessageResponse(@SerialName("messageText") val message: String)
+internal data class FareMessageResponse(@SerialName("messageText") val message: String = "")
