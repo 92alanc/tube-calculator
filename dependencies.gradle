@@ -10,6 +10,7 @@ ext {
     coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
     firebase_bom = "com.google.firebase:firebase-bom:$firebase_bom_version"
     firebase_config = "com.google.firebase:firebase-config"
+    firebase_crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     firebase_firestore = "com.google.firebase:firebase-firestore-ktx"
     hilt_android = "com.google.dagger:hilt-android:$hilt_version"
     hilt_work = "androidx.hilt:hilt-work:$hilt_work_version"

@@ -12,6 +12,7 @@ import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
 import com.alancamargo.tubecalculator.core.tools.Logger
 import com.alancamargo.tubecalculator.core.tools.LoggerImpl
+import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -55,5 +56,8 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideLogger(): Logger = LoggerImpl()
+    fun provideLogger(): Logger {
+        val crashlytics = Firebase.crashlytics
+        return LoggerImpl(crashlytics)
+    }
 }

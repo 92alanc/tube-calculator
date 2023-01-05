@@ -33,6 +33,7 @@ dependencies {
     implementation "$android_appcompat"
     implementation "$android_material"
     implementation "$firebase_config"
+    implementation "$firebase_crashlytics"
     implementation "$firebase_firestore"
     implementation "$hilt_android"
     implementation "$kotlin_serialisation_converter"
