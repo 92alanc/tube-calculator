@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.fares.data.remote
 
+import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
 import com.alancamargo.tubecalculator.fares.data.service.FaresService
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.testtools.STATION_ID
@@ -17,7 +18,8 @@ import retrofit2.Response
 class FaresRemoteDataSourceImplTest {
 
     private val mockService = mockk<FaresService>()
-    private val remoteDataSource = FaresRemoteDataSourceImpl(mockService)
+    private val mockRemoteDatabase = mockk<RemoteDatabase>(relaxed = true)
+    private val remoteDataSource = FaresRemoteDataSourceImpl(mockService, mockRemoteDatabase)
 
     @Test
     fun `when service returns success getFares should return Success`() {

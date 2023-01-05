@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class TicketTimeResponse(
-    @SerialName("type") val label: String,
-    @SerialName("description") val description: String
+    @SerialName("type") val label: String = "",
+    @SerialName("description") val description: String = ""
 )

@@ -4,4 +4,4 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class TicketTypeResponse(@SerialName("type") val label: String)
+internal data class TicketTypeResponse(@SerialName("type") val label: String = "")
