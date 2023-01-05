@@ -10,6 +10,8 @@ import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
+import com.alancamargo.tubecalculator.core.tools.Logger
+import com.alancamargo.tubecalculator.core.tools.LoggerImpl
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -50,4 +52,8 @@ internal object CoreModule {
         val firestore = Firebase.firestore
         return RemoteDatabaseImpl(firestore)
     }
+
+    @Provides
+    @Singleton
+    fun provideLogger(): Logger = LoggerImpl()
 }
