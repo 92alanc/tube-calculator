@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
+import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
     private val searchStationUseCase: SearchStationUseCase,
+    private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -35,10 +37,17 @@ internal class StationSearchViewModel @Inject constructor(
             searchStationUseCase(query).onStart {
                 _state.update { it.onLoading() }
             }.catch { throwable ->
+                logger.error(throwable)
                 handleThrowable(throwable)
             }.onCompletion {
                 _state.update { it.onStopLoading() }
-            }.collect(::handleResult)
+            }.collect { result ->
+                if (result is StationListResult.ServerError || result is StationListResult.GenericError) {
+                    logger.debug("Query: $query. Result: $result")
+                }
+
+                handleResult(result)
+            }
         }
     }
 

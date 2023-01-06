@@ -2,6 +2,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
+import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
@@ -17,10 +18,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class FaresViewModelTest {
@@ -29,12 +32,14 @@ class FaresViewModelTest {
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
     private val mockBulletListFormatter = mockk<BulletListFormatter>()
     private val mockFaresCacheWorkScheduler = mockk<FaresCacheWorkScheduler>(relaxed = true)
+    private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
     private val viewModel = FaresViewModel(
         mockGetFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
         mockBulletListFormatter,
         mockFaresCacheWorkScheduler,
+        mockLogger,
         dispatcher
     )
 
@@ -99,6 +104,24 @@ class FaresViewModelTest {
     }
 
     @Test
+    fun `when use case returns Success onCreate should not log result`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = station, destination = station)
+        } returns flowOf(FareListResult.Success(listOf(stubFareListRoot())))
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        verify(exactly = 0) { mockLogger.debug(message = any()) }
+    }
+
+    @Test
     fun `with only bus and tram fare onCreate should set correct state`() {
         collector.test { states, _ ->
             // WHEN
@@ -119,7 +142,20 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError searchStation should set correct state and send ShowErrorDialogue action`() {
+    fun `with only bus and tram fare onCreate should not log result`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = null,
+            destination = null,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        verify(exactly = 0) { mockLogger.debug(message = any()) }
+    }
+
+    @Test
+    fun `when use case returns NetworkError onCreate should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -141,7 +177,25 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError searchStation should set correct state and send ShowErrorDialogue action`() {
+    fun `when use case returns NetworkError onCreate should not log result`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = station, destination = station)
+        } returns flowOf(FareListResult.NetworkError)
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        verify(exactly = 0) { mockLogger.debug(message = any()) }
+    }
+
+    @Test
+    fun `when use case returns ServerError onCreate should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -163,7 +217,26 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError searchStation should set correct state and send ShowErrorDialogue action`() {
+    fun `when use case returns ServerError onCreate should log result`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = station, destination = station)
+        } returns flowOf(FareListResult.ServerError)
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${FareListResult.ServerError}"
+        verify { mockLogger.debug(message) }
+    }
+
+    @Test
+    fun `when use case returns GenericError onCreate should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -182,6 +255,86 @@ class FaresViewModelTest {
             assertThat(states).contains(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC))
         }
+    }
+
+    @Test
+    fun `when use case returns GenericError onCreate should log result`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = station, destination = station)
+        } returns flowOf(FareListResult.GenericError)
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${FareListResult.GenericError}"
+        verify { mockLogger.debug(message) }
+    }
+
+    @Test
+    fun `when use case throws IOException onCreate should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            every {
+                mockGetFaresUseCase(origin = station, destination = station)
+            } returns flow { throw IOException() }
+
+            // WHEN
+            viewModel.onCreate(
+                origin = uiStation,
+                destination = uiStation,
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            )
+
+            // THEN
+            val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK)
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when use case throws generic exception onCreate should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            every {
+                mockGetFaresUseCase(origin = station, destination = station)
+            } returns flow { throw Throwable() }
+
+            // WHEN
+            viewModel.onCreate(
+                origin = uiStation,
+                destination = uiStation,
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            )
+
+            // THEN
+            val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC)
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when use case throws exception onCreate should log exception`() {
+        // GIVEN
+        val exception = Throwable()
+        every {
+            mockGetFaresUseCase(origin = station, destination = station)
+        } returns flow { throw exception }
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        verify { mockLogger.error(exception) }
     }
 
     @Test

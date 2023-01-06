@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
+import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
@@ -24,6 +25,7 @@ internal class FaresViewModel @Inject constructor(
     private val calculateBusAndTramFareUseCase: CalculateBusAndTramFareUseCase,
     private val bulletListFormatter: BulletListFormatter,
     private val faresCacheWorkScheduler: FaresCacheWorkScheduler,
+    private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -76,10 +78,18 @@ internal class FaresViewModel @Inject constructor(
         ).onStart {
             _state.update { it.onLoading() }
         }.catch { throwable ->
+            logger.error(throwable)
             handleThrowable(throwable)
         }.onCompletion {
             _state.update { it.onStopLoading() }
-        }.collect(::handleResult)
+        }.collect { result ->
+            if (result is FareListResult.ServerError || result is FareListResult.GenericError) {
+                val message = "Origin: ${origin.name}. Destination: ${destination.name}. Result: $result"
+                logger.debug(message)
+            }
+
+            handleResult(result)
+        }
     }
 
     private fun calculateBusAndTramFare(busAndTramJourneyCount: Int) {
