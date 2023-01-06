@@ -1,8 +1,11 @@
 package com.alancamargo.tubecalculator.settings.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.settings.databinding.ActivitySettingsBinding
 import com.alancamargo.tubecalculator.settings.ui.viewmodel.SettingsViewModel
@@ -37,5 +40,9 @@ internal class SettingsActivity : AppCompatActivity() {
 
     private fun handleState(state: SettingsViewState) {
         binding.switchCrashLogging.isChecked = state.isCrashLoggingEnabled
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = context.createIntent(SettingsActivity::class)
     }
 }
