@@ -19,16 +19,13 @@ internal class SettingsViewModel @Inject constructor(
 
     val state: StateFlow<SettingsViewState> = _state
 
-    private var isCrashLoggingEnabled = false
-
     fun onCreate() {
-        isCrashLoggingEnabled = isCrashLoggingEnabledUseCase()
+        val isCrashLoggingEnabled = isCrashLoggingEnabledUseCase()
         _state.update { it.setCrashLoggingEnabled(isCrashLoggingEnabled) }
     }
 
-    fun onCrashLoggingToggled() {
-        isCrashLoggingEnabled = !isCrashLoggingEnabled
-        setCrashLoggingEnabledUseCase(isCrashLoggingEnabled)
-        _state.update { it.setCrashLoggingEnabled(isCrashLoggingEnabled) }
+    fun onCrashLoggingToggled(isEnabled: Boolean) {
+        setCrashLoggingEnabledUseCase(isEnabled)
+        _state.update { it.setCrashLoggingEnabled(isEnabled) }
     }
 }

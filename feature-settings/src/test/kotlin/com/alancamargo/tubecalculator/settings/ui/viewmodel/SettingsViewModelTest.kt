@@ -49,7 +49,7 @@ class SettingsViewModelTest {
     fun `onCrashLoggingToggled should update state`() {
         collector.test { states, _ ->
             // WHEN
-            viewModel.onCrashLoggingToggled()
+            viewModel.onCrashLoggingToggled(isEnabled = true)
 
             // THEN
             val expected = SettingsViewState(isCrashLoggingEnabled = true)
@@ -60,7 +60,7 @@ class SettingsViewModelTest {
     @Test
     fun `onCrashLoggingToggled should update setting`() {
         // WHEN
-        viewModel.onCrashLoggingToggled()
+        viewModel.onCrashLoggingToggled(isEnabled = true)
 
         // THEN
         verify { mockSetCrashLoggingEnabledUseCase(isEnabled = true) }
