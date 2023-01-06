@@ -4,8 +4,7 @@ import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.repository.SearchRepositoryImpl
 import com.alancamargo.tubecalculator.search.domain.repository.SearchRepository
-import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
-import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCaseImpl
+import com.alancamargo.tubecalculator.search.domain.usecase.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +32,14 @@ internal abstract class SearchModule {
     abstract fun bindSearchStationUseCase(
         impl: SearchStationUseCaseImpl
     ): SearchStationUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindIsFirstAccessUseCase(impl: IsFirstAccessUseCaseImpl): IsFirstAccessUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDisableFirstAccessUseCase(
+        impl: DisableFirstAccessUseCaseImpl
+    ): DisableFirstAccessUseCase
 }
