@@ -26,12 +26,15 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         context: Context,
         titleRes: Int,
         messageRes: Int,
+        buttonTextRes: Int,
         onDismiss: (() -> Unit)?
     ) {
         val builder = getBuilder(
             context = context,
             titleRes = titleRes,
-            messageRes = messageRes
+            messageRes = messageRes,
+            buttonTextRes = buttonTextRes,
+            onDismiss = onDismiss
         )
 
         builder.show()
@@ -51,6 +54,7 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         context: Context,
         titleRes: Int,
         messageRes: Int,
+        buttonTextRes: Int = R.string.ok,
         onDismiss: (() -> Unit)? = null
     ): MaterialAlertDialogBuilder {
         val builder = MaterialAlertDialogBuilder(context)
@@ -59,7 +63,7 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
             .setCancelable(false)
 
         onDismiss?.let {
-            builder.setNeutralButton(R.string.ok) { dialogue, _ ->
+            builder.setNeutralButton(buttonTextRes) { dialogue, _ ->
                 it()
                 dialogue.dismiss()
             }

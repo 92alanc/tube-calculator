@@ -15,4 +15,7 @@
     <string name="search_app_info">App developed by Alan Camargo. Powered by TfL Open Data. Contains OS data © Crown copyright and database rights 2016. Contains Geomni UK Map data © and database rights [2019].</string>
     <string name="search">Search</string>
     <string name="clear">Clear</string>
+    <string name="first_access_title">Welcome!</string>
+    <string name="first_access_message">Since this is the first time you\'re using this app, perhaps it will be a good idea to have a quick look at the settings to make sure you\'re happy with the way your data is handled. You can always change it later if you want.</string>
+    <string name="sounds_good">Sounds good</string>
 </resources>

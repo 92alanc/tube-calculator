@@ -12,6 +12,7 @@ import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
+import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
@@ -45,6 +46,9 @@ internal class SearchActivity : AppCompatActivity() {
     lateinit var faresActivityNavigation: FaresActivityNavigation
 
     @Inject
+    lateinit var settingsActivityNavigation: SettingsActivityNavigation
+
+    @Inject
     lateinit var dialogueHelper: DialogueHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +57,7 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
+        viewModel.onCreate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -62,6 +67,11 @@ internal class SearchActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.itemSettings -> {
+                viewModel.onSettingsClicked()
+                true
+            }
+
             R.id.itemAbout -> {
                 viewModel.onAppInfoClicked()
                 true
@@ -82,6 +92,10 @@ internal class SearchActivity : AppCompatActivity() {
             is SearchViewAction.ShowAppInfo -> showAppInfoDialogue()
 
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
+
+            is SearchViewAction.NavigateToSettings -> navigateToSettings()
+
+            is SearchViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
         }
     }
 
@@ -142,6 +156,20 @@ internal class SearchActivity : AppCompatActivity() {
             destination = destination,
             busAndTramJourneyCount = busAndTramJourneyCount
         )
+    }
+
+    private fun showFirstAccessDialogue() {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R.string.first_access_title,
+            messageRes = R.string.first_access_message,
+            buttonTextRes = R.string.sounds_good,
+            onDismiss = viewModel::onFirstAccessDialogueDismissed
+        )
+    }
+
+    private fun navigateToSettings() {
+        settingsActivityNavigation.startActivity(context = this)
     }
 
     private fun showAppInfoDialogue() {

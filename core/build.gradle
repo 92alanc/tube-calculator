@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.library'
-    id 'com.google.firebase.crashlytics'
     id 'com.google.gms.google-services'
     id 'kotlin-android'
     id 'kotlin-kapt'
