@@ -16,7 +16,7 @@ class IsFirstAccessUseCaseImplTest {
     @Test
     fun `invoke should get value from preferences manager`() {
         // GIVEN
-        every { mockPreferencesManager.getBoolean(KEY, defaultValue = false) } returns true
+        every { mockPreferencesManager.getBoolean(KEY, defaultValue = true) } returns true
 
         // WHEN
         val actual = useCase()

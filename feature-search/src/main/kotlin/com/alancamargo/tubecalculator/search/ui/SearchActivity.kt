@@ -57,6 +57,7 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
+        viewModel.onCreate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -93,6 +94,8 @@ internal class SearchActivity : AppCompatActivity() {
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
 
             is SearchViewAction.NavigateToSettings -> navigateToSettings()
+
+            is SearchViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
         }
     }
 
@@ -152,6 +155,16 @@ internal class SearchActivity : AppCompatActivity() {
             origin = origin,
             destination = destination,
             busAndTramJourneyCount = busAndTramJourneyCount
+        )
+    }
+
+    private fun showFirstAccessDialogue() {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R.string.first_access_title,
+            messageRes = R.string.first_access_message,
+            buttonTextRes = R.string.sounds_good,
+            onDismiss = viewModel::onFirstAccessDialogueDismissed
         )
     }
 

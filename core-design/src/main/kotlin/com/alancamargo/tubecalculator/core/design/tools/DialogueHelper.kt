@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.core.design.tools
 import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.alancamargo.tubecalculator.core.design.R
 
 interface DialogueHelper {
 
@@ -17,6 +18,7 @@ interface DialogueHelper {
         context: Context,
         @StringRes titleRes: Int,
         @StringRes messageRes: Int,
+        @StringRes buttonTextRes: Int = R.string.ok,
         onDismiss: (() -> Unit)? = null
     )
 

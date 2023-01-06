@@ -16,4 +16,6 @@ internal sealed class SearchViewAction {
     object ShowAppInfo : SearchViewAction()
 
     object NavigateToSettings : SearchViewAction()
+
+    object ShowFirstAccessDialogue : SearchViewAction()
 }

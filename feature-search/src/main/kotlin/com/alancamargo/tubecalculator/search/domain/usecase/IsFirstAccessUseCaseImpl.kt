@@ -9,5 +9,5 @@ internal class IsFirstAccessUseCaseImpl @Inject constructor(
     private val preferencesManager: PreferencesManager
 ) : IsFirstAccessUseCase {
 
-    override fun invoke(): Boolean = preferencesManager.getBoolean(KEY, defaultValue = false)
+    override fun invoke(): Boolean = preferencesManager.getBoolean(KEY, defaultValue = true)
 }

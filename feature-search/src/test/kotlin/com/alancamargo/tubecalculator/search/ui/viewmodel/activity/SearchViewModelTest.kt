@@ -1,24 +1,85 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
+import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.testtools.stubUiStation
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
+    private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
+    private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
-    private val viewModel = SearchViewModel(dispatcher)
+    private val viewModel = SearchViewModel(
+        mockIsFirstAccessUseCase,
+        mockDisableFirstAccessUseCase,
+        dispatcher
+    )
 
     private val collector = ViewModelFlowCollector(
         stateFlow = viewModel.action,
         actionFlow = viewModel.action,
         dispatcher = dispatcher
     )
+
+    @Test
+    fun `on first access onCreate should send ShowFirstAccessDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            every { mockIsFirstAccessUseCase() } returns true
+
+            // WHEN
+            viewModel.onCreate()
+
+            // THEN
+            delay(100)
+            assertThat(actions).contains(SearchViewAction.ShowFirstAccessDialogue)
+        }
+    }
+
+    @Test
+    fun `when not on first access onCreate should not send ShowFirstAccessDialogue action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            every { mockIsFirstAccessUseCase() } returns false
+
+            // WHEN
+            viewModel.onCreate()
+
+            // THEN
+            assertThat(actions).doesNotContain(SearchViewAction.ShowFirstAccessDialogue)
+        }
+    }
+
+    @Test
+    fun `onFirstAccessDialogueDismissed should disable first access`() {
+        // WHEN
+        viewModel.onFirstAccessDialogueDismissed()
+
+        // THEN
+        verify { mockDisableFirstAccessUseCase() }
+    }
+
+    @Test
+    fun `onFirstAccessDialogueDismissed should send NavigateToSettings action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onFirstAccessDialogueDismissed()
+
+            // THEN
+            assertThat(actions).contains(SearchViewAction.NavigateToSettings)
+        }
+    }
 
     @Test
     fun `onSettingsClicked should send NavigateToSettings action`() {
