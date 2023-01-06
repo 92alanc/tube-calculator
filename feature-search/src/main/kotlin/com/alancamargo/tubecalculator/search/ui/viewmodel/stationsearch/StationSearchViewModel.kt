@@ -42,7 +42,7 @@ internal class StationSearchViewModel @Inject constructor(
             }.onCompletion {
                 _state.update { it.onStopLoading() }
             }.collect { result ->
-                if (result !is StationListResult.Success) {
+                if (result is StationListResult.ServerError || result is StationListResult.GenericError) {
                     logger.debug("Query: $query. Result: $result")
                 }
 

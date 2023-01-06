@@ -98,7 +98,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Empty searchStation should log query and result`() {
+    fun `when use case returns Empty searchStation should not log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
@@ -107,8 +107,7 @@ class StationSearchViewModelTest {
             viewModel.searchStation(SEARCH_QUERY)
 
             // THEN
-            val message = "Query: $SEARCH_QUERY. Result: ${StationListResult.Empty}"
-            verify { mockLogger.debug(message) }
+            verify(exactly = 0) { mockLogger.debug(message = any()) }
         }
     }
 
@@ -136,7 +135,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError searchStation should log query and result`() {
+    fun `when use case returns NetworkError searchStation should not log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every {
@@ -147,8 +146,7 @@ class StationSearchViewModelTest {
             viewModel.searchStation(SEARCH_QUERY)
 
             // THEN
-            val message = "Query: $SEARCH_QUERY. Result: ${StationListResult.NetworkError}"
-            verify { mockLogger.debug(message) }
+            verify(exactly = 0) { mockLogger.debug(message = any()) }
         }
     }
 
@@ -250,23 +248,6 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case throws IOException searchStation should log exception`() {
-        collector.test { _, _ ->
-            // GIVEN
-            val exception = IOException()
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns flow { throw exception }
-
-            // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
-
-            // THEN
-            verify { mockLogger.error(exception) }
-        }
-    }
-
-    @Test
     fun `when use case throws generic exception searchStation should send ShowErrorDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
@@ -284,7 +265,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case throws generic exception searchStation should log exception`() {
+    fun `when use case throws exception searchStation should log exception`() {
         collector.test { _, _ ->
             // GIVEN
             val exception = Throwable()
