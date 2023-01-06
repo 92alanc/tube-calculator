@@ -21,6 +21,12 @@ internal class SearchViewModel @Inject constructor(
 
     val action: SharedFlow<SearchViewAction> = _action
 
+    fun onSettingsClicked() {
+        viewModelScope.launch(dispatcher) {
+            _action.emit(SearchViewAction.NavigateToSettings)
+        }
+    }
+
     fun onAppInfoClicked() {
         viewModelScope.launch(dispatcher) {
             _action.emit(SearchViewAction.ShowAppInfo)

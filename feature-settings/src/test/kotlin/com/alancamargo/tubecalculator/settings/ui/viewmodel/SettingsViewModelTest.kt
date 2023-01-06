@@ -18,15 +18,16 @@ class SettingsViewModelTest {
     private val mockSetCrashLoggingEnabledUseCase = mockk<SetCrashLoggingEnabledUseCase>(
         relaxed = true
     )
+    private val dispatcher = TestCoroutineDispatcher()
     private val viewModel = SettingsViewModel(
         mockIsCrashLoggingEnabledUseCase,
-        mockSetCrashLoggingEnabledUseCase
+        mockSetCrashLoggingEnabledUseCase,
+        dispatcher
     )
 
-    private val dispatcher = TestCoroutineDispatcher()
     private val collector = ViewModelFlowCollector(
         viewModel.state,
-        viewModel.state,
+        viewModel.action,
         dispatcher
     )
 
@@ -64,5 +65,16 @@ class SettingsViewModelTest {
 
         // THEN
         verify { mockSetCrashLoggingEnabledUseCase(isEnabled = true) }
+    }
+
+    @Test
+    fun `onBackClicked should send Finish action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onBackClicked()
+
+            // THEN
+            assertThat(actions).contains(SettingsViewAction.Finish)
+        }
     }
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.settings.databinding.ActivitySettingsBinding
+import com.alancamargo.tubecalculator.settings.ui.viewmodel.SettingsViewAction
 import com.alancamargo.tubecalculator.settings.ui.viewmodel.SettingsViewModel
 import com.alancamargo.tubecalculator.settings.ui.viewmodel.SettingsViewState
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +27,13 @@ internal class SettingsActivity : AppCompatActivity() {
         _binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpUi()
-        observeViewModelFlow(viewModel.state, ::handleState)
+        observeViewStateAndAction()
         viewModel.onCreate()
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        viewModel.onBackClicked()
+        return true
     }
 
     private fun setUpUi() = with(binding) {
@@ -38,8 +44,19 @@ internal class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    private fun observeViewStateAndAction() {
+        observeViewModelFlow(viewModel.state, ::handleState)
+        observeViewModelFlow(viewModel.action, ::handleAction)
+    }
+
     private fun handleState(state: SettingsViewState) {
         binding.switchCrashLogging.isChecked = state.isCrashLoggingEnabled
+    }
+
+    private fun handleAction(action: SettingsViewAction) {
+        when (action) {
+            is SettingsViewAction.Finish -> finish()
+        }
     }
 
     companion object {

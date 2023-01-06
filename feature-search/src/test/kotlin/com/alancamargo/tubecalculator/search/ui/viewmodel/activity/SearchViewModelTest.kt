@@ -21,6 +21,17 @@ class SearchViewModelTest {
     )
 
     @Test
+    fun `onSettingsClicked should send NavigateToSettings action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onSettingsClicked()
+
+            // THEN
+            assertThat(actions).contains(SearchViewAction.NavigateToSettings)
+        }
+    }
+
+    @Test
     fun `onAppInfoClicked should send ShowAppInfo action`() {
         collector.test { _, actions ->
             // WHEN
