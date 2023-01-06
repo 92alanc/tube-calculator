@@ -33,28 +33,28 @@ class SearchViewModelTest {
     )
 
     @Test
-    fun `on first access onCreate should send ShowFirstAccessDialogue action`() {
+    fun `on first access onStart should send ShowFirstAccessDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             every { mockIsFirstAccessUseCase() } returns true
 
             // WHEN
-            viewModel.onCreate()
+            viewModel.onStart()
 
             // THEN
-            delay(100)
+            delay(200)
             assertThat(actions).contains(SearchViewAction.ShowFirstAccessDialogue)
         }
     }
 
     @Test
-    fun `when not on first access onCreate should not send ShowFirstAccessDialogue action`() {
+    fun `when not on first access onStart should not send ShowFirstAccessDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             every { mockIsFirstAccessUseCase() } returns false
 
             // WHEN
-            viewModel.onCreate()
+            viewModel.onStart()
 
             // THEN
             assertThat(actions).doesNotContain(SearchViewAction.ShowFirstAccessDialogue)

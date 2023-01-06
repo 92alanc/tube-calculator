@@ -57,7 +57,11 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
-        viewModel.onCreate()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

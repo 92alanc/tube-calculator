@@ -26,9 +26,9 @@ internal class SearchViewModel @Inject constructor(
 
     val action: SharedFlow<SearchViewAction> = _action
 
-    fun onCreate() {
+    fun onStart() {
         viewModelScope.launch(dispatcher) {
-            delay(100) // Without this delay the UI won't have time to process the action
+            delay(200) // Without this delay the UI won't have time to process the action
 
             if (isFirstAccessUseCase()) {
                 _action.emit(SearchViewAction.ShowFirstAccessDialogue)
