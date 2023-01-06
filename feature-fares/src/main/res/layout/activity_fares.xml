@@ -41,6 +41,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btNewSearch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside"
         tools:text="Bus and tram fares: £3.30"/>
 
     <com.google.android.material.button.MaterialButton
@@ -52,7 +53,8 @@
         app:layout_constraintTop_toBottomOf="@id/txtBusAndTramFares"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1"/>
 
     <FrameLayout
         android:id="@+id/shimmerContainer"
