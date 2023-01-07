@@ -7,4 +7,8 @@
     <style name="TubeCalculator.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="titleTextColor">?colorOnPrimary</item>
     </style>
+    <style name="TubeCalculator.OverflowButton" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:src">@drawable/ic_overflow_menu</item>
+        <item name="android:padding">@dimen/spacing_8</item>
+    </style>
 </resources>
