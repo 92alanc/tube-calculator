@@ -12,6 +12,7 @@ ext {
     firebase_config = "com.google.firebase:firebase-config"
     firebase_crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     firebase_firestore = "com.google.firebase:firebase-firestore-ktx"
+    google_ads = "com.google.android.gms:play-services-ads:$google_ads_version"
     hilt_android = "com.google.dagger:hilt-android:$hilt_version"
     hilt_work = "androidx.hilt:hilt-work:$hilt_work_version"
     hilt_compiler = "com.google.dagger:hilt-compiler:$hilt_version"
