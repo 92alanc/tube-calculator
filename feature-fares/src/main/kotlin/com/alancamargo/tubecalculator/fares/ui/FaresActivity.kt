@@ -65,6 +65,10 @@ internal class FaresActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
         adLoader.loadBannerAds(banner)
+        adLoader.loadInterstitialAds(
+            activity = this@FaresActivity,
+            adIdRes = R.string.ads_interstitial_fares
+        )
     }
 
     private fun observeViewStateAndAction() {
