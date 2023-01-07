@@ -47,6 +47,9 @@ internal class SettingsActivity : AppCompatActivity() {
         switchCrashLogging.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onCrashLoggingToggled(isChecked)
         }
+        switchAdPersonalisation.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onAdPersonalisationToggled(isChecked)
+        }
         adLoader.loadBannerAds(banner)
     }
 
