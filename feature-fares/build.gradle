@@ -40,6 +40,7 @@ dependencies {
     implementation "$android_activity"
     implementation "$android_appcompat"
     implementation "$android_material"
+    implementation "$google_ads"
     implementation "$hilt_android"
     implementation "$hilt_work"
     implementation "$room"
