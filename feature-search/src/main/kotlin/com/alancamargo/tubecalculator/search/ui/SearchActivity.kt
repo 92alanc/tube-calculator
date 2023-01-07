@@ -104,6 +104,7 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpUi() = with(binding) {
+        setSupportActionBar(binding.toolbar)
         setUpCalculateButton()
         setUpFragments()
     }
