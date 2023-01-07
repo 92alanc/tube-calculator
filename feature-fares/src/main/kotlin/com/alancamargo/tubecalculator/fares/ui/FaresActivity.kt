@@ -57,6 +57,7 @@ internal class FaresActivity : AppCompatActivity() {
     }
 
     private fun setUpUi() = with(binding) {
+        setSupportActionBar(toolbar)
         recyclerView.adapter = adapter
         btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
     }

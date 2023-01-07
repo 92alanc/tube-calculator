@@ -1,27 +1,17 @@
 <resources>
-    <style name="Theme.TubeCalculator" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+    <style name="Theme.TubeCalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/red_dark</item>
+        <item name="colorPrimaryVariant">@color/red_dark</item>
         <item name="colorOnPrimary">@color/black</item>
 
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/grey_light</item>
         <item name="colorOnSecondary">@color/black</item>
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-
-        <item name="fontFamily">@font/johnston</item>
-    </style>
-    <style name="Theme.TubeCalculator.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="appBarLayoutStyle">@style/TubeCalculator.ActionBarLayout</item>
+        <item name="toolbarStyle">@style/TubeCalculator.Toolbar</item>
+        <item name="actionOverflowButtonStyle">@style/TubeCalculator.OverflowButton</item>
 
         <item name="fontFamily">@font/johnston</item>
     </style>
