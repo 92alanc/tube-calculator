@@ -8,7 +8,8 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
-import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.ads.AdLoader
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
@@ -50,6 +51,9 @@ internal class SearchActivity : AppCompatActivity() {
 
     @Inject
     lateinit var dialogueHelper: DialogueHelper
+
+    @Inject
+    lateinit var adLoader: AdLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +111,7 @@ internal class SearchActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         setUpCalculateButton()
         setUpFragments()
+        adLoader.loadBannerAds(binding.banner)
     }
 
     private fun setUpCalculateButton() {

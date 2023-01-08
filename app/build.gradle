@@ -47,6 +47,7 @@ dependencies {
     implementation project(':feature-fares')
     implementation project(':feature-settings')
 
+    implementation "$google_ads"
     implementation "$hilt_android"
     implementation "$hilt_work"
 

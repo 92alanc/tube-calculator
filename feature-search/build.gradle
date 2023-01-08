@@ -41,6 +41,7 @@ dependencies {
     implementation "$android_appcompat"
     implementation "$android_fragment"
     implementation "$android_material"
+    implementation "$google_ads"
     implementation "$hilt_android"
     implementation "$shimmer"
 

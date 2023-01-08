@@ -8,7 +8,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
-import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.ads.AdLoader
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
@@ -43,6 +44,9 @@ internal class FaresActivity : AppCompatActivity() {
     @Inject
     lateinit var dialogueHelper: DialogueHelper
 
+    @Inject
+    lateinit var adLoader: AdLoader
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityFaresBinding.inflate(layoutInflater)
@@ -60,6 +64,11 @@ internal class FaresActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         recyclerView.adapter = adapter
         btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
+        adLoader.loadBannerAds(banner)
+        adLoader.loadInterstitialAds(
+            activity = this@FaresActivity,
+            adIdRes = R.string.ads_interstitial_fares
+        )
     }
 
     private fun observeViewStateAndAction() {

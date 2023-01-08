@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.design.tools
+package com.alancamargo.tubecalculator.core.design.dialogue
 
 import android.content.Context
 import com.alancamargo.tubecalculator.core.design.R

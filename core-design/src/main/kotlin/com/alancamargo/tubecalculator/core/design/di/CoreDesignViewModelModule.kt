@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.core.design.di
 
-import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
-import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatterImpl
+import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
+import com.alancamargo.tubecalculator.core.design.text.BulletListFormatterImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.design.tools
+package com.alancamargo.tubecalculator.core.design.text
 
 import android.text.Spannable
 import android.text.TextUtils

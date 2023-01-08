@@ -1,7 +1,9 @@
 package com.alancamargo.tubecalculator.settings.ui.viewmodel
 
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.settings.domain.usecase.IsAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.IsCrashLoggingEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.SetAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.SetCrashLoggingEnabledUseCase
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -18,10 +20,16 @@ class SettingsViewModelTest {
     private val mockSetCrashLoggingEnabledUseCase = mockk<SetCrashLoggingEnabledUseCase>(
         relaxed = true
     )
+    private val mockIsAdPersonalisationEnabledUseCase = mockk<IsAdPersonalisationEnabledUseCase>()
+    private val mockSetAdPersonalisationEnabledUseCase = mockk<SetAdPersonalisationEnabledUseCase>(
+        relaxed = true
+    )
     private val dispatcher = TestCoroutineDispatcher()
     private val viewModel = SettingsViewModel(
         mockIsCrashLoggingEnabledUseCase,
         mockSetCrashLoggingEnabledUseCase,
+        mockIsAdPersonalisationEnabledUseCase,
+        mockSetAdPersonalisationEnabledUseCase,
         dispatcher
     )
 
@@ -36,6 +44,7 @@ class SettingsViewModelTest {
         collector.test { states, _ ->
             // GIVEN
             every { mockIsCrashLoggingEnabledUseCase() } returns true
+            every { mockIsAdPersonalisationEnabledUseCase() } returns true
 
             // WHEN
             viewModel.onCreate()
@@ -65,6 +74,46 @@ class SettingsViewModelTest {
 
         // THEN
         verify { mockSetCrashLoggingEnabledUseCase(isEnabled = true) }
+    }
+
+    @Test
+    fun `onCreate should update state with ad personalisation setting`() {
+        collector.test { states, _ ->
+            // GIVEN
+            every { mockIsCrashLoggingEnabledUseCase() } returns true
+            every { mockIsAdPersonalisationEnabledUseCase() } returns true
+
+            // WHEN
+            viewModel.onCreate()
+
+            // THEN
+            val expected = SettingsViewState(
+                isCrashLoggingEnabled = true,
+                isAdPersonalisationEnabled = true
+            )
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onAdPersonalisationToggled should update state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onAdPersonalisationToggled(isEnabled = true)
+
+            // THEN
+            val expected = SettingsViewState(isAdPersonalisationEnabled = true)
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onAdPersonalisationToggled should update setting`() {
+        // WHEN
+        viewModel.onAdPersonalisationToggled(isEnabled = true)
+
+        // THEN
+        verify { mockSetAdPersonalisationEnabledUseCase(isEnabled = true) }
     }
 
     @Test
