@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.design.tools
+package com.alancamargo.tubecalculator.core.design.ads
 
 import android.view.View
 import androidx.annotation.StringRes

@@ -1,9 +1,9 @@
 package com.alancamargo.tubecalculator.core.design.di
 
-import com.alancamargo.tubecalculator.core.design.tools.AdLoader
-import com.alancamargo.tubecalculator.core.design.tools.AdLoaderImpl
-import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
-import com.alancamargo.tubecalculator.core.design.tools.DialogueHelperImpl
+import com.alancamargo.tubecalculator.core.design.ads.AdLoader
+import com.alancamargo.tubecalculator.core.design.ads.AdLoaderImpl
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelperImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

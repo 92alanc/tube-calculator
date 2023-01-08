@@ -8,8 +8,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
-import com.alancamargo.tubecalculator.core.design.tools.AdLoader
-import com.alancamargo.tubecalculator.core.design.tools.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.ads.AdLoader
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow

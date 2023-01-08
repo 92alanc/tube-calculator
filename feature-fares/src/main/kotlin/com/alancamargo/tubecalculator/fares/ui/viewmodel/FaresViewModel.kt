@@ -3,7 +3,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
-import com.alancamargo.tubecalculator.core.design.tools.BulletListFormatter
+import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
