@@ -1,16 +1,11 @@
 package com.alancamargo.tubecalculator.settings.domain.usecase
 
-import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
+import com.alancamargo.tubecalculator.settings.domain.repository.SettingsRepository
 import javax.inject.Inject
 
-private const val KEY = "gad_has_consent_for_cookies"
-
 internal class IsAdPersonalisationEnabledUseCaseImpl @Inject constructor(
-    private val preferencesManager: PreferencesManager
+    private val repository: SettingsRepository
 ) : IsAdPersonalisationEnabledUseCase {
 
-    override fun invoke(): Boolean {
-        val intValue = preferencesManager.getInt(KEY, defaultValue = 0)
-        return intValue == 1
-    }
+    override fun invoke(): Boolean = repository.isAdPersonalisationEnabled()
 }
