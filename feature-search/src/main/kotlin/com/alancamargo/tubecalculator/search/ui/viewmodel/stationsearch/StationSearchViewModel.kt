@@ -19,7 +19,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val MIN_QUERY_LENGTH = 4
-private const val SEARCH_DELAY_MILLIS = 1500L
+private const val SEARCH_DELAY_MILLIS = 1000L
 
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
