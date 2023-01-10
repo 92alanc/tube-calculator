@@ -18,4 +18,8 @@ internal class RemoteConfigManagerImpl @Inject constructor(
     override fun getLong(key: String): Long {
         return firebaseRemoteConfig.getLong(key)
     }
+
+    override fun getInt(key: String): Int {
+        return firebaseRemoteConfig.getLong(key).toInt()
+    }
 }

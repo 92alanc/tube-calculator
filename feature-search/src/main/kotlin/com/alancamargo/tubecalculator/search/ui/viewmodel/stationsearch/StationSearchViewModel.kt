@@ -7,6 +7,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
@@ -19,11 +20,10 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 
-private const val MIN_QUERY_LENGTH = 4
-
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
     private val searchStationUseCase: SearchStationUseCase,
+    private val getMinQueryLengthUseCase: GetMinQueryLengthUseCase,
     private val getSearchTriggerDelayUseCase: GetSearchTriggerDelayUseCase,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -50,7 +50,8 @@ internal class StationSearchViewModel @Inject constructor(
             _state.update { it.clearSearchResults() }
             selectedStation = null
         } else {
-            val isTooShort = query.length < MIN_QUERY_LENGTH
+            val minQueryLength = getMinQueryLengthUseCase()
+            val isTooShort = query.length < minQueryLength
             val hasSelectedStation = selectedStation != null
             val isJobActive = searchJob?.isActive == true
 

@@ -7,4 +7,6 @@ interface RemoteConfigManager {
     fun getBoolean(key: String): Boolean
 
     fun getLong(key: String): Long
+
+    fun getInt(key: String): Int
 }

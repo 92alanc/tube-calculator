@@ -50,4 +50,17 @@ class RemoteConfigManagerImplTest {
         // THEN
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `getInt should get int value from firebase`() {
+        // GIVEN
+        val expected = 123L
+        every { mockFirebaseRemoteConfig.getLong(KEY) } returns expected
+
+        // WHEN
+        val actual = remoteConfigManager.getInt(KEY)
+
+        // THEN
+        assertThat(actual).isEqualTo(expected.toInt())
+    }
 }

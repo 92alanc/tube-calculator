@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
@@ -26,12 +27,14 @@ import java.io.IOException
 class StationSearchViewModelTest {
 
     private val mockSearchStationUseCase = mockk<SearchStationUseCase>()
+    private val mockGetMinQueryLengthUseCase = mockk<GetMinQueryLengthUseCase>()
     private val mockGetSearchTriggerDelayUseCase = mockk<GetSearchTriggerDelayUseCase>()
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = StationSearchViewModel(
         mockSearchStationUseCase,
+        mockGetMinQueryLengthUseCase,
         mockGetSearchTriggerDelayUseCase,
         mockLogger,
         dispatcher
@@ -45,6 +48,7 @@ class StationSearchViewModelTest {
 
     @Before
     fun setUp() {
+        every { mockGetMinQueryLengthUseCase() } returns 4
         every { mockGetSearchTriggerDelayUseCase() } returns 0
     }
 
@@ -61,9 +65,12 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when query is under 4 characters onQueryChanged should not search station`() {
+    fun `when query is less than minimum query length onQueryChanged should not search station`() {
+        // GIVEN
+        every { mockGetMinQueryLengthUseCase() } returns 100
+
         // WHEN
-        viewModel.onQueryChanged(query = "aaa")
+        viewModel.onQueryChanged(SEARCH_QUERY)
 
         // THEN
         verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
@@ -83,6 +90,11 @@ class StationSearchViewModelTest {
 
     @Test
     fun `when query is not empty and station is not selected onQueryChanged should search station`() {
+        // GIVEN
+        every {
+            mockSearchStationUseCase(SEARCH_QUERY)
+        } returns flowOf(StationListResult.ServerError)
+
         // WHEN
         viewModel.onQueryChanged(SEARCH_QUERY)
 
