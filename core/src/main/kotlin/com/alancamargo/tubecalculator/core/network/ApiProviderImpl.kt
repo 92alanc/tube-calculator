@@ -21,7 +21,7 @@ internal class ApiProviderImpl @Inject constructor() : ApiProvider {
 
     override fun <T> provideService(clazz: Class<T>): T {
         val converterFactory = getConverterFactory()
-        val client = getAuthenticatedClient()
+        val client = getClient()
 
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
@@ -36,24 +36,22 @@ internal class ApiProviderImpl @Inject constructor() : ApiProvider {
         return json.asConverterFactory(contentType)
     }
 
-    private fun getAuthenticatedClient(): OkHttpClient {
-        val tokenInterceptor = getTokenInterceptor()
-        return getClientBuilder().addInterceptor(tokenInterceptor).build()
-    }
-
-    private fun getClientBuilder(): OkHttpClient.Builder {
+    private fun getClient(): OkHttpClient {
         val loggingInterceptor = getLoggingInterceptor()
+        val appIdAndKeyInterceptor = getAppIdAndKeyInterceptor()
 
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .addInterceptor(appIdAndKeyInterceptor)
             .callTimeout(10, TimeUnit.SECONDS)
+            .build()
     }
 
     private fun getLoggingInterceptor() = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
 
-    private fun getTokenInterceptor(): (Interceptor.Chain) -> Response = { chain ->
+    private fun getAppIdAndKeyInterceptor(): (Interceptor.Chain) -> Response = { chain ->
         val newUrl = chain.request().url.newBuilder()
             .addQueryParameter("app_id", BuildConfig.APP_ID)
             .addQueryParameter("app_key", BuildConfig.APP_KEY)
