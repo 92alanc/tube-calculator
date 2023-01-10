@@ -39,6 +39,7 @@ internal class StationSearchViewModel @Inject constructor(
         private set
 
     private var searchJob: Job? = null
+    private var lastQuery: String? = null
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
@@ -46,23 +47,27 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onQueryChanged(query: String?) {
-        if (query.isNullOrBlank()) {
+        val trimmedQuery = query?.trim()
+
+        if (trimmedQuery.isNullOrBlank()) {
             _state.update { it.clearSearchResults() }
             selectedStation = null
         } else {
             val minQueryLength = getMinQueryLengthUseCase()
-            val isTooShort = query.length < minQueryLength
+            val isTooShort = trimmedQuery.length < minQueryLength
             val hasSelectedStation = selectedStation != null
             val isJobActive = searchJob?.isActive == true
+            val isSameQuery = trimmedQuery == lastQuery
 
-            if (isTooShort || hasSelectedStation || isJobActive) {
+            if (isTooShort || hasSelectedStation || isJobActive || isSameQuery) {
                 return
             }
 
             searchJob = viewModelScope.launch(dispatcher) {
                 val triggerDelay = getSearchTriggerDelayUseCase()
                 delay(triggerDelay)
-                searchStation(query)
+                lastQuery = trimmedQuery
+                searchStation(trimmedQuery)
             }
         }
     }

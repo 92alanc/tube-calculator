@@ -13,10 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:text="@sample/search_screen.json/data/label"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -30,15 +26,14 @@
         app:endIconMode="clear_text"
         app:boxBackgroundMode="outline"
         app:boxBackgroundColor="?colorOnPrimary"
-        app:layout_constraintTop_toBottomOf="@id/txtLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:hint="@sample/search_screen.json/data/hint">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionNone"
+            android:maxLines="1"
+            android:inputType="text"
             tools:text="@sample/stations.json/data/query"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,10 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:itemCount="2"
         tools:listitem="@layout/item_station" />
 
@@ -60,9 +51,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_16"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="gone">
         <include layout="@layout/shimmer_search" />
     </FrameLayout>
@@ -72,9 +60,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="gone">
         <include layout="@layout/search_empty_state" />
     </FrameLayout>
