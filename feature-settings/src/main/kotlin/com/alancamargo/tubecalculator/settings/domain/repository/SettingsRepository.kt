@@ -9,4 +9,8 @@ internal interface SettingsRepository {
     fun setAdPersonalisationEnabled(isEnabled: Boolean)
 
     fun isAdPersonalisationEnabled(): Boolean
+
+    fun setAnalyticsEnabled(isEnabled: Boolean)
+
+    fun isAnalyticsEnabled(): Boolean
 }
