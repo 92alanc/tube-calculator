@@ -7,10 +7,14 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
+import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -19,6 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
     private val searchStationUseCase: SearchStationUseCase,
+    private val getMinQueryLengthUseCase: GetMinQueryLengthUseCase,
+    private val getSearchTriggerDelayUseCase: GetSearchTriggerDelayUseCase,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -32,24 +38,8 @@ internal class StationSearchViewModel @Inject constructor(
     var selectedStation: UiStation? = null
         private set
 
-    fun searchStation(query: String) {
-        viewModelScope.launch(dispatcher) {
-            searchStationUseCase(query).onStart {
-                _state.update { it.onLoading() }
-            }.catch { throwable ->
-                logger.error(throwable)
-                handleThrowable(throwable)
-            }.onCompletion {
-                _state.update { it.onStopLoading() }
-            }.collect { result ->
-                if (result is StationListResult.ServerError || result is StationListResult.GenericError) {
-                    logger.debug("Query: $query. Result: $result")
-                }
-
-                handleResult(result)
-            }
-        }
-    }
+    private var searchJob: Job? = null
+    private var lastQuery: String? = null
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
@@ -57,12 +47,48 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onQueryChanged(query: String?) {
-        if (query.isNullOrBlank()) {
-            _state.update { it.disableSearchButton() }
+        val trimmedQuery = query?.trim()
+
+        if (trimmedQuery.isNullOrBlank()) {
             _state.update { it.clearSearchResults() }
             selectedStation = null
         } else {
-            _state.update { it.enableSearchButton() }
+            val minQueryLength = getMinQueryLengthUseCase()
+            val isTooShort = trimmedQuery.length < minQueryLength
+            val hasSelectedStation = selectedStation != null
+            val isJobActive = searchJob?.isActive == true
+            val isSameQuery = trimmedQuery == lastQuery
+
+            if (isTooShort || hasSelectedStation || isJobActive || isSameQuery) {
+                return
+            }
+
+            searchJob = viewModelScope.launch(dispatcher) {
+                val triggerDelay = getSearchTriggerDelayUseCase()
+                delay(triggerDelay)
+                lastQuery = trimmedQuery
+                searchStation(trimmedQuery)
+            }
+        }
+    }
+
+    private suspend fun searchStation(query: String) {
+        searchStationUseCase(query).onStart {
+            _state.update { it.onLoading() }
+        }.catch { throwable ->
+            logger.error(throwable)
+            handleThrowable(throwable)
+        }.onCompletion {
+            _state.update { it.onStopLoading() }
+        }.collect { result ->
+            val isServerError = result is StationListResult.ServerError
+            val isGenericError = result is StationListResult.GenericError
+
+            if (isServerError || isGenericError) {
+                logger.debug("Query: $query. Result: $result")
+            }
+
+            handleResult(result)
         }
     }
 

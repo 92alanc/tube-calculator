@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import org.junit.Test
 
@@ -19,10 +18,13 @@ class SearchViewModelTest {
 
     private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
+    private val firstAccessDelay = 0L
     private val dispatcher = TestCoroutineDispatcher()
+
     private val viewModel = SearchViewModel(
         mockIsFirstAccessUseCase,
         mockDisableFirstAccessUseCase,
+        firstAccessDelay,
         dispatcher
     )
 
@@ -42,7 +44,6 @@ class SearchViewModelTest {
             viewModel.onStart()
 
             // THEN
-            delay(200)
             assertThat(actions).contains(SearchViewAction.ShowFirstAccessDialogue)
         }
     }

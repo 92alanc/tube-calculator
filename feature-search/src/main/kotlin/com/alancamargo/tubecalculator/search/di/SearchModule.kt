@@ -42,4 +42,16 @@ internal abstract class SearchModule {
     abstract fun bindDisableFirstAccessUseCase(
         impl: DisableFirstAccessUseCaseImpl
     ): DisableFirstAccessUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetSearchTriggerDelayUseCase(
+        impl: GetSearchTriggerDelayUseCaseImpl
+    ): GetSearchTriggerDelayUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetMinQueryLengthUseCase(
+        impl: GetMinQueryLengthUseCaseImpl
+    ): GetMinQueryLengthUseCase
 }
