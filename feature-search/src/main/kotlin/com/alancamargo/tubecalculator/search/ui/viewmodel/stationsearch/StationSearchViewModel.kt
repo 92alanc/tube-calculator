@@ -11,10 +11,15 @@ import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
+
+private const val MIN_QUERY_LENGTH = 4
+private const val SEARCH_DELAY_MILLIS = 2000L
 
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
@@ -32,7 +37,34 @@ internal class StationSearchViewModel @Inject constructor(
     var selectedStation: UiStation? = null
         private set
 
-    fun searchStation(query: String) {
+    private var searchJob: Job? = null
+
+    fun onStationSelected(station: UiStation) {
+        this.selectedStation = station
+        _state.update { it.onSelectedStation(station) }
+    }
+
+    fun onQueryChanged(query: String?) {
+        if (query.isNullOrBlank()) {
+            _state.update { it.clearSearchResults() }
+            selectedStation = null
+        } else {
+            val isTooShort = query.length < MIN_QUERY_LENGTH
+            val hasSelectedStation = selectedStation != null
+            val isJobActive = searchJob?.isActive == true
+
+            if (isTooShort || hasSelectedStation || isJobActive) {
+                return
+            }
+
+            searchJob = viewModelScope.launch(dispatcher) {
+                delay(SEARCH_DELAY_MILLIS)
+                searchStation(query)
+            }
+        }
+    }
+
+    private fun searchStation(query: String) {
         viewModelScope.launch(dispatcher) {
             searchStationUseCase(query).onStart {
                 _state.update { it.onLoading() }
@@ -42,27 +74,15 @@ internal class StationSearchViewModel @Inject constructor(
             }.onCompletion {
                 _state.update { it.onStopLoading() }
             }.collect { result ->
-                if (result is StationListResult.ServerError || result is StationListResult.GenericError) {
+                val isServerError = result is StationListResult.ServerError
+                val isGenericError = result is StationListResult.GenericError
+
+                if (isServerError || isGenericError) {
                     logger.debug("Query: $query. Result: $result")
                 }
 
                 handleResult(result)
             }
-        }
-    }
-
-    fun onStationSelected(station: UiStation) {
-        this.selectedStation = station
-        _state.update { it.onSelectedStation(station) }
-    }
-
-    fun onQueryChanged(query: String?) {
-        if (query.isNullOrBlank()) {
-            _state.update { it.disableSearchButton() }
-            _state.update { it.clearSearchResults() }
-            selectedStation = null
-        } else {
-            _state.update { it.enableSearchButton() }
         }
     }
 

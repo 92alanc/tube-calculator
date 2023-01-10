@@ -14,7 +14,6 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
-import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -68,16 +67,10 @@ internal class StationSearchFragment : Fragment() {
         txtLabel.setText(args.searchType.labelRes)
         textInputLayout.hint = getString(args.searchType.hintRes)
         recyclerView.adapter = adapter
-        btSearch.setOnClickListener {
-            it.hideKeyboard()
-            val query = edtSearch.text?.toString().orEmpty()
-            viewModel.searchStation(query)
-        }
         edtSearch.addTextChangedListener(getQueryTextWatcher())
     }
 
     private fun handleState(state: StationSearchViewState) = with(state) {
-        binding.btSearch.isEnabled = isSearchButtonEnabled
         binding.shimmer.isVisible = isLoading
         binding.recyclerView.isVisible = searchResults != null
         binding.emptyState.isVisible = showEmptyState
@@ -102,7 +95,7 @@ internal class StationSearchFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
         override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-            viewModel.onQueryChanged(text?.toString())
+            text?.toString()?.let(viewModel::onQueryChanged)
         }
 
         override fun afterTextChanged(s: Editable?) {}
