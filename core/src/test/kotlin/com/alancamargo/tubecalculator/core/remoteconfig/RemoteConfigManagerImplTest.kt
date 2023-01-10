@@ -37,4 +37,17 @@ class RemoteConfigManagerImplTest {
         // THEN
         assertThat(actual).isTrue()
     }
+
+    @Test
+    fun `getLong should get long value from firebase`() {
+        // GIVEN
+        val expected = 1000L
+        every { mockFirebaseRemoteConfig.getLong(KEY) } returns expected
+
+        // WHEN
+        val actual = remoteConfigManager.getLong(KEY)
+
+        // THEN
+        assertThat(actual).isEqualTo(expected)
+    }
 }

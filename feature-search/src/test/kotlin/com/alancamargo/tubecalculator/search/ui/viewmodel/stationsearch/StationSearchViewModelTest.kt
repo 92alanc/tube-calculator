@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulSearchFlow
@@ -17,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
@@ -24,10 +26,13 @@ import java.io.IOException
 class StationSearchViewModelTest {
 
     private val mockSearchStationUseCase = mockk<SearchStationUseCase>()
+    private val mockGetSearchTriggerDelayUseCase = mockk<GetSearchTriggerDelayUseCase>()
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
+
     private val viewModel = StationSearchViewModel(
         mockSearchStationUseCase,
+        mockGetSearchTriggerDelayUseCase,
         mockLogger,
         dispatcher
     )
@@ -38,14 +43,61 @@ class StationSearchViewModelTest {
         dispatcher = dispatcher
     )
 
+    @Before
+    fun setUp() {
+        every { mockGetSearchTriggerDelayUseCase() } returns 0
+    }
+
     @Test
-    fun `when use case returns Success searchStation should set correct states`() {
+    fun `when query is empty onQueryChanged should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onQueryChanged(query = "")
+
+            // THEN
+            val expected = StationSearchViewState()
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when query is under 4 characters onQueryChanged should not search station`() {
+        // WHEN
+        viewModel.onQueryChanged(query = "aaa")
+
+        // THEN
+        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+    }
+
+    @Test
+    fun `when a station is already selected onQueryChanged should not search station`() {
+        // GIVEN
+        viewModel.onStationSelected(station = stubUiStation(name = "Uxbridge"))
+
+        // WHEN
+        viewModel.onQueryChanged(SEARCH_QUERY)
+
+        // THEN
+        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+    }
+
+    @Test
+    fun `when query is not empty and station is not selected onQueryChanged should search station`() {
+        // WHEN
+        viewModel.onQueryChanged(SEARCH_QUERY)
+
+        // THEN
+        verify { mockSearchStationUseCase(SEARCH_QUERY) }
+    }
+
+    @Test
+    fun `when use case returns Success onQueryChanged should set correct states`() {
         collector.test { states, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns stubSuccessfulSearchFlow()
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val stations = stubUiStationList()
@@ -62,13 +114,13 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Success searchStation should not log query and result`() {
+    fun `when use case returns Success onQueryChanged should not log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns stubSuccessfulSearchFlow()
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             verify(exactly = 0) { mockLogger.debug(message = any()) }
@@ -76,13 +128,13 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Empty searchStation should set correct states`() {
+    fun `when use case returns Empty onQueryChanged should set correct states`() {
         collector.test { states, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expected = listOf(
@@ -98,13 +150,13 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Empty searchStation should not log query and result`() {
+    fun `when use case returns Empty onQueryChanged should not log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             verify(exactly = 0) { mockLogger.debug(message = any()) }
@@ -112,7 +164,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `when use case returns NetworkError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -120,7 +172,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.NetworkError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expected = listOf(
@@ -135,7 +187,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError searchStation should not log query and result`() {
+    fun `when use case returns NetworkError onQueryChanged should not log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every {
@@ -143,7 +195,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.NetworkError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             verify(exactly = 0) { mockLogger.debug(message = any()) }
@@ -151,7 +203,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `when use case returns ServerError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -159,7 +211,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.ServerError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expected = listOf(
@@ -174,7 +226,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError searchStation should log query and result`() {
+    fun `when use case returns ServerError onQueryChanged should log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every {
@@ -182,7 +234,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.ServerError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val message = "Query: $SEARCH_QUERY. Result: ${StationListResult.ServerError}"
@@ -191,7 +243,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError searchStation should set correct states and send ShowErrorDialogue action`() {
+    fun `when use case returns GenericError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
             every {
@@ -199,7 +251,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.GenericError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expected = listOf(
@@ -214,7 +266,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError searchStation should log query and result`() {
+    fun `when use case returns GenericError onQueryChanged should log query and result`() {
         collector.test { _, _ ->
             // GIVEN
             every {
@@ -222,7 +274,7 @@ class StationSearchViewModelTest {
             } returns flowOf(StationListResult.GenericError)
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val message = "Query: $SEARCH_QUERY. Result: ${StationListResult.GenericError}"
@@ -231,7 +283,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case throws IOException searchStation should send ShowErrorDialogue action`() {
+    fun `when use case throws IOException onQueryChanged should send ShowErrorDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             every {
@@ -239,7 +291,7 @@ class StationSearchViewModelTest {
             } returns flow { throw IOException() }
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.NETWORK)
@@ -248,7 +300,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case throws generic exception searchStation should send ShowErrorDialogue action`() {
+    fun `when use case throws generic exception onQueryChanged should send ShowErrorDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
             every {
@@ -256,7 +308,7 @@ class StationSearchViewModelTest {
             } returns flow { throw Throwable() }
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
@@ -265,7 +317,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case throws exception searchStation should log exception`() {
+    fun `when use case throws exception onQueryChanged should log exception`() {
         collector.test { _, _ ->
             // GIVEN
             val exception = Throwable()
@@ -274,7 +326,7 @@ class StationSearchViewModelTest {
             } returns flow { throw exception }
 
             // WHEN
-            viewModel.searchStation(SEARCH_QUERY)
+            viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
             verify { mockLogger.error(exception) }
@@ -290,30 +342,6 @@ class StationSearchViewModelTest {
 
             // THEN
             val expected = StationSearchViewState(searchResults = listOf(station))
-            assertThat(states).contains(expected)
-        }
-    }
-
-    @Test
-    fun `when query is empty onQueryChanged should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onQueryChanged(query = "")
-
-            // THEN
-            val expected = StationSearchViewState()
-            assertThat(states).contains(expected)
-        }
-    }
-
-    @Test
-    fun `when query is not empty onQueryChanged should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onQueryChanged(SEARCH_QUERY)
-
-            // THEN
-            val expected = StationSearchViewState(isSearchButtonEnabled = true)
             assertThat(states).contains(expected)
         }
     }

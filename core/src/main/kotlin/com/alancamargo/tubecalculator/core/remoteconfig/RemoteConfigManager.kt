@@ -5,4 +5,6 @@ interface RemoteConfigManager {
     fun getDouble(key: String): Double
 
     fun getBoolean(key: String): Boolean
+
+    fun getLong(key: String): Long
 }

@@ -14,4 +14,8 @@ internal class RemoteConfigManagerImpl @Inject constructor(
     override fun getBoolean(key: String): Boolean {
         return firebaseRemoteConfig.getBoolean(key)
     }
+
+    override fun getLong(key: String): Long {
+        return firebaseRemoteConfig.getLong(key)
+    }
 }

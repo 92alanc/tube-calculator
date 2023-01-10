@@ -7,6 +7,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,11 +20,11 @@ import java.io.IOException
 import javax.inject.Inject
 
 private const val MIN_QUERY_LENGTH = 4
-private const val SEARCH_DELAY_MILLIS = 1000L
 
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
     private val searchStationUseCase: SearchStationUseCase,
+    private val getSearchTriggerDelayUseCase: GetSearchTriggerDelayUseCase,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -58,31 +59,30 @@ internal class StationSearchViewModel @Inject constructor(
             }
 
             searchJob = viewModelScope.launch(dispatcher) {
-                delay(SEARCH_DELAY_MILLIS)
+                val triggerDelay = getSearchTriggerDelayUseCase()
+                delay(triggerDelay)
                 searchStation(query)
             }
         }
     }
 
-    private fun searchStation(query: String) {
-        viewModelScope.launch(dispatcher) {
-            searchStationUseCase(query).onStart {
-                _state.update { it.onLoading() }
-            }.catch { throwable ->
-                logger.error(throwable)
-                handleThrowable(throwable)
-            }.onCompletion {
-                _state.update { it.onStopLoading() }
-            }.collect { result ->
-                val isServerError = result is StationListResult.ServerError
-                val isGenericError = result is StationListResult.GenericError
+    private suspend fun searchStation(query: String) {
+        searchStationUseCase(query).onStart {
+            _state.update { it.onLoading() }
+        }.catch { throwable ->
+            logger.error(throwable)
+            handleThrowable(throwable)
+        }.onCompletion {
+            _state.update { it.onStopLoading() }
+        }.collect { result ->
+            val isServerError = result is StationListResult.ServerError
+            val isGenericError = result is StationListResult.GenericError
 
-                if (isServerError || isGenericError) {
-                    logger.debug("Query: $query. Result: $result")
-                }
-
-                handleResult(result)
+            if (isServerError || isGenericError) {
+                logger.debug("Query: $query. Result: $result")
             }
+
+            handleResult(result)
         }
     }
 

@@ -8,4 +8,8 @@
     <key>should_clear_cache</key>
     <value>false</value>
   </entry>
+  <entry>
+    <key>search_trigger_delay_millis</key>
+    <value>1000</value>
+  </entry>
 </defaults>
