@@ -1,6 +1,7 @@
-package com.alancamargo.tubecalculator.settings.domain.usecase
+package com.alancamargo.tubecalculator.settings.domain.usecase.crash
 
 import com.alancamargo.tubecalculator.settings.domain.repository.SettingsRepository
+import com.alancamargo.tubecalculator.settings.domain.usecase.crash.IsCrashLoggingEnabledUseCaseImpl
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk

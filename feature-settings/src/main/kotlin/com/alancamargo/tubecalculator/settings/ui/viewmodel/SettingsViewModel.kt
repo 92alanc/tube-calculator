@@ -3,10 +3,10 @@ package com.alancamargo.tubecalculator.settings.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
-import com.alancamargo.tubecalculator.settings.domain.usecase.IsAdPersonalisationEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.IsCrashLoggingEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.SetAdPersonalisationEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.SetCrashLoggingEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.crash.IsCrashLoggingEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.crash.SetCrashLoggingEnabledUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*

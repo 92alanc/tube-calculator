@@ -1,14 +1,14 @@
-package com.alancamargo.tubecalculator.settings.domain.usecase
+package com.alancamargo.tubecalculator.settings.domain.usecase.crash
 
 import com.alancamargo.tubecalculator.settings.domain.repository.SettingsRepository
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
-class SetAdPersonalisationEnabledUseCaseImplTest {
+class SetCrashLoggingEnabledUseCaseImplTest {
 
     private val mockRepository = mockk<SettingsRepository>(relaxed = true)
-    private val useCase = SetAdPersonalisationEnabledUseCaseImpl(mockRepository)
+    private val useCase = SetCrashLoggingEnabledUseCaseImpl(mockRepository)
 
     @Test
     fun `invoke should change setting on repository`() {
@@ -16,6 +16,6 @@ class SetAdPersonalisationEnabledUseCaseImplTest {
         useCase(isEnabled = true)
 
         // THEN
-        verify { mockRepository.setAdPersonalisationEnabled(isEnabled = true) }
+        verify { mockRepository.setCrashLoggingEnabled(isEnabled = true) }
     }
 }
