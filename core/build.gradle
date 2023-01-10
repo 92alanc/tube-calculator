@@ -36,6 +36,7 @@ dependencies {
 
     implementation "$android_appcompat"
     implementation "$android_material"
+    implementation "$firebase_analytics"
     implementation "$firebase_config"
     implementation "$firebase_crashlytics"
     implementation "$firebase_firestore"
