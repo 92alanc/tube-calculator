@@ -15,12 +15,29 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * Without this delay the UI won't have time to process the action
+ */
+private const val FIRST_ACCESS_DELAY_MILLIS = 200L
+
 @HiltViewModel
-internal class SearchViewModel @Inject constructor(
+internal class SearchViewModel(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
+    private val firstAccessDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
+
+    @Inject constructor(
+        isFirstAccessUseCase: IsFirstAccessUseCase,
+        disableFirstAccessUseCase: DisableFirstAccessUseCase,
+        @IoDispatcher dispatcher: CoroutineDispatcher
+    ) : this(
+        isFirstAccessUseCase,
+        disableFirstAccessUseCase,
+        FIRST_ACCESS_DELAY_MILLIS,
+        dispatcher
+    )
 
     private val _action = MutableSharedFlow<SearchViewAction>()
 
@@ -28,9 +45,8 @@ internal class SearchViewModel @Inject constructor(
 
     fun onStart() {
         viewModelScope.launch(dispatcher) {
-            delay(200) // Without this delay the UI won't have time to process the action
-
             if (isFirstAccessUseCase()) {
+                delay(firstAccessDelay)
                 _action.emit(SearchViewAction.ShowFirstAccessDialogue)
             }
         }
