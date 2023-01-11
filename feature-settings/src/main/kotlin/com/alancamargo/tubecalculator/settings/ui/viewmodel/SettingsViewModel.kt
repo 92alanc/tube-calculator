@@ -3,10 +3,12 @@ package com.alancamargo.tubecalculator.settings.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
-import com.alancamargo.tubecalculator.settings.domain.usecase.IsAdPersonalisationEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.IsCrashLoggingEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.SetAdPersonalisationEnabledUseCase
-import com.alancamargo.tubecalculator.settings.domain.usecase.SetCrashLoggingEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.IsAnalyticsEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.SetAnalyticsEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.crash.IsCrashLoggingEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.crash.SetCrashLoggingEnabledUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
@@ -19,6 +21,8 @@ internal class SettingsViewModel @Inject constructor(
     private val setCrashLoggingEnabledUseCase: SetCrashLoggingEnabledUseCase,
     private val isAdPersonalisationEnabledUseCase: IsAdPersonalisationEnabledUseCase,
     private val setAdPersonalisationEnabledUseCase: SetAdPersonalisationEnabledUseCase,
+    private val isAnalyticsEnabledUseCase: IsAnalyticsEnabledUseCase,
+    private val setAnalyticsEnabledUseCase: SetAnalyticsEnabledUseCase,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -30,10 +34,16 @@ internal class SettingsViewModel @Inject constructor(
 
     fun onCreate() {
         val isCrashLoggingEnabled = isCrashLoggingEnabledUseCase()
-        _state.update { it.setCrashLoggingEnabled(isCrashLoggingEnabled) }
-
         val isAdPersonalisationEnabled = isAdPersonalisationEnabledUseCase()
-        _state.update { it.setAdPersonalisationEnabled(isAdPersonalisationEnabled) }
+        val isAnalyticsEnabled = isAnalyticsEnabledUseCase()
+
+        _state.update {
+            it.setAllValues(
+                isCrashLoggingEnabled = isCrashLoggingEnabled,
+                isAdPersonalisationEnabled = isAdPersonalisationEnabled,
+                isAnalyticsEnabled = isAnalyticsEnabled
+            )
+        }
     }
 
     fun onCrashLoggingToggled(isEnabled: Boolean) {
@@ -44,6 +54,11 @@ internal class SettingsViewModel @Inject constructor(
     fun onAdPersonalisationToggled(isEnabled: Boolean) {
         setAdPersonalisationEnabledUseCase(isEnabled)
         _state.update { it.setAdPersonalisationEnabled(isEnabled) }
+    }
+
+    fun onAnalyticsToggled(isEnabled: Boolean) {
+        setAnalyticsEnabledUseCase(isEnabled)
+        _state.update { it.setAnalyticsEnabled(isEnabled) }
     }
 
     fun onBackClicked() {

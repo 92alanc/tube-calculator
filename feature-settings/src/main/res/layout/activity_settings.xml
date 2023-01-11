@@ -37,9 +37,17 @@
             android:padding="@dimen/spacing_16">
 
             <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchAnalytics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_analytics"
+                tools:checked="true" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/switchCrashLogging"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_8"
                 android:text="@string/title_crash_logging"
                 tools:checked="true" />
 

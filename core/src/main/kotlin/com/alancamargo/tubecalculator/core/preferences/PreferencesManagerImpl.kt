@@ -21,12 +21,4 @@ internal class PreferencesManagerImpl @Inject constructor(
     override fun putBoolean(key: String, value: Boolean) {
         sharedPreferences.edit { putBoolean(key, value) }
     }
-
-    override fun getInt(key: String, defaultValue: Int): Int {
-        return sharedPreferences.getInt(key, defaultValue)
-    }
-
-    override fun putInt(key: String, value: Int) {
-        sharedPreferences.edit { putInt(key, value) }
-    }
 }

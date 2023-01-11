@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.settings.data.repository
 
+import com.alancamargo.tubecalculator.core.analytics.Analytics
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.google.common.truth.Truth.assertThat
@@ -8,17 +9,21 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
+private const val KEY_AD_PERSONALISATION = "is_ad_personalisation_enabled"
+private const val KEY_ANALYTICS = "is_analytics_enabled"
 private const val KEY_CRASH_LOGGING = "is_crash_logging_enabled"
-private const val KEY_AD_PERSONALISATION = "gad_has_consent_for_cookies"
-
-private const val AD_PERSONALISATION_DISABLED = 0
-private const val AD_PERSONALISATION_ENABLED = 1
 
 class SettingsRepositoryImplTest {
 
     private val mockPreferencesManager = mockk<PreferencesManager>(relaxed = true)
+    private val mockAnalytics = mockk<Analytics>(relaxed = true)
     private val mockLogger = mockk<Logger>(relaxed = true)
-    private val repository = SettingsRepositoryImpl(mockPreferencesManager, mockLogger)
+
+    private val repository = SettingsRepositoryImpl(
+        mockPreferencesManager,
+        mockAnalytics,
+        mockLogger
+    )
 
     @Test
     fun `setCrashLoggingEnabled should change setting on preferences manager`() {
@@ -53,42 +58,29 @@ class SettingsRepositoryImplTest {
     }
 
     @Test
-    fun `when setting is enabled setAdPersonalisationEnabled should change setting on preferences manager`() {
+    fun `setAdPersonalisationEnabled should change setting on preferences manager`() {
         // WHEN
         repository.setAdPersonalisationEnabled(isEnabled = true)
 
         // THEN
-        verify {
-            mockPreferencesManager.putInt(
-                KEY_AD_PERSONALISATION,
-                value = AD_PERSONALISATION_ENABLED
-            )
-        }
+        verify { mockPreferencesManager.putBoolean(KEY_AD_PERSONALISATION, value = true) }
     }
 
     @Test
-    fun `when setting is disabled setAdPersonalisationEnabled should change setting on preferences manager`() {
+    fun `setAdPersonalisationEnabled should change setting on analytics`() {
         // WHEN
-        repository.setAdPersonalisationEnabled(isEnabled = false)
+        repository.setAdPersonalisationEnabled(isEnabled = true)
 
         // THEN
-        verify {
-            mockPreferencesManager.putInt(
-                KEY_AD_PERSONALISATION,
-                value = AD_PERSONALISATION_DISABLED
-            )
-        }
+        verify { mockAnalytics.setAdPersonalisationEnabled(isEnabled = true) }
     }
 
     @Test
-    fun `when setting is enabled isAdPersonalisationEnabled should get setting from preferences manager`() {
+    fun `isAdPersonalisationEnabled should get setting from preferences manager`() {
         // GIVEN
         every {
-            mockPreferencesManager.getInt(
-                KEY_AD_PERSONALISATION,
-                defaultValue = AD_PERSONALISATION_DISABLED
-            )
-        } returns AD_PERSONALISATION_ENABLED
+            mockPreferencesManager.getBoolean(KEY_AD_PERSONALISATION, defaultValue = false)
+        } returns true
 
         // WHEN
         val actual = repository.isAdPersonalisationEnabled()
@@ -98,19 +90,34 @@ class SettingsRepositoryImplTest {
     }
 
     @Test
-    fun `when setting is disabled isAdPersonalisationEnabled should get setting from preferences manager`() {
-        // GIVEN
-        every {
-            mockPreferencesManager.getInt(
-                KEY_AD_PERSONALISATION,
-                defaultValue = AD_PERSONALISATION_DISABLED
-            )
-        } returns AD_PERSONALISATION_DISABLED
-
+    fun `setAnalyticsEnabled should change setting on preferences manager`() {
         // WHEN
-        val actual = repository.isAdPersonalisationEnabled()
+        repository.setAnalyticsEnabled(isEnabled = true)
 
         // THEN
-        assertThat(actual).isFalse()
+        verify { mockPreferencesManager.putBoolean(KEY_ANALYTICS, value = true) }
+    }
+
+    @Test
+    fun `setAnalyticsEnabled should change setting on analytics`() {
+        // WHEN
+        repository.setAnalyticsEnabled(isEnabled = true)
+
+        // THEN
+        verify { mockAnalytics.setAnalyticsEnabled(isEnabled = true) }
+    }
+
+    @Test
+    fun `isAnalyticsEnabled should get setting from preferences manager`() {
+        // GIVEN
+        every {
+            mockPreferencesManager.getBoolean(KEY_ANALYTICS, defaultValue = false)
+        } returns true
+
+        // WHEN
+        val actual = repository.isAnalyticsEnabled()
+
+        // THEN
+        assertThat(actual).isTrue()
     }
 }

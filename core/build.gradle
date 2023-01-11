@@ -36,6 +36,7 @@ dependencies {
 
     implementation "$android_appcompat"
     implementation "$android_material"
+    implementation "$firebase_analytics"
     implementation "$firebase_config"
     implementation "$firebase_crashlytics"
     implementation "$firebase_firestore"
@@ -45,7 +46,6 @@ dependencies {
     implementation "$okhttp"
     implementation "$room"
     implementation "$room_runtime"
-    implementation "androidx.room:room-runtime:$room_version"
     implementation "$work"
 
     api "$android_activity"

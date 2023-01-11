@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.settings.domain.usecase
+package com.alancamargo.tubecalculator.settings.domain.usecase.ads
 
 internal interface IsAdPersonalisationEnabledUseCase {
 

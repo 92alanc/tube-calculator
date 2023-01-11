@@ -6,6 +6,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
+import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
@@ -25,6 +26,7 @@ internal class FaresViewModel @Inject constructor(
     private val calculateBusAndTramFareUseCase: CalculateBusAndTramFareUseCase,
     private val bulletListFormatter: BulletListFormatter,
     private val faresCacheWorkScheduler: FaresCacheWorkScheduler,
+    private val analytics: FaresAnalytics,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -40,6 +42,8 @@ internal class FaresViewModel @Inject constructor(
         destination: UiStation?,
         busAndTramJourneyCount: Int
     ) {
+        analytics.trackScreenViewed()
+
         viewModelScope.launch(dispatcher) {
             calculateBusAndTramFare(busAndTramJourneyCount)
             if (origin != null && destination != null) {
@@ -59,12 +63,16 @@ internal class FaresViewModel @Inject constructor(
     }
 
     fun onNewSearchClicked() {
+        analytics.trackNewSearchClicked()
+
         viewModelScope.launch(dispatcher) {
             _action.emit(FaresViewAction.NavigateToSearch)
         }
     }
 
     fun onMessagesButtonClicked(messages: List<String>) {
+        analytics.trackMessagesClicked()
+
         viewModelScope.launch(dispatcher) {
             val text = bulletListFormatter.getBulletList(messages)
             _action.emit(FaresViewAction.ShowMessagesDialogue(text))

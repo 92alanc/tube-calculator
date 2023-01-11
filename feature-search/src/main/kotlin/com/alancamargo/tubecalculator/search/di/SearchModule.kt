@@ -1,5 +1,7 @@
 package com.alancamargo.tubecalculator.search.di
 
+import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
+import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalyticsImpl
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.repository.SearchRepositoryImpl
@@ -54,4 +56,8 @@ internal abstract class SearchModule {
     abstract fun bindGetMinQueryLengthUseCase(
         impl: GetMinQueryLengthUseCaseImpl
     ): GetMinQueryLengthUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindSearchAnalytics(impl: SearchAnalyticsImpl): SearchAnalytics
 }

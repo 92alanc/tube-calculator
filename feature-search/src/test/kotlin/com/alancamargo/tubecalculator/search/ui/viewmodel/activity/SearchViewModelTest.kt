@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.testtools.stubUiStation
@@ -18,12 +19,14 @@ class SearchViewModelTest {
 
     private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
+    private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
     private val firstAccessDelay = 0L
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = SearchViewModel(
         mockIsFirstAccessUseCase,
         mockDisableFirstAccessUseCase,
+        mockAnalytics,
         firstAccessDelay,
         dispatcher
     )
@@ -33,6 +36,18 @@ class SearchViewModelTest {
         actionFlow = viewModel.action,
         dispatcher = dispatcher
     )
+
+    @Test
+    fun `onStart should track screen view event`() {
+        // GIVEN
+        every { mockIsFirstAccessUseCase() } returns false
+
+        // WHEN
+        viewModel.onStart()
+
+        // THEN
+        verify { mockAnalytics.trackScreenViewed() }
+    }
 
     @Test
     fun `on first access onStart should send ShowFirstAccessDialogue action`() {
@@ -83,6 +98,15 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `onSettingsClicked should track button click event`() {
+        // WHEN
+        viewModel.onSettingsClicked()
+
+        // THEN
+        verify { mockAnalytics.trackSettingsClicked() }
+    }
+
+    @Test
     fun `onSettingsClicked should send NavigateToSettings action`() {
         collector.test { _, actions ->
             // WHEN
@@ -94,6 +118,15 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `onAppInfoClicked should track button click event`() {
+        // WHEN
+        viewModel.onAppInfoClicked()
+
+        // THEN
+        verify { mockAnalytics.trackAppInfoClicked() }
+    }
+
+    @Test
     fun `onAppInfoClicked should send ShowAppInfo action`() {
         collector.test { _, actions ->
             // WHEN
@@ -101,6 +134,28 @@ class SearchViewModelTest {
 
             // THEN
             assertThat(actions).contains(SearchViewAction.ShowAppInfo)
+        }
+    }
+
+    @Test
+    fun `onCalculateClicked should track button click event`() {
+        // WHEN
+        val origin = "Romford"
+        val destination = "Blackfriars"
+        val busAndTramJourneyCount = 1
+        viewModel.onCalculateClicked(
+            origin = stubUiStation(origin),
+            destination = stubUiStation(destination),
+            busAndTramJourneyCount = busAndTramJourneyCount
+        )
+
+        // THEN
+        verify {
+            mockAnalytics.trackCalculateClicked(
+                origin,
+                destination,
+                busAndTramJourneyCount
+            )
         }
     }
 

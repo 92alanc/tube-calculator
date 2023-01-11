@@ -1,6 +1,7 @@
-package com.alancamargo.tubecalculator.settings.domain.usecase
+package com.alancamargo.tubecalculator.settings.domain.usecase.ads
 
 import com.alancamargo.tubecalculator.settings.domain.repository.SettingsRepository
+import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCaseImpl
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
