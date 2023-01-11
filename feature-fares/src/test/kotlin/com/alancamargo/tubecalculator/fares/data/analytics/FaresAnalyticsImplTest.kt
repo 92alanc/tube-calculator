@@ -50,19 +50,4 @@ class FaresAnalyticsImplTest {
             )
         }
     }
-
-    @Test
-    fun `trackBackClicked should track button click event`() {
-        // WHEN
-        faresAnalytics.trackBackClicked()
-
-        // THEN
-        verify {
-            mockAnalytics.trackButtonClicked(
-                buttonName = "back",
-                screenName = SCREEN_NAME,
-                properties = null
-            )
-        }
-    }
 }

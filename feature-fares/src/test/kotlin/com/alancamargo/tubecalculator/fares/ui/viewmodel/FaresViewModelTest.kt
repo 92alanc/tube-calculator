@@ -4,6 +4,7 @@ import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
@@ -32,13 +33,16 @@ class FaresViewModelTest {
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
     private val mockBulletListFormatter = mockk<BulletListFormatter>()
     private val mockFaresCacheWorkScheduler = mockk<FaresCacheWorkScheduler>(relaxed = true)
+    private val mockAnalytics = mockk<FaresAnalytics>(relaxed = true)
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
+
     private val viewModel = FaresViewModel(
         mockGetFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
         mockBulletListFormatter,
         mockFaresCacheWorkScheduler,
+        mockAnalytics,
         mockLogger,
         dispatcher
     )
@@ -57,6 +61,24 @@ class FaresViewModelTest {
         every {
             mockCalculateBusAndTramFareUseCase(BUS_AND_TRAM_JOURNEY_COUNT)
         } returns BUS_AND_TRAM_FARE
+    }
+
+    @Test
+    fun `onCreate should track screen view event`() {
+        // GIVEN
+        every {
+            mockGetFaresUseCase(origin = any(), destination = any())
+        } returns flowOf(FareListResult.NetworkError)
+
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+        )
+
+        // THEN
+        verify { mockAnalytics.trackScreenViewed() }
     }
 
     @Test
@@ -349,6 +371,15 @@ class FaresViewModelTest {
     }
 
     @Test
+    fun `onNewSearchClicked should track button click event`() {
+        // WHEN
+        viewModel.onNewSearchClicked()
+
+        // THEN
+        verify { mockAnalytics.trackNewSearchClicked() }
+    }
+
+    @Test
     fun `onNewSearchClicked should send NavigateToSearch action`() {
         collector.test { _, actions ->
             // WHEN
@@ -357,6 +388,18 @@ class FaresViewModelTest {
             // THEN
             assertThat(actions).contains(FaresViewAction.NavigateToSearch)
         }
+    }
+
+    @Test
+    fun `onMessagesButtonClicked should track button click event`() {
+        // GIVEN
+        every { mockBulletListFormatter.getBulletList(strings = any()) } returns ""
+
+        // WHEN
+        viewModel.onMessagesButtonClicked(messages = emptyList())
+
+        // THEN
+        verify { mockAnalytics.trackMessagesClicked() }
     }
 
     @Test

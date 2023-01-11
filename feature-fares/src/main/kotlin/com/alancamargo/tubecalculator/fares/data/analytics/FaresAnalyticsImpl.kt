@@ -7,7 +7,6 @@ private const val SCREEN_NAME = "fares"
 
 private const val BUTTON_NEW_SEARCH = "new_search"
 private const val BUTTON_MESSAGES = "messages"
-private const val BUTTON_BACK = "back"
 
 internal class FaresAnalyticsImpl @Inject constructor(
     private val analytics: Analytics
@@ -27,13 +26,6 @@ internal class FaresAnalyticsImpl @Inject constructor(
     override fun trackMessagesClicked() {
         analytics.trackButtonClicked(
             buttonName = BUTTON_MESSAGES,
-            screenName = SCREEN_NAME
-        )
-    }
-
-    override fun trackBackClicked() {
-        analytics.trackButtonClicked(
-            buttonName = BUTTON_BACK,
             screenName = SCREEN_NAME
         )
     }
