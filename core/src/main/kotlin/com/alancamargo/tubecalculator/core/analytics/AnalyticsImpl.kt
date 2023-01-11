@@ -1,9 +1,11 @@
 package com.alancamargo.tubecalculator.core.analytics
 
-import android.os.Bundle
 import androidx.core.os.bundleOf
+import com.alancamargo.tubecalculator.core.tools.BundleBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
+
+private const val EVENT_BUTTON_CLICKED = "button_clicked"
 
 internal class AnalyticsImpl @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
@@ -27,7 +29,12 @@ internal class AnalyticsImpl @Inject constructor(
         )
     }
 
-    override fun trackEvent(eventName: String, properties: Bundle?) {
-        firebaseAnalytics.logEvent(eventName, properties)
+    override fun trackButtonClicked(buttonName: String, properties: (BundleBuilder.() -> Unit)?) {
+        trackEvent(EVENT_BUTTON_CLICKED, properties)
+    }
+
+    override fun trackEvent(eventName: String, properties: (BundleBuilder.() -> Unit)?) {
+        val params = properties?.let { BundleBuilder().apply(it) }?.build()
+        firebaseAnalytics.logEvent(eventName, params)
     }
 }

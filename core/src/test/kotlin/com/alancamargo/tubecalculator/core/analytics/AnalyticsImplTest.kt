@@ -34,12 +34,23 @@ class AnalyticsImplTest {
     }
 
     @Test
-    fun `trackScreenViewed should track screen view event`() {
+    fun `trackScreenViewed should track screen view event on firebase`() {
         // WHEN
         val screenName = "fares"
         analytics.trackScreenViewed(screenName)
 
         // THEN
         verify { mockFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, any()) }
+    }
+
+    @Test
+    fun `trackButtonClicked should track button click event on firebase`() {
+        // WHEN
+        val buttonName = "calculate"
+        analytics.trackButtonClicked(buttonName)
+
+        // THEN
+        val eventName = "button_clicked"
+        verify { mockFirebaseAnalytics.logEvent(eventName, null) }
     }
 }

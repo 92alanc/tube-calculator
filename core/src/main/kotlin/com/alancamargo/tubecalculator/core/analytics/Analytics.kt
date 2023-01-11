@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.core.analytics
 
-import android.os.Bundle
+import com.alancamargo.tubecalculator.core.tools.BundleBuilder
 
 interface Analytics {
 
@@ -10,5 +10,7 @@ interface Analytics {
 
     fun trackScreenViewed(screenName: String)
 
-    fun trackEvent(eventName: String, properties: Bundle? = null)
+    fun trackButtonClicked(buttonName: String, properties: (BundleBuilder.() -> Unit)? = null)
+
+    fun trackEvent(eventName: String, properties: (BundleBuilder.() -> Unit)? = null)
 }
