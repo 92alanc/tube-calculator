@@ -25,4 +25,8 @@ internal class AnalyticsImpl @Inject constructor(
             bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to screenName)
         )
     }
+
+    override fun trackEvent(eventName: String, properties: AnalyticsPropertiesBuilder?) {
+        firebaseAnalytics.logEvent(eventName, properties?.buildAsBundle())
+    }
 }

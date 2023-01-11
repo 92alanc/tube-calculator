@@ -7,4 +7,6 @@ interface Analytics {
     fun setAdPersonalisationEnabled(isEnabled: Boolean)
 
     fun trackScreenViewed(screenName: String)
+
+    fun trackEvent(eventName: String, properties: AnalyticsPropertiesBuilder? = null)
 }
