@@ -7,6 +7,10 @@ import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalis
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCaseImpl
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCaseImpl
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.IsAnalyticsEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.IsAnalyticsEnabledUseCaseImpl
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.SetAnalyticsEnabledUseCase
+import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.SetAnalyticsEnabledUseCaseImpl
 import com.alancamargo.tubecalculator.settings.domain.usecase.crash.IsCrashLoggingEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.crash.IsCrashLoggingEnabledUseCaseImpl
 import com.alancamargo.tubecalculator.settings.domain.usecase.crash.SetCrashLoggingEnabledUseCase
@@ -48,4 +52,16 @@ internal abstract class SettingsModule {
     abstract fun bindSetAdPersonalisationEnabledUseCase(
         impl: SetAdPersonalisationEnabledUseCaseImpl
     ): SetAdPersonalisationEnabledUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindIsAnalyticsEnabledUseCase(
+        impl: IsAnalyticsEnabledUseCaseImpl
+    ): IsAnalyticsEnabledUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindSetAnalyticsEnabledUseCase(
+        impl: SetAnalyticsEnabledUseCaseImpl
+    ): SetAnalyticsEnabledUseCase
 }
