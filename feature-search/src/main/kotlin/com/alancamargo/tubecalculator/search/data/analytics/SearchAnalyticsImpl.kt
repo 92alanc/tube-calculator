@@ -22,8 +22,8 @@ internal class SearchAnalyticsImpl @Inject constructor(
     }
 
     override fun trackCalculateClicked(
-        origin: String,
-        destination: String,
+        origin: String?,
+        destination: String?,
         busAndTramJourneyCount: Int
     ) {
         analytics.trackButtonClicked(BUTTON_CALCULATE) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
+import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
@@ -24,6 +25,7 @@ private const val FIRST_ACCESS_DELAY_MILLIS = 200L
 internal class SearchViewModel(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
+    private val analytics: SearchAnalytics,
     private val firstAccessDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -31,10 +33,12 @@ internal class SearchViewModel(
     @Inject constructor(
         isFirstAccessUseCase: IsFirstAccessUseCase,
         disableFirstAccessUseCase: DisableFirstAccessUseCase,
+        analytics: SearchAnalytics,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ) : this(
         isFirstAccessUseCase,
         disableFirstAccessUseCase,
+        analytics,
         FIRST_ACCESS_DELAY_MILLIS,
         dispatcher
     )
@@ -44,6 +48,8 @@ internal class SearchViewModel(
     val action: SharedFlow<SearchViewAction> = _action
 
     fun onStart() {
+        analytics.trackScreenViewed()
+
         viewModelScope.launch(dispatcher) {
             if (isFirstAccessUseCase()) {
                 delay(firstAccessDelay)
@@ -60,12 +66,16 @@ internal class SearchViewModel(
     }
 
     fun onSettingsClicked() {
+        analytics.trackSettingsClicked()
+
         viewModelScope.launch(dispatcher) {
             _action.emit(SearchViewAction.NavigateToSettings)
         }
     }
 
     fun onAppInfoClicked() {
+        analytics.trackAppInfoClicked()
+
         viewModelScope.launch(dispatcher) {
             _action.emit(SearchViewAction.ShowAppInfo)
         }
@@ -76,6 +86,12 @@ internal class SearchViewModel(
         destination: UiStation?,
         busAndTramJourneyCount: Int
     ) {
+        analytics.trackCalculateClicked(
+            origin = origin?.name,
+            destination = destination?.name,
+            busAndTramJourneyCount = busAndTramJourneyCount
+        )
+
         viewModelScope.launch(dispatcher) {
             if ((origin == null || destination == null) && busAndTramJourneyCount == 0) {
                 val error = UiSearchError.MISSING_ORIGIN_OR_DESTINATION

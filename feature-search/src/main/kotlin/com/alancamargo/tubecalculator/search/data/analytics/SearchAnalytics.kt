@@ -5,8 +5,8 @@ internal interface SearchAnalytics {
     fun trackScreenViewed()
 
     fun trackCalculateClicked(
-        origin: String,
-        destination: String,
+        origin: String?,
+        destination: String?,
         busAndTramJourneyCount: Int
     )
 
