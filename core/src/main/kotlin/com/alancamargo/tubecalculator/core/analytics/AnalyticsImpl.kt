@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.core.analytics
 
+import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
@@ -26,7 +27,7 @@ internal class AnalyticsImpl @Inject constructor(
         )
     }
 
-    override fun trackEvent(eventName: String, properties: AnalyticsPropertiesBuilder?) {
-        firebaseAnalytics.logEvent(eventName, properties?.buildAsBundle())
+    override fun trackEvent(eventName: String, properties: Bundle?) {
+        firebaseAnalytics.logEvent(eventName, properties)
     }
 }

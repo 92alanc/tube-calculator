@@ -1,5 +1,7 @@
 package com.alancamargo.tubecalculator.core.analytics
 
+import android.os.Bundle
+
 interface Analytics {
 
     fun setAnalyticsEnabled(isEnabled: Boolean)
@@ -8,5 +10,5 @@ interface Analytics {
 
     fun trackScreenViewed(screenName: String)
 
-    fun trackEvent(eventName: String, properties: AnalyticsPropertiesBuilder? = null)
+    fun trackEvent(eventName: String, properties: Bundle? = null)
 }
