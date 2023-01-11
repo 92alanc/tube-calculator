@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_crash_logging">Allow app performance logging</string>
+    <string name="title_analytics">Allow anonymous app usage logging</string>
+    <string name="title_crash_logging">Allow anonymous app performance logging</string>
     <string name="title_personalised_ads">Allow personalised ads</string>
 </resources>

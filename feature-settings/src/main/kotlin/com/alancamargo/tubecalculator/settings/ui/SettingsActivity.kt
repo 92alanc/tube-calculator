@@ -44,12 +44,9 @@ internal class SettingsActivity : AppCompatActivity() {
     private fun setUpUi() = with(binding) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        switchCrashLogging.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onCrashLoggingToggled(isChecked)
-        }
-        switchAdPersonalisation.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onAdPersonalisationToggled(isChecked)
-        }
+        setUpAnalytics()
+        setUpCrashLogging()
+        setUpPersonalisedAds()
         adLoader.loadBannerAds(banner)
     }
 
@@ -58,8 +55,28 @@ internal class SettingsActivity : AppCompatActivity() {
         observeViewModelFlow(viewModel.action, ::handleAction)
     }
 
-    private fun handleState(state: SettingsViewState) {
-        binding.switchCrashLogging.isChecked = state.isCrashLoggingEnabled
+    private fun ActivitySettingsBinding.setUpAnalytics() {
+        switchAnalytics.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onAnalyticsToggled(isChecked)
+        }
+    }
+
+    private fun ActivitySettingsBinding.setUpCrashLogging() {
+        switchCrashLogging.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onCrashLoggingToggled(isChecked)
+        }
+    }
+
+    private fun ActivitySettingsBinding.setUpPersonalisedAds() {
+        switchAdPersonalisation.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onAdPersonalisationToggled(isChecked)
+        }
+    }
+
+    private fun handleState(state: SettingsViewState) = with(binding) {
+        switchAnalytics.isChecked = state.isAnalyticsEnabled
+        switchCrashLogging.isChecked = state.isCrashLoggingEnabled
+        switchAdPersonalisation.isChecked = state.isAdPersonalisationEnabled
     }
 
     private fun handleAction(action: SettingsViewAction) {
