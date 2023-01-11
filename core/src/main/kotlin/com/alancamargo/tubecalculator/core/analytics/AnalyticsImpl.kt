@@ -2,6 +2,7 @@ package com.alancamargo.tubecalculator.core.analytics
 
 import com.alancamargo.tubecalculator.core.tools.BundleBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import javax.inject.Inject
 
 private const val EVENT_BUTTON_CLICKED = "button_clicked"
@@ -22,17 +23,30 @@ internal class AnalyticsImpl @Inject constructor(
     }
 
     override fun trackScreenViewed(screenName: String) {
-        trackEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
-            FirebaseAnalytics.Param.SCREEN_NAME withValue screenName
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
         }
     }
 
-    override fun trackButtonClicked(buttonName: String, properties: (BundleBuilder.() -> Unit)?) {
-        trackEvent(EVENT_BUTTON_CLICKED, properties)
+    override fun trackButtonClicked(
+        buttonName: String,
+        screenName: String,
+        properties: (BundleBuilder.() -> Unit)?
+    ) {
+        trackEvent(EVENT_BUTTON_CLICKED, screenName, properties)
     }
 
-    override fun trackEvent(eventName: String, properties: (BundleBuilder.() -> Unit)?) {
-        val params = properties?.let { BundleBuilder().apply(it) }?.build()
+    override fun trackEvent(
+        eventName: String,
+        screenName: String,
+        properties: (BundleBuilder.() -> Unit)?
+    ) {
+        val params = properties?.let {
+            BundleBuilder().apply(it)
+        }?.build()?.apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+        }
+
         firebaseAnalytics.logEvent(eventName, params)
     }
 }

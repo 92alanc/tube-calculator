@@ -5,6 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
+private const val SCREEN_NAME = "search"
+
 class SearchAnalyticsImplTest {
 
     private val mockAnalytics = mockk<Analytics>(relaxed = true)
@@ -16,7 +18,7 @@ class SearchAnalyticsImplTest {
         searchAnalytics.trackScreenViewed()
 
         // THEN
-        verify { mockAnalytics.trackScreenViewed(screenName = "search") }
+        verify { mockAnalytics.trackScreenViewed(SCREEN_NAME) }
     }
 
     @Test
@@ -30,7 +32,13 @@ class SearchAnalyticsImplTest {
         searchAnalytics.trackCalculateClicked(origin, destination, busAndTramJourneyCount)
 
         // THEN
-        verify { mockAnalytics.trackButtonClicked(buttonName = "calculate", properties = any()) }
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "calculate",
+                screenName = SCREEN_NAME,
+                properties = any()
+            )
+        }
     }
 
     @Test
@@ -39,7 +47,12 @@ class SearchAnalyticsImplTest {
         searchAnalytics.trackSettingsClicked()
 
         // THEN
-        verify { mockAnalytics.trackButtonClicked(buttonName = "settings") }
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "settings",
+                screenName = SCREEN_NAME
+            )
+        }
     }
 
     @Test
@@ -48,6 +61,11 @@ class SearchAnalyticsImplTest {
         searchAnalytics.trackAppInfoClicked()
 
         // THEN
-        verify { mockAnalytics.trackButtonClicked(buttonName = "app_info") }
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "app_info",
+                screenName = SCREEN_NAME
+            )
+        }
     }
 }

@@ -10,7 +10,15 @@ interface Analytics {
 
     fun trackScreenViewed(screenName: String)
 
-    fun trackButtonClicked(buttonName: String, properties: (BundleBuilder.() -> Unit)? = null)
+    fun trackButtonClicked(
+        buttonName: String,
+        screenName: String,
+        properties: (BundleBuilder.() -> Unit)? = null
+    )
 
-    fun trackEvent(eventName: String, properties: (BundleBuilder.() -> Unit)? = null)
+    fun trackEvent(
+        eventName: String,
+        screenName: String,
+        properties: (BundleBuilder.() -> Unit)? = null
+    )
 }

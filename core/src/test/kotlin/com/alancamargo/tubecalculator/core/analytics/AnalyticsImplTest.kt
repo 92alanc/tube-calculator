@@ -5,6 +5,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
 
+private const val SCREEN_NAME = "fares"
+
 class AnalyticsImplTest {
 
     private val mockFirebaseAnalytics = mockk<FirebaseAnalytics>(relaxed = true)
@@ -47,10 +49,10 @@ class AnalyticsImplTest {
     fun `trackButtonClicked should track button click event on firebase`() {
         // WHEN
         val buttonName = "calculate"
-        analytics.trackButtonClicked(buttonName)
+        analytics.trackButtonClicked(buttonName, SCREEN_NAME)
 
         // THEN
         val eventName = "button_clicked"
-        verify { mockFirebaseAnalytics.logEvent(eventName, null) }
+        verify { mockFirebaseAnalytics.logEvent(eventName, any()) }
     }
 }

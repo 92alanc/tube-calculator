@@ -26,7 +26,10 @@ internal class SearchAnalyticsImpl @Inject constructor(
         destination: String?,
         busAndTramJourneyCount: Int
     ) {
-        analytics.trackButtonClicked(BUTTON_CALCULATE) {
+        analytics.trackButtonClicked(
+            buttonName = BUTTON_CALCULATE,
+            screenName = SCREEN_NAME
+        ) {
             PROPERTY_ORIGIN withValue origin
             PROPERTY_DESTINATION withValue destination
             PROPERTY_BUS_AND_TRAM_FARE_COUNT withValue busAndTramJourneyCount
@@ -34,10 +37,16 @@ internal class SearchAnalyticsImpl @Inject constructor(
     }
 
     override fun trackSettingsClicked() {
-        analytics.trackButtonClicked(BUTTON_SETTINGS)
+        analytics.trackButtonClicked(
+            buttonName = BUTTON_SETTINGS,
+            screenName = SCREEN_NAME
+        )
     }
 
     override fun trackAppInfoClicked() {
-        analytics.trackButtonClicked(BUTTON_APP_INFO)
+        analytics.trackButtonClicked(
+            buttonName = BUTTON_APP_INFO,
+            screenName = SCREEN_NAME
+        )
     }
 }
