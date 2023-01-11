@@ -1,6 +1,5 @@
 package com.alancamargo.tubecalculator.core.analytics
 
-import androidx.core.os.bundleOf
 import com.alancamargo.tubecalculator.core.tools.BundleBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import javax.inject.Inject
@@ -23,10 +22,9 @@ internal class AnalyticsImpl @Inject constructor(
     }
 
     override fun trackScreenViewed(screenName: String) {
-        firebaseAnalytics.logEvent(
-            FirebaseAnalytics.Event.SCREEN_VIEW,
-            bundleOf(FirebaseAnalytics.Param.SCREEN_NAME to screenName)
-        )
+        trackEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
+            FirebaseAnalytics.Param.SCREEN_NAME withValue screenName
+        }
     }
 
     override fun trackButtonClicked(buttonName: String, properties: (BundleBuilder.() -> Unit)?) {
