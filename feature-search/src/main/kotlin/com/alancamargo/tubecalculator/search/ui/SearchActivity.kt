@@ -185,7 +185,7 @@ internal class SearchActivity : AppCompatActivity() {
     private fun showAppInfoDialogue() {
         dialogueHelper.showDialogue(
             context = this,
-            iconRes = R2.mipmap.ic_launcher,
+            iconRes = R2.mipmap.ic_launcher_round,
             titleRes = R2.string.app_name,
             messageRes = R.string.search_app_info
         )
