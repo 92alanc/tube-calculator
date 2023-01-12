@@ -43,7 +43,6 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
-        _state.update { it.onSelectedStation(station) }
     }
 
     fun onQueryChanged(query: String?) {
@@ -109,9 +108,9 @@ internal class StationSearchViewModel @Inject constructor(
                 if (stations.size == 1) {
                     val station = stations.first()
                     onStationSelected(station)
-                } else {
-                    _state.update { it.onReceivedSearchResults(stations) }
                 }
+
+                _state.update { it.onReceivedSearchResults(stations) }
             }
 
             is StationListResult.Empty -> _state.update { it.onEmptyState() }
