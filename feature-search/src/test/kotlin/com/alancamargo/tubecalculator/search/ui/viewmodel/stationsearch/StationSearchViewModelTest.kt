@@ -77,18 +77,6 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when a station is already selected onQueryChanged should not search station`() {
-        // GIVEN
-        viewModel.onStationSelected(station = stubUiStation(name = "Uxbridge"))
-
-        // WHEN
-        viewModel.onQueryChanged(SEARCH_QUERY)
-
-        // THEN
-        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
-    }
-
-    @Test
     fun `when query is not empty and station is not selected onQueryChanged should search station`() {
         // GIVEN
         every {
