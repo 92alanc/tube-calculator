@@ -177,6 +177,30 @@ class FaresViewModelTest {
     }
 
     @Test
+    fun `when use case returns InvalidQueryError onCreate should set correct state and send ShowErrorDialogue action`() {
+        collector.test { states, actions ->
+            // GIVEN
+            every {
+                mockGetFaresUseCase(origin = station, destination = station)
+            } returns flowOf(FareListResult.InvalidQueryError)
+
+            // WHEN
+            viewModel.onCreate(
+                origin = uiStation,
+                destination = uiStation,
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            )
+
+            // THEN
+            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
+            assertThat(states).contains(expected)
+            assertThat(actions).contains(
+                FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
+            )
+        }
+    }
+
+    @Test
     fun `when use case returns NetworkError onCreate should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN

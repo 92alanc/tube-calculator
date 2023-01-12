@@ -63,7 +63,7 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
     ): FareListResult {
         return response.body()?.let { body ->
             if (body.isEmpty()) {
-                FareListResult.GenericError
+                FareListResult.InvalidQueryError
             } else {
                 val data = RemoteDatabaseFareListWrapper(body)
                 remoteDatabase.save(REMOTE_DATABASE_COLLECTION_NAME, documentId, data)
