@@ -3,9 +3,9 @@ package com.alancamargo.tubecalculator.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
@@ -40,6 +40,16 @@ internal class SearchActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<SearchViewModel>()
 
+    private val actionBarDrawerToggle by lazy {
+        ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.appBar.toolbar,
+            R2.string.nav_open,
+            R2.string.nav_close
+        )
+    }
+
     private val originFragment = StationSearchFragment.newInstance(SearchType.ORIGIN)
     private val destinationFragment = StationSearchFragment.newInstance(SearchType.DESTINATION)
     private val busAndTramJourneysFragment = BusAndTramJourneysFragment()
@@ -69,9 +79,20 @@ internal class SearchActivity : AppCompatActivity() {
         viewModel.onStart()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setUpUi() = with(binding) {
+        setUpNavigationDrawer()
+        setSupportActionBar(appBar.toolbar)
+        setUpCalculateButton()
+        appBar.content.setUpFragments()
+        adLoader.loadBannerAds(appBar.content.banner)
     }
 
     private fun handleAction(action: SearchViewAction) {
@@ -92,26 +113,27 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUi() = with(binding) {
+    private fun ActivitySearchBinding.setUpNavigationDrawer() {
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
         navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
-        setSupportActionBar(binding.appBar.toolbar)
-        setUpCalculateButton()
-        appBar.content.setUpFragments()
-        adLoader.loadBannerAds(binding.appBar.content.banner)
     }
 
-    private fun onNavigationItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.itemSettings -> {
-            viewModel.onSettingsClicked()
-            true
-        }
+    private fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.itemSettings -> {
+                viewModel.onSettingsClicked()
+                binding.drawerLayout.close()
+                true
+            }
 
-        R.id.itemAbout -> {
-            viewModel.onAppInfoClicked()
-            true
-        }
+            R.id.itemAbout -> {
+                viewModel.onAppInfoClicked()
+                true
+            }
 
-        else -> false
+            else -> false
+        }
     }
 
     private fun setUpCalculateButton() {
