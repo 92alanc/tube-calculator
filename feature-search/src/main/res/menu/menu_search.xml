@@ -3,15 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/itemSettings"
-            android:icon="@drawable/ic_settings"
-            android:title="@string/settings" />
+    <item
+        android:id="@+id/itemSettings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/settings" />
 
-        <item
-            android:id="@+id/itemAbout"
-            android:icon="@drawable/ic_app_info"
-            android:title="@string/search_about" />
-    </group>
+    <item
+        android:id="@+id/itemAbout"
+        android:icon="@drawable/ic_app_info"
+        android:title="@string/search_about" />
 </menu>

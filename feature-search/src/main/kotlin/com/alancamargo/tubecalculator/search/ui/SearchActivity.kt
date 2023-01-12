@@ -74,22 +74,6 @@ internal class SearchActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.itemSettings -> {
-                viewModel.onSettingsClicked()
-                true
-            }
-
-            R.id.itemAbout -> {
-                viewModel.onAppInfoClicked()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     private fun handleAction(action: SearchViewAction) {
         when (action) {
             is SearchViewAction.NavigateToFares -> navigateToFares(
@@ -109,10 +93,25 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpUi() = with(binding) {
+        navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
         setSupportActionBar(binding.appBar.toolbar)
         setUpCalculateButton()
         appBar.content.setUpFragments()
         adLoader.loadBannerAds(binding.appBar.content.banner)
+    }
+
+    private fun onNavigationItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.itemSettings -> {
+            viewModel.onSettingsClicked()
+            true
+        }
+
+        R.id.itemAbout -> {
+            viewModel.onAppInfoClicked()
+            true
+        }
+
+        else -> false
     }
 
     private fun setUpCalculateButton() {
