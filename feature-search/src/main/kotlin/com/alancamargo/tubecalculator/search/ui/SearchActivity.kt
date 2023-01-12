@@ -16,6 +16,7 @@ import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
+import com.alancamargo.tubecalculator.search.databinding.ContentSearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
 import com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
@@ -108,14 +109,14 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpUi() = with(binding) {
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(binding.appBar.toolbar)
         setUpCalculateButton()
-        setUpFragments()
-        adLoader.loadBannerAds(binding.banner)
+        appBar.content.setUpFragments()
+        adLoader.loadBannerAds(binding.appBar.content.banner)
     }
 
     private fun setUpCalculateButton() {
-        binding.btCalculate.setOnClickListener {
+        binding.appBar.content.btCalculate.setOnClickListener {
             val origin = originFragment.getSelectedStation()
             val destination = destinationFragment.getSelectedStation()
             val busAndTramJourneyCount = busAndTramJourneysFragment.getBusAndTramJourneyCount()
@@ -128,7 +129,7 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun ActivitySearchBinding.setUpFragments() {
+    private fun ContentSearchBinding.setUpFragments() {
         val origin = supportFragmentManager.findFragmentByTag(TAG_ORIGIN)
         val destination = supportFragmentManager.findFragmentByTag(TAG_DESTINATION)
         val busAndTramJourneys = supportFragmentManager.findFragmentByTag(TAG_BUS_AND_TRAM_JOURNEYS)
@@ -138,7 +139,7 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun ActivitySearchBinding.addFragments() {
+    private fun ContentSearchBinding.addFragments() {
         supportFragmentManager.beginTransaction()
             .replace(
                 originContainer.id,
