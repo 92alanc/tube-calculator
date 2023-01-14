@@ -8,17 +8,31 @@ import com.alancamargo.tubecalculator.core.tools.GenericDiffCallback
 import com.alancamargo.tubecalculator.search.databinding.ItemStationBinding
 
 internal class StationAdapter(
-    private val onItemClick: (UiStation) -> Unit
+    private val onItemSelected: (UiStation) -> Unit
 ) : ListAdapter<UiStation, StationViewHolder>(GenericDiffCallback()) {
+
+    private var selectedItem: StationViewHolder? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemStationBinding.inflate(inflater, parent, false)
-        return StationViewHolder(binding, onItemClick)
+        return StationViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
         val station = getItem(position)
-        holder.bindTo(station)
+
+        if (itemCount == 1) {
+            holder.check()
+        }
+
+        holder.bindTo(station) { selectedItem ->
+            if (selectedItem != this.selectedItem) {
+                this.selectedItem?.uncheck()
+            }
+
+            this.selectedItem = selectedItem
+            onItemSelected(station)
+        }
     }
 }

@@ -8,7 +8,6 @@ import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDela
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulSearchFlow
-import com.alancamargo.tubecalculator.search.testtools.stubUiStation
 import com.alancamargo.tubecalculator.search.testtools.stubUiStationList
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
@@ -68,18 +67,6 @@ class StationSearchViewModelTest {
     fun `when query is less than minimum query length onQueryChanged should not search station`() {
         // GIVEN
         every { mockGetMinQueryLengthUseCase() } returns 100
-
-        // WHEN
-        viewModel.onQueryChanged(SEARCH_QUERY)
-
-        // THEN
-        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
-    }
-
-    @Test
-    fun `when a station is already selected onQueryChanged should not search station`() {
-        // GIVEN
-        viewModel.onStationSelected(station = stubUiStation(name = "Uxbridge"))
 
         // WHEN
         viewModel.onQueryChanged(SEARCH_QUERY)
@@ -342,19 +329,6 @@ class StationSearchViewModelTest {
 
             // THEN
             verify { mockLogger.error(exception) }
-        }
-    }
-
-    @Test
-    fun `onStationSelected should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            val station = stubUiStation(name = "Tottenham Court Road")
-            viewModel.onStationSelected(station)
-
-            // THEN
-            val expected = StationSearchViewState(searchResults = listOf(station))
-            assertThat(states).contains(expected)
         }
     }
 }

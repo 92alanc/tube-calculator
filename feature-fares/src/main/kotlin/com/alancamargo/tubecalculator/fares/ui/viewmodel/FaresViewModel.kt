@@ -120,6 +120,11 @@ internal class FaresViewModel @Inject constructor(
         when (result) {
             is FareListResult.Success -> _state.update { it.onReceivedRailFares(result.fareList) }
 
+            is FareListResult.InvalidQueryError -> {
+                val error = UiFaresError.INVALID_QUERY
+                _action.emit(FaresViewAction.ShowErrorDialogue(error))
+            }
+
             is FareListResult.NetworkError -> {
                 val error = UiFaresError.NETWORK
                 _action.emit(FaresViewAction.ShowErrorDialogue(error))

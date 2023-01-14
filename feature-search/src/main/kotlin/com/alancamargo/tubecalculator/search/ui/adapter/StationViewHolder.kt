@@ -11,15 +11,27 @@ import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.search.databinding.ItemStationBinding
 
 internal class StationViewHolder(
-    private val binding: ItemStationBinding,
-    private val onItemClick: (UiStation) -> Unit
+    private val binding: ItemStationBinding
 ) : ViewHolder(binding.root) {
 
-    fun bindTo(station: UiStation) = with(binding) {
+    fun bindTo(station: UiStation, onItemSelected: (StationViewHolder) -> Unit) = with(binding) {
         imageContainer.removeAllViews()
         imageContainer.addIconsForModes(station.modes)
         txtName.text = station.name
-        root.setOnClickListener { onItemClick(station) }
+        root.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                onItemSelected(this@StationViewHolder)
+            }
+        }
+        root.setOnClickListener { root.isChecked = true }
+    }
+
+    fun check() {
+        binding.root.isChecked = true
+    }
+
+    fun uncheck() {
+        binding.root.isChecked = false
     }
 
     private fun GridLayout.addIconsForModes(modes: List<UiMode>) = modes.forEach { mode ->

@@ -43,7 +43,6 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
-        _state.update { it.onSelectedStation(station) }
     }
 
     fun onQueryChanged(query: String?) {
@@ -55,11 +54,10 @@ internal class StationSearchViewModel @Inject constructor(
         } else {
             val minQueryLength = getMinQueryLengthUseCase()
             val isTooShort = trimmedQuery.length < minQueryLength
-            val hasSelectedStation = selectedStation != null
             val isJobActive = searchJob?.isActive == true
             val isSameQuery = trimmedQuery == lastQuery
 
-            if (isTooShort || hasSelectedStation || isJobActive || isSameQuery) {
+            if (isTooShort || isJobActive || isSameQuery) {
                 return
             }
 
@@ -109,11 +107,10 @@ internal class StationSearchViewModel @Inject constructor(
 
                 if (stations.size == 1) {
                     val station = stations.first()
-                    selectedStation = station
-                    _state.update { it.onSelectedStation(station) }
-                } else {
-                    _state.update { it.onReceivedSearchResults(stations) }
+                    onStationSelected(station)
                 }
+
+                _state.update { it.onReceivedSearchResults(stations) }
             }
 
             is StationListResult.Empty -> _state.update { it.onEmptyState() }

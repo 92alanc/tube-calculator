@@ -178,7 +178,7 @@ class FaresRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `when service returns empty list getFares should return GenericError`() {
+    fun `when service returns empty list getFares should return InvalidQueryError`() {
         // GIVEN
         coEvery {
             mockRemoteDatabase.load(
@@ -198,7 +198,7 @@ class FaresRemoteDataSourceImplTest {
         }
 
         // THEN
-        val expected = FareListResult.GenericError
+        val expected = FareListResult.InvalidQueryError
         assertThat(actual).isEqualTo(expected)
     }
 

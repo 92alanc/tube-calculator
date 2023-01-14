@@ -16,7 +16,7 @@ class BundleBuilder {
 
         keysAndValues.entries.forEach { (key, value) ->
             when (value) {
-                is String -> bundle.putString(key, value)
+                is String? -> bundle.putString(key, value)
                 is Int -> bundle.putInt(key, value)
                 is Boolean -> bundle.putBoolean(key, value)
                 else -> throw IllegalArgumentException("BundleBuilder only supports string, int and boolean")

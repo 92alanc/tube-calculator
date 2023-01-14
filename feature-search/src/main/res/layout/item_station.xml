@@ -5,9 +5,12 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:checkable="true"
     app:cardCornerRadius="@dimen/spacing_8"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    app:checkedIcon="@null">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingVertical="@dimen/spacing_8"

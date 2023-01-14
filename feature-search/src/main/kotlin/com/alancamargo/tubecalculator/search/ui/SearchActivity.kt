@@ -3,9 +3,9 @@ package com.alancamargo.tubecalculator.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
@@ -16,6 +16,7 @@ import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
+import com.alancamargo.tubecalculator.search.databinding.ContentSearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
 import com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
@@ -38,6 +39,16 @@ internal class SearchActivity : AppCompatActivity() {
         get() = _binding!!
 
     private val viewModel by viewModels<SearchViewModel>()
+
+    private val actionBarDrawerToggle by lazy {
+        ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.appBar.toolbar,
+            R2.string.nav_open,
+            R2.string.nav_close
+        )
+    }
 
     private val originFragment = StationSearchFragment.newInstance(SearchType.ORIGIN)
     private val destinationFragment = StationSearchFragment.newInstance(SearchType.DESTINATION)
@@ -68,25 +79,20 @@ internal class SearchActivity : AppCompatActivity() {
         viewModel.onStart()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_search, menu)
-        return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.itemSettings -> {
-                viewModel.onSettingsClicked()
-                true
-            }
-
-            R.id.itemAbout -> {
-                viewModel.onAppInfoClicked()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
+    private fun setUpUi() = with(binding) {
+        setUpNavigationDrawer()
+        setSupportActionBar(appBar.toolbar)
+        setUpCalculateButton()
+        appBar.content.setUpFragments()
+        adLoader.loadBannerAds(appBar.content.banner)
     }
 
     private fun handleAction(action: SearchViewAction) {
@@ -107,15 +113,31 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpUi() = with(binding) {
-        setSupportActionBar(binding.toolbar)
-        setUpCalculateButton()
-        setUpFragments()
-        adLoader.loadBannerAds(binding.banner)
+    private fun ActivitySearchBinding.setUpNavigationDrawer() {
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+        navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    private fun onNavigationItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.itemSettings -> {
+                viewModel.onSettingsClicked()
+                binding.drawerLayout.close()
+                true
+            }
+
+            R.id.itemAbout -> {
+                viewModel.onAppInfoClicked()
+                true
+            }
+
+            else -> false
+        }
     }
 
     private fun setUpCalculateButton() {
-        binding.btCalculate.setOnClickListener {
+        binding.appBar.content.btCalculate.setOnClickListener {
             val origin = originFragment.getSelectedStation()
             val destination = destinationFragment.getSelectedStation()
             val busAndTramJourneyCount = busAndTramJourneysFragment.getBusAndTramJourneyCount()
@@ -128,7 +150,7 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun ActivitySearchBinding.setUpFragments() {
+    private fun ContentSearchBinding.setUpFragments() {
         val origin = supportFragmentManager.findFragmentByTag(TAG_ORIGIN)
         val destination = supportFragmentManager.findFragmentByTag(TAG_DESTINATION)
         val busAndTramJourneys = supportFragmentManager.findFragmentByTag(TAG_BUS_AND_TRAM_JOURNEYS)
@@ -138,7 +160,7 @@ internal class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun ActivitySearchBinding.addFragments() {
+    private fun ContentSearchBinding.addFragments() {
         supportFragmentManager.beginTransaction()
             .replace(
                 originContainer.id,

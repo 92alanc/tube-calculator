@@ -11,7 +11,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="appBarLayoutStyle">@style/TubeCalculator.ActionBarLayout</item>
         <item name="toolbarStyle">@style/TubeCalculator.Toolbar</item>
-        <item name="actionOverflowButtonStyle">@style/TubeCalculator.OverflowButton</item>
+        <item name="drawerArrowStyle">@style/TubeCalculator.DrawerArrow</item>
 
         <item name="fontFamily">@font/johnston</item>
     </style>

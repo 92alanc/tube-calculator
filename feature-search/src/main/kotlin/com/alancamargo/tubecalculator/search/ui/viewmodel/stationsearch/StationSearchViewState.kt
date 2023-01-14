@@ -26,9 +26,5 @@ internal data class StationSearchViewState(
         searchResults = null
     )
 
-    fun onSelectedStation(selectedStation: UiStation) = copy(
-        searchResults = listOf(selectedStation)
-    )
-
     fun clearSearchResults() = copy(searchResults = null)
 }
