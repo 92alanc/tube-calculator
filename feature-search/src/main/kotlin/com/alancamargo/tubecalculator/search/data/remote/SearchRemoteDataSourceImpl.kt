@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.search.data.remote
 
+import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.core.extensions.isRequestError
 import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.search.data.api.SearchService
@@ -26,19 +27,33 @@ internal class SearchRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override fun getAllStopPoints(): Flow<List<Station>> = flow {
+        val response = service.getAllStopPoints()
+
+        if (response.isSuccessful) {
+            response.body()?.stopPoints?.let {
+                val stations = it.filterNot { response ->
+                    response.id == null
+                }.map { response ->
+                    response.toDomain()
+                }
+
+                emit(stations)
+            } ?: run {
+                emit(emptyList())
+            }
+        }
+    }
+
     private suspend fun FlowCollector<StationListResult>.handleSuccess(
         response: Response<StationSearchResultsResponse>
     ) {
-        response.body()?.let { body ->
-            body.matches?.let {
-                if (it.isEmpty()) {
-                    emit(StationListResult.Empty)
-                } else {
-                    val stations = it.map { station -> station.toDomain() }
-                    emit(StationListResult.Success(stations))
-                }
-            } ?: run {
+        response.body()?.matches?.let {
+            if (it.isEmpty()) {
                 emit(StationListResult.Empty)
+            } else {
+                val stations = it.map { station -> station.toDomain() }
+                emit(StationListResult.Success(stations))
             }
         } ?: run {
             emit(StationListResult.Empty)

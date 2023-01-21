@@ -9,7 +9,7 @@ import com.alancamargo.tubecalculator.search.data.model.db.DbStation
     version = 1,
     exportSchema = false
 )
-internal abstract class StationDatabase : RoomDatabase() {
+internal abstract class SearchDatabase : RoomDatabase() {
 
-    abstract fun getStationDao(): StationDao
+    abstract fun getStationDao(): SearchDao
 }

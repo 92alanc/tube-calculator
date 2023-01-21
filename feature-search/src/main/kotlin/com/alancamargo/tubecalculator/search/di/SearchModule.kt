@@ -2,6 +2,8 @@ package com.alancamargo.tubecalculator.search.di
 
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalyticsImpl
+import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSource
+import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.repository.SearchRepositoryImpl
@@ -60,4 +62,14 @@ internal abstract class SearchModule {
     @Binds
     @ViewModelScoped
     abstract fun bindSearchAnalytics(impl: SearchAnalyticsImpl): SearchAnalytics
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindSearchLocalDataSource(impl: SearchLocalDataSourceImpl): SearchLocalDataSource
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindPopulateLocalDatabaseUseCase(
+        impl: PopulateLocalDatabaseUseCaseImpl
+    ): PopulateLocalDatabaseUseCase
 }

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class StopPointResponse(
-    @SerialName("stationNaptan") val id: String,
+    @SerialName("stationNaptan") val id: String? = null,
     @SerialName("commonName") val name: String,
     @SerialName("modes") val modes: List<ModeResponse>
 )

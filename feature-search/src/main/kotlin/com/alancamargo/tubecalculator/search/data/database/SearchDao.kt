@@ -7,9 +7,9 @@ import androidx.room.Query
 import com.alancamargo.tubecalculator.search.data.model.db.DbStation
 
 @Dao
-internal interface StationDao {
+internal interface SearchDao {
 
-    @Insert(entity = DbStation::class, onConflict = OnConflictStrategy.IGNORE)
+    @Insert(entity = DbStation::class, onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertStation(station: DbStation)
 
     @Query("SELECT * FROM STATIONS WHERE NAME LIKE :query")

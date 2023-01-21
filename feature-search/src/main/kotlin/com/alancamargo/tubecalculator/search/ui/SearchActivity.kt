@@ -72,6 +72,7 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
+        viewModel.onCreate()
     }
 
     override fun onStart() {
