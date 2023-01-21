@@ -19,6 +19,6 @@ internal interface SearchService {
 
     @GET("StopPoint/Mode/{modes}")
     suspend fun getAllStopPoints(
-        @Path("modes") modes: String = "national-rail"
+        @Path("modes") modes: String = "dlr,elizabeth-line,overground,tube"
     ): Response<StopPointListResponse>
 }
