@@ -43,9 +43,9 @@ internal class ApiProviderImpl @Inject constructor() : ApiProvider {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(appIdAndKeyInterceptor)
-            .connectTimeout(20, TimeUnit.MINUTES)
-            .callTimeout(20, TimeUnit.MINUTES)
-            .readTimeout(20, TimeUnit.MINUTES)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .callTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
             .build()
     }
 
