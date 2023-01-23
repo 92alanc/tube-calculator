@@ -43,9 +43,12 @@ dependencies {
     implementation "$android_material"
     implementation "$google_ads"
     implementation "$hilt_android"
+    implementation "$room"
+    implementation "$room_runtime"
     implementation "$shimmer"
 
     kapt "$hilt_compiler"
+    kapt "$room_compiler"
 
     testImplementation project(':core-test')
 

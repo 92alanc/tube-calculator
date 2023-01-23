@@ -11,10 +11,31 @@ internal class LocalDatabaseProviderImpl @Inject constructor(
 ) : LocalDatabaseProvider {
 
     override fun <T : RoomDatabase> provideDatabase(clazz: KClass<T>, databaseName: String): T {
+        return getDatabaseBuilder(
+            clazz,
+            databaseName
+        ).build()
+    }
+
+    override fun <T : RoomDatabase> provideDatabaseFromAsset(
+        clazz: KClass<T>,
+        databaseName: String,
+        assetPath: String
+    ): T {
+        return getDatabaseBuilder(
+            clazz,
+            databaseName
+        ).createFromAsset(assetPath).build()
+    }
+
+    private fun <T : RoomDatabase> getDatabaseBuilder(
+        clazz: KClass<T>,
+        databaseName: String
+    ): RoomDatabase.Builder<T> {
         return Room.databaseBuilder(
             context,
             clazz.java,
             databaseName
-        ).fallbackToDestructiveMigration().build()
+        ).fallbackToDestructiveMigration()
     }
 }

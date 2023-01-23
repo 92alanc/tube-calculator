@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
@@ -161,8 +162,8 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun ContentSearchBinding.addFragments() {
-        supportFragmentManager.beginTransaction()
-            .replace(
+        supportFragmentManager.commit {
+            replace(
                 originContainer.id,
                 originFragment,
                 TAG_ORIGIN
@@ -174,7 +175,8 @@ internal class SearchActivity : AppCompatActivity() {
                 busAndTramJourneysContainer.id,
                 busAndTramJourneysFragment,
                 TAG_BUS_AND_TRAM_JOURNEYS
-            ).commit()
+            )
+        }
     }
 
     private fun navigateToFares(
