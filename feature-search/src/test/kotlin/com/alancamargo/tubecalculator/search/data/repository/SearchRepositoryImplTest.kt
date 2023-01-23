@@ -57,7 +57,7 @@ class SearchRepositoryImplTest {
             // GIVEN
             coEvery {
                 mockLocalDataSource.searchStation(SEARCH_QUERY)
-            } returns StationListResult.Empty
+            } returns StationListResult.ServerError
             val expected = StationListResult.Success(stubStationList())
             coEvery { mockRemoteDataSource.searchStation(SEARCH_QUERY) } returns expected
 

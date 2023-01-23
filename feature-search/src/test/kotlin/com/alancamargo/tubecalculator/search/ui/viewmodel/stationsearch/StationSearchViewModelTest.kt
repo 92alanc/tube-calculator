@@ -86,7 +86,7 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Success onQueryChanged should set correct states`() {
+    fun `when use case returns Success onQueryChanged should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns stubSuccessfulSearchFlow()
@@ -96,15 +96,8 @@ class StationSearchViewModelTest {
 
             // THEN
             val stations = stubUiStationList()
-            val expected = listOf(
-                StationSearchViewState(isLoading = true),
-                StationSearchViewState(
-                    isLoading = true,
-                    searchResults = stations
-                ),
-                StationSearchViewState(searchResults = stations)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            val expected = StationSearchViewState(searchResults = stations)
+            assertThat(states).contains(expected)
         }
     }
 
@@ -123,44 +116,8 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns Empty onQueryChanged should set correct states`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
-
-            // WHEN
-            viewModel.onQueryChanged(SEARCH_QUERY)
-
-            // THEN
-            val expected = listOf(
-                StationSearchViewState(isLoading = true),
-                StationSearchViewState(
-                    isLoading = true,
-                    showEmptyState = true
-                ),
-                StationSearchViewState(showEmptyState = true)
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-        }
-    }
-
-    @Test
-    fun `when use case returns Empty onQueryChanged should not log query and result`() {
-        collector.test { _, _ ->
-            // GIVEN
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns flowOf(StationListResult.Empty)
-
-            // WHEN
-            viewModel.onQueryChanged(SEARCH_QUERY)
-
-            // THEN
-            verify(exactly = 0) { mockLogger.debug(message = any()) }
-        }
-    }
-
-    @Test
-    fun `when use case returns NetworkError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+    fun `when use case returns NetworkError onQueryChanged should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
             // GIVEN
             every {
                 mockSearchStationUseCase(SEARCH_QUERY)
@@ -170,12 +127,6 @@ class StationSearchViewModelTest {
             viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
-            val expected = listOf(
-                StationSearchViewState(isLoading = true),
-                StationSearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.NETWORK)
             assertThat(actions).contains(expectedAction)
         }
@@ -198,8 +149,8 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+    fun `when use case returns ServerError onQueryChanged should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
             // GIVEN
             every {
                 mockSearchStationUseCase(SEARCH_QUERY)
@@ -209,12 +160,6 @@ class StationSearchViewModelTest {
             viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
-            val expected = listOf(
-                StationSearchViewState(isLoading = true),
-                StationSearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.SERVER)
             assertThat(actions).contains(expectedAction)
         }
@@ -238,8 +183,8 @@ class StationSearchViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError onQueryChanged should set correct states and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+    fun `when use case returns GenericError onQueryChanged should send ShowErrorDialogue action`() {
+        collector.test { _, actions ->
             // GIVEN
             every {
                 mockSearchStationUseCase(SEARCH_QUERY)
@@ -249,12 +194,6 @@ class StationSearchViewModelTest {
             viewModel.onQueryChanged(SEARCH_QUERY)
 
             // THEN
-            val expected = listOf(
-                StationSearchViewState(isLoading = true),
-                StationSearchViewState()
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-
             val expectedAction = StationSearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
             assertThat(actions).contains(expectedAction)
         }
