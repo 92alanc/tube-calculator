@@ -4,7 +4,6 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
-import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulSearchFlow
@@ -27,14 +26,12 @@ class StationSearchViewModelTest {
 
     private val mockSearchStationUseCase = mockk<SearchStationUseCase>()
     private val mockGetMinQueryLengthUseCase = mockk<GetMinQueryLengthUseCase>()
-    private val mockGetSearchTriggerDelayUseCase = mockk<GetSearchTriggerDelayUseCase>()
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = StationSearchViewModel(
         mockSearchStationUseCase,
         mockGetMinQueryLengthUseCase,
-        mockGetSearchTriggerDelayUseCase,
         mockLogger,
         dispatcher
     )
@@ -47,8 +44,7 @@ class StationSearchViewModelTest {
 
     @Before
     fun setUp() {
-        every { mockGetMinQueryLengthUseCase() } returns 4
-        every { mockGetSearchTriggerDelayUseCase() } returns 0
+        every { mockGetMinQueryLengthUseCase() } returns 3
     }
 
     @Test

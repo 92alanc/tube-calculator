@@ -49,12 +49,6 @@ internal abstract class SearchModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindGetSearchTriggerDelayUseCase(
-        impl: GetSearchTriggerDelayUseCaseImpl
-    ): GetSearchTriggerDelayUseCase
-
-    @Binds
-    @ViewModelScoped
     abstract fun bindGetMinQueryLengthUseCase(
         impl: GetMinQueryLengthUseCaseImpl
     ): GetMinQueryLengthUseCase
@@ -66,10 +60,4 @@ internal abstract class SearchModule {
     @Binds
     @ViewModelScoped
     abstract fun bindSearchLocalDataSource(impl: SearchLocalDataSourceImpl): SearchLocalDataSource
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindPopulateLocalDatabaseUseCase(
-        impl: PopulateLocalDatabaseUseCaseImpl
-    ): PopulateLocalDatabaseUseCase
 }

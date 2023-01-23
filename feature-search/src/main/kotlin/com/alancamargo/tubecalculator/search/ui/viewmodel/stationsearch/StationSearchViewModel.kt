@@ -8,13 +8,10 @@ import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
-import com.alancamargo.tubecalculator.search.domain.usecase.GetSearchTriggerDelayUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -24,7 +21,6 @@ import javax.inject.Inject
 internal class StationSearchViewModel @Inject constructor(
     private val searchStationUseCase: SearchStationUseCase,
     private val getMinQueryLengthUseCase: GetMinQueryLengthUseCase,
-    private val getSearchTriggerDelayUseCase: GetSearchTriggerDelayUseCase,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -37,9 +33,6 @@ internal class StationSearchViewModel @Inject constructor(
 
     var selectedStation: UiStation? = null
         private set
-
-    private var searchJob: Job? = null
-    private var lastQuery: String? = null
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
@@ -54,17 +47,12 @@ internal class StationSearchViewModel @Inject constructor(
         } else {
             val minQueryLength = getMinQueryLengthUseCase()
             val isTooShort = trimmedQuery.length < minQueryLength
-            val isJobActive = searchJob?.isActive == true
-            val isSameQuery = trimmedQuery == lastQuery
 
-            if (isTooShort || isJobActive || isSameQuery) {
+            if (isTooShort) {
                 return
             }
 
-            searchJob = viewModelScope.launch(dispatcher) {
-                val triggerDelay = getSearchTriggerDelayUseCase()
-                delay(triggerDelay)
-                lastQuery = trimmedQuery
+            viewModelScope.launch(dispatcher) {
                 searchStation(trimmedQuery)
             }
         }

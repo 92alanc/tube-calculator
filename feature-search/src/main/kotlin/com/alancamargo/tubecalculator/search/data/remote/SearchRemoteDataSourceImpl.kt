@@ -1,15 +1,9 @@
 package com.alancamargo.tubecalculator.search.data.remote
 
 import com.alancamargo.tubecalculator.common.domain.model.Station
-import com.alancamargo.tubecalculator.core.extensions.isRequestError
-import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.search.data.api.SearchService
 import com.alancamargo.tubecalculator.search.data.mapping.toDomain
 import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
-import com.alancamargo.tubecalculator.search.domain.model.StationListResult
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -17,58 +11,36 @@ internal class SearchRemoteDataSourceImpl @Inject constructor(
     private val service: SearchService
 ) : SearchRemoteDataSource {
 
-    override fun searchStation(query: String): Flow<StationListResult> = flow {
+    override suspend fun searchStation(query: String): List<Station> {
         val response = service.searchStation(query = query)
 
-        if (response.isSuccessful) {
+        return if (response.isSuccessful) {
             handleSuccess(response)
         } else {
             handleError(response)
         }
     }
 
-    override fun getAllStopPoints(): Flow<List<Station>> = flow {
-        val response = service.getAllStopPoints()
-
-        if (response.isSuccessful) {
-            response.body()?.stopPoints?.let {
-                val stations = it.filterNot { response ->
-                    response.id == null
-                }.map { response ->
-                    response.toDomain()
-                }
-
-                emit(stations)
-            } ?: run {
-                emit(emptyList())
-            }
-        }
-    }
-
-    private suspend fun FlowCollector<StationListResult>.handleSuccess(
+    private fun handleSuccess(
         response: Response<StationSearchResultsResponse>
-    ) {
-        response.body()?.matches?.let {
-            if (it.isEmpty()) {
-                emit(StationListResult.Empty)
-            } else {
-                val stations = it.map { station -> station.toDomain() }
-                emit(StationListResult.Success(stations))
-            }
+    ): List<Station> {
+        return response.body()?.matches?.let {
+            it.map { station -> station.toDomain() }
         } ?: run {
-            emit(StationListResult.Empty)
+            emptyList()
         }
     }
 
-    private suspend fun FlowCollector<StationListResult>.handleError(
+    private fun handleError(
         response: Response<StationSearchResultsResponse>
-    ) {
-        if (response.isRequestError()) {
+    ): List<Station> {
+        throw Throwable()
+        /*if (response.isRequestError()) {
             emit(StationListResult.GenericError)
         } else if (response.isServerError()) {
             emit(StationListResult.ServerError)
         } else {
             emit(StationListResult.GenericError)
-        }
+        }*/
     }
 }

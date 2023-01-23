@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.search.data.repository
 
 import app.cash.turbine.test
+import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSource
 import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
@@ -14,7 +15,8 @@ import org.junit.Test
 class SearchRepositoryImplTest {
 
     private val mockRemoteDataSource = mockk<SearchRemoteDataSource>()
-    private val repository = SearchRepositoryImpl(mockRemoteDataSource)
+    private val mockLocalDataSource = mockk<SearchLocalDataSource>()
+    private val repository = SearchRepositoryImpl(mockRemoteDataSource, mockLocalDataSource)
 
     @Test
     fun `searchStation should get result from remote data source`() = runBlocking {

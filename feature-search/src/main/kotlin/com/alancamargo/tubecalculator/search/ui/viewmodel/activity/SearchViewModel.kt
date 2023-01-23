@@ -1,6 +1,5 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
@@ -8,15 +7,12 @@ import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
-import com.alancamargo.tubecalculator.search.domain.usecase.PopulateLocalDatabaseUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,7 +25,6 @@ private const val FIRST_ACCESS_DELAY_MILLIS = 200L
 internal class SearchViewModel(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
-    private val populateLocalDatabaseUseCase: PopulateLocalDatabaseUseCase,
     private val analytics: SearchAnalytics,
     private val firstAccessDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -38,13 +33,11 @@ internal class SearchViewModel(
     @Inject constructor(
         isFirstAccessUseCase: IsFirstAccessUseCase,
         disableFirstAccessUseCase: DisableFirstAccessUseCase,
-        populateLocalDatabaseUseCase: PopulateLocalDatabaseUseCase,
         analytics: SearchAnalytics,
         @IoDispatcher dispatcher: CoroutineDispatcher
     ) : this(
         isFirstAccessUseCase,
         disableFirstAccessUseCase,
-        populateLocalDatabaseUseCase,
         analytics,
         FIRST_ACCESS_DELAY_MILLIS,
         dispatcher
@@ -53,18 +46,6 @@ internal class SearchViewModel(
     private val _action = MutableSharedFlow<SearchViewAction>()
 
     val action: SharedFlow<SearchViewAction> = _action
-
-    fun onCreate() {
-        viewModelScope.launch(dispatcher) {
-            populateLocalDatabaseUseCase().onStart {
-                Log.d("TEST_ALAN", "Populating local database...")
-            }.catch { t ->
-                Log.e("TEST_ALAN", t.message, t)
-            }.collect {
-                Log.d("TEST_ALAN", "Success")
-            }
-        }
-    }
 
     fun onStart() {
         analytics.trackScreenViewed()
