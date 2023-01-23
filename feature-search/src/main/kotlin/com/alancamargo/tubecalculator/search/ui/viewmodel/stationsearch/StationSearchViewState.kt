@@ -5,7 +5,8 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 internal data class StationSearchViewState(
     val isLoading: Boolean = false,
     val searchResults: List<UiStation>? = null,
-    val showEmptyState: Boolean = false
+    val showEmptyState: Boolean = false,
+    val selectedStation: UiStation? = null
 ) {
 
     fun onLoading() = copy(
@@ -26,5 +27,13 @@ internal data class StationSearchViewState(
         searchResults = null
     )
 
-    fun clearSearchResults() = copy(searchResults = null)
+    fun clearQuery() = copy(
+        searchResults = null,
+        selectedStation = null
+    )
+
+    fun onStationSelected(selectedStation: UiStation) = copy(
+        selectedStation = selectedStation,
+        searchResults = null
+    )
 }

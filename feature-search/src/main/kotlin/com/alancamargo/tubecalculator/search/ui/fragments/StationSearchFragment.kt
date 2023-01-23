@@ -14,6 +14,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
+import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -72,8 +73,12 @@ internal class StationSearchFragment : Fragment() {
 
     private fun handleState(state: StationSearchViewState) = with(state) {
         binding.shimmer.isVisible = isLoading
-        binding.recyclerView.isVisible = searchResults != null
+        binding.recyclerView.isVisible = searchResults != null && selectedStation == null
         binding.emptyState.isVisible = showEmptyState
+        selectedStation?.let {
+            binding.edtSearch.hideKeyboard()
+            binding.edtSearch.setText(it.name)
+        }
         searchResults?.let(adapter::submitList)
     }
 

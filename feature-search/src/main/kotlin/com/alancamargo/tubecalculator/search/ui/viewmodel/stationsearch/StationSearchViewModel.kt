@@ -36,13 +36,14 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
+        _state.update { it.onStationSelected(station) }
     }
 
     fun onQueryChanged(query: String?) {
         val trimmedQuery = query?.trim()
 
         if (trimmedQuery.isNullOrBlank()) {
-            _state.update { it.clearSearchResults() }
+            _state.update { it.clearQuery() }
             selectedStation = null
         } else {
             val minQueryLength = getMinQueryLengthUseCase()
