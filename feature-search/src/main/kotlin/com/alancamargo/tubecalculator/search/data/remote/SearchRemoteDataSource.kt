@@ -1,8 +1,8 @@
 package com.alancamargo.tubecalculator.search.data.remote
 
-import com.alancamargo.tubecalculator.common.domain.model.Station
+import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 
 internal interface SearchRemoteDataSource {
 
-    suspend fun searchStation(query: String): List<Station>
+    suspend fun searchStation(query: String): StationListResult
 }

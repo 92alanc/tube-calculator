@@ -14,12 +14,13 @@ internal class SearchRepositoryImpl @Inject constructor(
 ) : SearchRepository {
 
     override fun searchStation(query: String): Flow<StationListResult> = flow {
-        val stations = try {
-            localDataSource.searchStation(query)
-        } catch (t: Throwable) {
-            remoteDataSource.searchStation(query)
-        }
+        val localResult = localDataSource.searchStation(query)
 
-        emit(StationListResult.Success(stations))
+        if (localResult is StationListResult.Success) {
+            emit(localResult)
+        } else {
+            val remoteResult = remoteDataSource.searchStation(query)
+            emit(remoteResult)
+        }
     }
 }

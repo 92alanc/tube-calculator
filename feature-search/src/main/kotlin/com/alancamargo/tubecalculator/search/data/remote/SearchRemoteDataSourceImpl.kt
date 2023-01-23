@@ -1,9 +1,11 @@
 package com.alancamargo.tubecalculator.search.data.remote
 
-import com.alancamargo.tubecalculator.common.domain.model.Station
+import com.alancamargo.tubecalculator.core.extensions.isRequestError
+import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.search.data.api.SearchService
 import com.alancamargo.tubecalculator.search.data.mapping.toDomain
 import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
+import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -11,7 +13,7 @@ internal class SearchRemoteDataSourceImpl @Inject constructor(
     private val service: SearchService
 ) : SearchRemoteDataSource {
 
-    override suspend fun searchStation(query: String): List<Station> {
+    override suspend fun searchStation(query: String): StationListResult {
         val response = service.searchStation(query = query)
 
         return if (response.isSuccessful) {
@@ -23,24 +25,29 @@ internal class SearchRemoteDataSourceImpl @Inject constructor(
 
     private fun handleSuccess(
         response: Response<StationSearchResultsResponse>
-    ): List<Station> {
+    ): StationListResult {
         return response.body()?.matches?.let {
-            it.map { station -> station.toDomain() }
+            val stations = it.map { station -> station.toDomain() }
+
+            if (stations.isEmpty()) {
+                StationListResult.Empty
+            } else {
+                StationListResult.Success(stations)
+            }
         } ?: run {
-            emptyList()
+            StationListResult.Empty
         }
     }
 
     private fun handleError(
         response: Response<StationSearchResultsResponse>
-    ): List<Station> {
-        throw Throwable()
-        /*if (response.isRequestError()) {
-            emit(StationListResult.GenericError)
+    ): StationListResult {
+        return if (response.isRequestError()) {
+            StationListResult.GenericError
         } else if (response.isServerError()) {
-            emit(StationListResult.ServerError)
+            StationListResult.ServerError
         } else {
-            emit(StationListResult.GenericError)
-        }*/
+            StationListResult.GenericError
+        }
     }
 }
