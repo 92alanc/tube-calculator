@@ -32,6 +32,19 @@ class SearchLocalDataSourceImplTest {
     }
 
     @Test
+    fun `when database returns empty list searchStation should return Empty`() {
+        // GIVEN
+        coEvery { mockDao.searchStation(SEARCH_QUERY) } returns emptyList()
+
+        // WHEN
+        val actual = runBlocking { localDataSource.searchStation(SEARCH_QUERY) }
+
+        // THEN
+        val expected = StationListResult.Empty
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
     fun `when database throws exception searchStation should return GenericError`() {
         // GIVEN
         coEvery { mockDao.searchStation(SEARCH_QUERY) } throws IOException()

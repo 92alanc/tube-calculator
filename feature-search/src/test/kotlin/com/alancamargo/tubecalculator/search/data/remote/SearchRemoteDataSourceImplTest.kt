@@ -36,7 +36,7 @@ class SearchRemoteDataSourceImplTest {
     }
 
     @Test
-    fun `when service returns empty list searchStation should return Success`() {
+    fun `when service returns empty list searchStation should return Empty`() {
         // GIVEN
         val body = StationSearchResultsResponse(matches = emptyList())
         coEvery {
@@ -47,12 +47,12 @@ class SearchRemoteDataSourceImplTest {
         val actual = runBlocking { remoteDataSource.searchStation(SEARCH_QUERY) }
 
         // THEN
-        val expected = StationListResult.Success(emptyList())
+        val expected = StationListResult.Empty
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
-    fun `when service returns no matches searchStation should return Success`() {
+    fun `when service returns no matches searchStation should return Empty`() {
         // GIVEN
         val body = StationSearchResultsResponse(matches = null)
         coEvery {
@@ -63,7 +63,7 @@ class SearchRemoteDataSourceImplTest {
         val actual = runBlocking { remoteDataSource.searchStation(SEARCH_QUERY) }
 
         // THEN
-        val expected = StationListResult.Success(emptyList())
+        val expected = StationListResult.Empty
         assertThat(actual).isEqualTo(expected)
     }
 

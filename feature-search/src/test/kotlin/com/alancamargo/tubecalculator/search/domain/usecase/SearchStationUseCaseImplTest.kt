@@ -19,7 +19,7 @@ class SearchStationUseCaseImplTest {
     @Test
     fun `invoke should get result from repository`() = runBlocking {
         // GIVEN
-        val expected = StationListResult.ServerError
+        val expected = StationListResult.Empty
         every { mockRepository.searchStation(SEARCH_QUERY) } returns flowOf(expected)
 
         // WHEN

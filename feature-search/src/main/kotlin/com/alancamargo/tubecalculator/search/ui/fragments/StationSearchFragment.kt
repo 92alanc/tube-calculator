@@ -7,12 +7,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
+import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -35,7 +37,7 @@ internal class StationSearchFragment : Fragment() {
 
     private val args by args<Args>()
     private val viewModel by viewModels<StationSearchViewModel>()
-    private val adapter by lazy { StationAdapter(context = requireContext()) }
+    private val adapter by lazy { StationAdapter(viewModel::onStationSelected) }
 
     @Inject
     lateinit var dialogueHelper: DialogueHelper
@@ -65,18 +67,18 @@ internal class StationSearchFragment : Fragment() {
     private fun setUpUi() = with(binding) {
         txtLabel.setText(args.searchType.labelRes)
         textInputLayout.hint = getString(args.searchType.hintRes)
-        autoCompleteTextView.setAdapter(adapter)
-        autoCompleteTextView.addTextChangedListener(getQueryTextWatcher())
-        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
-            val item = parent.getItemAtPosition(position)
-            (item as? UiStation)?.let { station ->
-                viewModel.onStationSelected(station)
-                autoCompleteTextView.setText(station.name)
-            }
-        }
+        recyclerView.adapter = adapter
+        edtSearch.addTextChangedListener(getQueryTextWatcher())
     }
 
     private fun handleState(state: StationSearchViewState) = with(state) {
+        binding.shimmer.isVisible = isLoading
+        binding.recyclerView.isVisible = searchResults != null && selectedStation == null
+        binding.emptyState.isVisible = showEmptyState
+        selectedStation?.let {
+            binding.edtSearch.hideKeyboard()
+            binding.edtSearch.setText(it.name)
+        }
         searchResults?.let(adapter::submitList)
     }
 

@@ -28,9 +28,14 @@ internal class SearchRemoteDataSourceImpl @Inject constructor(
     ): StationListResult {
         return response.body()?.matches?.let {
             val stations = it.map { station -> station.toDomain() }
-            StationListResult.Success(stations)
+
+            if (stations.isEmpty()) {
+                StationListResult.Empty
+            } else {
+                StationListResult.Success(stations)
+            }
         } ?: run {
-            StationListResult.Success(emptyList())
+            StationListResult.Empty
         }
     }
 

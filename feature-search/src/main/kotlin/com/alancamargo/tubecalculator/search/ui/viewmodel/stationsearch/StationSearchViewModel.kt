@@ -36,12 +36,14 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onStationSelected(station: UiStation) {
         this.selectedStation = station
+        _state.update { it.onStationSelected(station) }
     }
 
     fun onQueryChanged(query: String?) {
         val trimmedQuery = query?.trim()
 
         if (trimmedQuery.isNullOrBlank()) {
+            _state.update { it.clearQuery() }
             selectedStation = null
         } else {
             val minQueryLength = getMinQueryLengthUseCase()
@@ -58,9 +60,13 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     private suspend fun searchStation(query: String) {
-        searchStationUseCase(query).catch { throwable ->
+        searchStationUseCase(query).onStart {
+            _state.update { it.onLoading() }
+        }.catch { throwable ->
             logger.error(throwable)
             handleThrowable(throwable)
+        }.onCompletion {
+            _state.update { it.onStopLoading() }
         }.collect { result ->
             val isServerError = result is StationListResult.ServerError
             val isGenericError = result is StationListResult.GenericError
@@ -95,6 +101,8 @@ internal class StationSearchViewModel @Inject constructor(
 
                 _state.update { it.onReceivedSearchResults(stations) }
             }
+
+            is StationListResult.Empty -> _state.update { it.onEmptyState() }
 
             is StationListResult.NetworkError -> {
                 val error = UiSearchError.NETWORK
