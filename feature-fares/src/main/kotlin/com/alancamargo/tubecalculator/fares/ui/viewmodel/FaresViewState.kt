@@ -12,7 +12,7 @@ internal data class FaresViewState(
     fun onStopLoading() = copy(isLoading = false)
 
     fun onReceivedRailFares(railFares: List<FareRoot.RailFare>) = copy(
-        fares = fares?.plus(railFares) ?: railFares
+        fares = railFares + (fares ?: emptyList())
     )
 
     fun onReceivedBusAndTramFare(busAndTramFare: FareRoot.BusAndTramFare) = copy(

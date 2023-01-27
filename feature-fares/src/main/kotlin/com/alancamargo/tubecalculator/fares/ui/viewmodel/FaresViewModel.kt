@@ -45,11 +45,11 @@ internal class FaresViewModel @Inject constructor(
         analytics.trackScreenViewed()
 
         viewModelScope.launch(dispatcher) {
-            calculateBusAndTramFare(busAndTramJourneyCount)
             if (origin != null && destination != null) {
                 getRailFares(origin, destination)
             }
 
+            calculateBusAndTramFare(busAndTramJourneyCount)
             railFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork()
         }
     }

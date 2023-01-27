@@ -116,12 +116,12 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE), stubRailFare())
-            val expected = FaresViewState(
-                isLoading = true,
-                fares = fares
+            val fares = listOf(stubRailFare(), FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(isLoading = false, fares = fares)
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
         }
     }
 
@@ -190,11 +190,14 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(
-                isLoading = true,
-                fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                )
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(
                 FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
             )
@@ -217,11 +220,14 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(
-                isLoading = true,
-                fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                )
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK))
         }
     }
@@ -260,11 +266,14 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(
-                isLoading = true,
-                fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                )
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.SERVER))
         }
     }
@@ -284,7 +293,8 @@ class FaresViewModelTest {
         )
 
         // THEN
-        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.ServerError}"
+        val message =
+            "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.ServerError}"
         verify { mockLogger.debug(message) }
     }
 
@@ -304,11 +314,14 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(
-                isLoading = true,
-                fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                )
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC))
         }
     }
@@ -328,7 +341,8 @@ class FaresViewModelTest {
         )
 
         // THEN
-        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.GenericError}"
+        val message =
+            "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.GenericError}"
         verify { mockLogger.debug(message) }
     }
 
