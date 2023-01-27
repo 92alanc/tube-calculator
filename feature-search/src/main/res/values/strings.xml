@@ -7,7 +7,7 @@
     <string name="search_where_are_you_travelling_to">And where are you travelling to?</string>
     <string name="search_label_destination">Destination</string>
     <string name="search_how_many_bus_tram_journeys">How many bus and/or tram journeys?</string>
-    <string name="search_bus_tram_journeys_info">If your bus/tram journeys are all within the space of an hour, you should consider them as a single journey</string>
+    <string name="search_bus_tram_journeys_info">If your bus/tram journeys are all within the space of an hour, you should consider them as a single journey because you will only be charged once.\n\nExample: you catch a bus and tap your card at 10:00, then you catch a tram and tap at 10:30 and then another bus at 10:59. You will only be charged for the time you tapped at 10:00.</string>
     <string name="search_calculate">Calculate</string>
     <string name="search_content_description_more">More</string>
     <string name="search_content_description_less">Less</string>
