@@ -35,24 +35,6 @@
         tools:listitem="@layout/item_fare_list_root"
         tools:itemCount="2"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/txtBusAndTramFares"
-        style="@style/TextAppearance.MaterialComponents.Headline5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:layout_marginHorizontal="@dimen/spacing_16"
-        android:gravity="center_horizontal"
-        android:drawablePadding="@dimen/spacing_8"
-        app:drawableStartCompat="@drawable/ic_bus"
-        app:drawableEndCompat="@drawable/ic_tram"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
-        app:layout_constraintBottom_toTopOf="@+id/btNewSearch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside"
-        tools:text="Bus and tram fares: £3.30"/>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btNewSearch"
         style="@style/TubeCalculator.Button"
@@ -61,7 +43,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginHorizontal="@dimen/spacing_16"
         android:text="@string/fares_new_search"
-        app:layout_constraintTop_toBottomOf="@id/txtBusAndTramFares"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
         app:layout_constraintBottom_toTopOf="@+id/banner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -85,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="txtBusAndTramFares, btNewSearch, banner" />
+        app:constraint_referenced_ids="btNewSearch, banner" />
 
     <FrameLayout
         android:id="@+id/shimmerContainer"
@@ -93,7 +75,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_16"
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
-        app:layout_constraintBottom_toTopOf="@+id/txtBusAndTramFares"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="gone">

@@ -6,20 +6,20 @@ import com.alancamargo.tubecalculator.core.extensions.isRequestError
 import com.alancamargo.tubecalculator.core.extensions.isServerError
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.RemoteDatabaseFareListWrapper
-import com.alancamargo.tubecalculator.fares.data.model.responses.FareListRootResponse
-import com.alancamargo.tubecalculator.fares.data.service.FaresService
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
+import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
+import com.alancamargo.tubecalculator.fares.data.service.RailFaresService
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import retrofit2.Response
 import javax.inject.Inject
 
 private const val REMOTE_DATABASE_COLLECTION_NAME = "fares"
 
 internal class FaresRemoteDataSourceImpl @Inject constructor(
-    private val service: FaresService,
+    private val service: RailFaresService,
     private val remoteDatabase: RemoteDatabase
 ) : FaresRemoteDataSource {
 
-    override suspend fun getFares(origin: Station, destination: Station): FareListResult {
+    override suspend fun getRailFares(origin: Station, destination: Station): RailFaresResult {
         val documentId = "${origin.id}#${destination.id}"
 
         return try {
@@ -30,8 +30,8 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
             )
 
             response?.let {
-                val fareList = it.fareList.map { fare -> fare.toDomain() }
-                FareListResult.Success(fareList)
+                val railFares = it.fareList.map { fare -> fare.toDomain() }
+                RailFaresResult.Success(railFares)
             } ?: run {
                 fetchFromService(origin, destination, documentId)
             }
@@ -44,8 +44,8 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
         origin: Station,
         destination: Station,
         documentId: String
-    ): FareListResult {
-        val response = service.getFares(
+    ): RailFaresResult {
+        val response = service.getRailFares(
             originId = origin.id,
             destinationId = destination.id
         )
@@ -59,29 +59,29 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
 
     private suspend fun handleSuccess(
         documentId: String,
-        response: Response<List<FareListRootResponse>>
-    ): FareListResult {
+        response: Response<List<RailFareResponse>>
+    ): RailFaresResult {
         return response.body()?.let { body ->
             if (body.isEmpty()) {
-                FareListResult.InvalidQueryError
+                RailFaresResult.InvalidQueryError
             } else {
                 val data = RemoteDatabaseFareListWrapper(body)
                 remoteDatabase.save(REMOTE_DATABASE_COLLECTION_NAME, documentId, data)
-                val fareList = body.map { it.toDomain() }
-                FareListResult.Success(fareList)
+                val railFares = body.map { it.toDomain() }
+                RailFaresResult.Success(railFares)
             }
         } ?: run {
-            FareListResult.GenericError
+            RailFaresResult.GenericError
         }
     }
 
-    private fun handleError(response: Response<List<FareListRootResponse>>): FareListResult {
+    private fun handleError(response: Response<List<RailFareResponse>>): RailFaresResult {
         return if (response.isRequestError()) {
-            FareListResult.GenericError
+            RailFaresResult.GenericError
         } else if (response.isServerError()) {
-            FareListResult.ServerError
+            RailFaresResult.ServerError
         } else {
-            FareListResult.GenericError
+            RailFaresResult.GenericError
         }
     }
 }

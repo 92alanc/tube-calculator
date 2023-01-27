@@ -4,8 +4,8 @@ import app.cash.turbine.test
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSource
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
-import com.alancamargo.tubecalculator.fares.testtools.stubFareListRoot
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
+import com.alancamargo.tubecalculator.fares.testtools.stubRailFare
 import com.alancamargo.tubecalculator.fares.testtools.stubStation
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -30,17 +30,17 @@ class FaresRepositoryImplTest {
     )
 
     @Test
-    fun `when local data source returns success getFares should not call remote`() = runBlocking {
+    fun `when local data source returns success getRailFares should not call remote`() = runBlocking {
         // GIVEN
-        val body = listOf(stubFareListRoot())
-        val expected = FareListResult.Success(body)
+        val body = listOf(stubRailFare())
+        val expected = RailFaresResult.Success(body)
         val station = stubStation()
         coEvery {
-            mockLocalDataSource.getFares(origin = station, destination = station)
+            mockLocalDataSource.getRailFares(origin = station, destination = station)
         } returns expected
 
         // WHEN
-        val result = repository.getFares(origin = station, destination = station)
+        val result = repository.getRailFares(origin = station, destination = station)
 
         // THEN
         result.test {
@@ -50,25 +50,25 @@ class FaresRepositoryImplTest {
         }
 
         coVerify(exactly = 0) {
-            mockRemoteDataSource.getFares(origin = any(), destination = any())
+            mockRemoteDataSource.getRailFares(origin = any(), destination = any())
         }
     }
 
     @Test
-    fun `when local data source throws exception getFares should get result from remote`() = runBlocking {
+    fun `when local data source throws exception getRailFares should get result from remote`() = runBlocking {
         // GIVEN
-        val body = listOf(stubFareListRoot())
-        val expected = FareListResult.Success(body)
+        val body = listOf(stubRailFare())
+        val expected = RailFaresResult.Success(body)
         val station = stubStation()
         coEvery {
-            mockLocalDataSource.getFares(origin = station, destination = station)
+            mockLocalDataSource.getRailFares(origin = station, destination = station)
         } throws Throwable()
         coEvery {
-            mockRemoteDataSource.getFares(origin = station, destination = station)
+            mockRemoteDataSource.getRailFares(origin = station, destination = station)
         } returns expected
 
         // WHEN
-        val result = repository.getFares(origin = station, destination = station)
+        val result = repository.getRailFares(origin = station, destination = station)
 
         // THEN
         result.test {
@@ -79,20 +79,20 @@ class FaresRepositoryImplTest {
     }
 
     @Test
-    fun `when local data source throws exception getFares should update local`() = runBlocking {
+    fun `when local data source throws exception getRailFares should update local`() = runBlocking {
         // GIVEN
-        val body = listOf(stubFareListRoot())
-        val expected = FareListResult.Success(body)
+        val body = listOf(stubRailFare())
+        val expected = RailFaresResult.Success(body)
         val station = stubStation()
         coEvery {
-            mockLocalDataSource.getFares(origin = station, destination = station)
+            mockLocalDataSource.getRailFares(origin = station, destination = station)
         } throws Throwable()
         coEvery {
-            mockRemoteDataSource.getFares(origin = station, destination = station)
+            mockRemoteDataSource.getRailFares(origin = station, destination = station)
         } returns expected
 
         // WHEN
-        val result = repository.getFares(origin = station, destination = station)
+        val result = repository.getRailFares(origin = station, destination = station)
 
         // THEN
         result.test {
@@ -101,7 +101,7 @@ class FaresRepositoryImplTest {
         }
 
         coVerify {
-            mockLocalDataSource.saveFares(origin = station, destination = station, fares = body)
+            mockLocalDataSource.saveRailFares(origin = station, destination = station, railFares = body)
         }
     }
 

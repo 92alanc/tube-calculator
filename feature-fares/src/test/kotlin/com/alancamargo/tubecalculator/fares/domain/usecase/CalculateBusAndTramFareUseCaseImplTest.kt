@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
+import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -23,7 +24,7 @@ class CalculateBusAndTramFareUseCaseImplTest {
         val actual = useCase(busAndTramJourneyCount = 2)
 
         // THEN
-        val expected = "£3.30"
+        val expected = FareRoot.BusAndTramFare(fare = "3.30")
         assertThat(actual).isEqualTo(expected)
     }
 

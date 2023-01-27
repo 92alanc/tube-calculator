@@ -8,8 +8,8 @@ import com.alancamargo.tubecalculator.fares.data.repository.FaresRepositoryImpl
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCaseImpl
-import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCase
-import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCaseImpl
+import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
+import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -30,7 +30,7 @@ internal abstract class FaresModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindGetFaresUseCase(impl: GetFaresUseCaseImpl): GetFaresUseCase
+    abstract fun bindGetRailFaresUseCase(impl: GetRailFaresUseCaseImpl): GetRailFaresUseCase
 
     @Binds
     @ViewModelScoped

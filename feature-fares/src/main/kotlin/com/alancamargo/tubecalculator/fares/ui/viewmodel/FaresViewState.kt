@@ -1,27 +1,21 @@
 package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
-import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
+import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 
 internal data class FaresViewState(
     val isLoading: Boolean = false,
-    val railFares: List<FareListRoot>? = null,
-    val busAndTramFare: String? = null,
-    val showOnlyBusAndTramFare: Boolean = false
+    val fares: List<FareRoot>? = null
 ) {
 
-    fun onLoading() = copy(
-        isLoading = true,
-        railFares = null
-    )
+    fun onLoading() = copy(isLoading = true)
 
     fun onStopLoading() = copy(isLoading = false)
 
-    fun onReceivedRailFares(railFares: List<FareListRoot>) = copy(
-        railFares = railFares,
-        showOnlyBusAndTramFare = false
+    fun onReceivedRailFares(railFares: List<FareRoot.RailFare>) = copy(
+        fares = fares?.plus(railFares) ?: railFares
     )
 
-    fun onReceivedBusAndTramFare(busAndTramFare: String) = copy(busAndTramFare = busAndTramFare)
-
-    fun onShowOnlyBusAndTramFare() = copy(showOnlyBusAndTramFare = true)
+    fun onReceivedBusAndTramFare(busAndTramFare: FareRoot.BusAndTramFare) = copy(
+        fares = fares?.plus(busAndTramFare) ?: listOf(busAndTramFare)
+    )
 }

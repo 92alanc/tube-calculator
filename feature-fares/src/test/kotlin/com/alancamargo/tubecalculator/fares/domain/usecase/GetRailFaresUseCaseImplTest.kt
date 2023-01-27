@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
 import app.cash.turbine.test
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import com.alancamargo.tubecalculator.fares.testtools.stubStation
 import com.google.common.truth.Truth.assertThat
@@ -11,18 +11,18 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
-class GetFaresUseCaseImplTest {
+class GetRailFaresUseCaseImplTest {
 
     private val mockRepository = mockk<FaresRepository>()
-    private val useCase = GetFaresUseCaseImpl(mockRepository)
+    private val useCase = GetRailFaresUseCaseImpl(mockRepository)
 
     @Test
     fun `invoke should get result from repository`() = runBlocking {
         // GIVEN
-        val expected = FareListResult.GenericError
+        val expected = RailFaresResult.GenericError
         val station = stubStation()
         every {
-            mockRepository.getFares(origin = station, destination = station)
+            mockRepository.getRailFares(origin = station, destination = station)
         } returns flowOf(expected)
 
         // WHEN

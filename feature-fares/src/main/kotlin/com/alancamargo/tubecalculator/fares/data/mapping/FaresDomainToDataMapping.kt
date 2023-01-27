@@ -2,11 +2,11 @@ package com.alancamargo.tubecalculator.fares.data.mapping
 
 import com.alancamargo.tubecalculator.fares.data.model.responses.*
 import com.alancamargo.tubecalculator.fares.domain.model.Fare
-import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
+import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 import com.alancamargo.tubecalculator.fares.domain.model.Ticket
 import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
 
-internal fun FareListRoot.toData() = FareListRootResponse(
+internal fun FareRoot.RailFare.toData() = RailFareResponse(
     header = header,
     fares = fares.map { it.toData() },
     messages = messages.map(::FareMessageResponse)

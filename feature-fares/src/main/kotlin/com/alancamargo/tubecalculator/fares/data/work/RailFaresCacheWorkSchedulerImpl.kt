@@ -7,15 +7,15 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-private const val WORK_NAME = "fares_cache"
+private const val WORK_NAME = "rail_fares_cache"
 
-internal class FaresCacheWorkSchedulerImpl @Inject constructor(
+internal class RailFaresCacheWorkSchedulerImpl @Inject constructor(
     private val context: Context
-) : FaresCacheWorkScheduler {
+) : RailFaresCacheWorkScheduler {
 
-    override fun scheduleFaresCacheBackgroundWork() {
+    override fun scheduleRailFaresCacheBackgroundWork() {
         val workManager = WorkManager.getInstance(context)
-        val request = PeriodicWorkRequestBuilder<FaresCacheWorker>(
+        val request = PeriodicWorkRequestBuilder<RailFaresCacheWorker>(
             30,
             TimeUnit.DAYS
         ).build()
