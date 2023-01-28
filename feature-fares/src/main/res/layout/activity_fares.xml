@@ -35,6 +35,32 @@
         tools:listitem="@layout/item_fare_list_root"
         tools:itemCount="2"/>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/txtCheapestTotalFare"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtCheapestTotalFare"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintBottom_toTopOf="@+id/btNewSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Cheapest total fare: £2.70"/>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btNewSearch"
         style="@style/TubeCalculator.Button"
@@ -43,7 +69,7 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginHorizontal="@dimen/spacing_16"
         android:text="@string/fares_new_search"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/txtCheapestTotalFare"
         app:layout_constraintBottom_toTopOf="@+id/banner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -67,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="top"
-        app:constraint_referenced_ids="btNewSearch, banner" />
+        app:constraint_referenced_ids="divider, txtCheapestTotalFare, btNewSearch, banner" />
 
     <FrameLayout
         android:id="@+id/shimmerContainer"
@@ -75,7 +101,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_16"
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerView"
+        app:layout_constraintBottom_toBottomOf="@+id/txtCheapestTotalFare"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="gone">

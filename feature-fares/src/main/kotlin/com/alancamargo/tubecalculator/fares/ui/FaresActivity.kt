@@ -79,6 +79,13 @@ internal class FaresActivity : AppCompatActivity() {
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
         binding.recyclerView.isVisible = fares != null && !isLoading
+        binding.txtCheapestTotalFare.isVisible = cheapestTotalFare != null
+        cheapestTotalFare?.let {
+            binding.txtCheapestTotalFare.text = getString(
+                R.string.fares_cheapest_total_fare_format,
+                it
+            )
+        }
         fares?.let(adapter::submitList)
     }
 
