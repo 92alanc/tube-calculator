@@ -27,41 +27,11 @@
         app:boxBackgroundMode="outline"
         app:boxBackgroundColor="?colorOnPrimary"
         tools:hint="@sample/search_screen.json/data/hint">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtSearch"
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionNone"
-            android:maxLines="1"
-            android:inputType="text"
-            tools:text="@sample/stations.json/data/query"/>
+            android:padding="@dimen/spacing_16"/>
     </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_station" />
-
-    <FrameLayout
-        android:id="@+id/shimmer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:layout_marginStart="@dimen/spacing_16"
-        tools:visibility="gone">
-        <include layout="@layout/shimmer_search" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/emptyState"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        tools:visibility="gone">
-        <include layout="@layout/search_empty_state" />
-    </FrameLayout>
 
 </LinearLayout>

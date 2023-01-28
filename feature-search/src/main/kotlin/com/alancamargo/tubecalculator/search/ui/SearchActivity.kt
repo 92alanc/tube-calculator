@@ -70,7 +70,7 @@ internal class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(binding.drawerLayout)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
     }

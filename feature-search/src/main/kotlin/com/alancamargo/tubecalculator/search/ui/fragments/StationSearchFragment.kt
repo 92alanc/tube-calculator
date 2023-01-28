@@ -2,19 +2,15 @@ package com.alancamargo.tubecalculator.search.ui.fragments
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
-import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -37,7 +33,6 @@ internal class StationSearchFragment : Fragment() {
 
     private val args by args<Args>()
     private val viewModel by viewModels<StationSearchViewModel>()
-    private val adapter by lazy { StationAdapter(viewModel::onStationSelected) }
 
     @Inject
     lateinit var dialogueHelper: DialogueHelper
@@ -55,6 +50,7 @@ internal class StationSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeStateAndAction()
         setUpUi()
+        viewModel.onCreate()
     }
 
     fun getSelectedStation(): UiStation? = viewModel.selectedStation
@@ -67,19 +63,28 @@ internal class StationSearchFragment : Fragment() {
     private fun setUpUi() = with(binding) {
         txtLabel.setText(args.searchType.labelRes)
         textInputLayout.hint = getString(args.searchType.hintRes)
-        recyclerView.adapter = adapter
-        edtSearch.addTextChangedListener(getQueryTextWatcher())
+        autoCompleteTextView.hint = getString(args.searchType.hintRes)
+        autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
+            val item = parent.getItemAtPosition(position)
+            (item as? UiStation)?.let { station ->
+                viewModel.onStationSelected(station)
+                autoCompleteTextView.setText(station.name)
+            }
+        }
     }
 
     private fun handleState(state: StationSearchViewState) = with(state) {
-        binding.shimmer.isVisible = isLoading
-        binding.recyclerView.isVisible = searchResults != null && selectedStation == null
-        binding.emptyState.isVisible = showEmptyState
-        selectedStation?.let {
-            binding.edtSearch.hideKeyboard()
-            binding.edtSearch.setText(it.name)
+        minQueryLength?.let {
+            binding.autoCompleteTextView.threshold = it
         }
-        searchResults?.let(adapter::submitList)
+
+        stations?.let {
+            val adapter = StationAdapter(
+                context = requireContext(),
+                stations = it
+            )
+            binding.autoCompleteTextView.setAdapter(adapter)
+        }
     }
 
     private fun handleAction(action: StationSearchViewAction) {
@@ -94,16 +99,6 @@ internal class StationSearchFragment : Fragment() {
             titleRes = R.string.error,
             messageRes = error.messageRes
         )
-    }
-
-    private fun getQueryTextWatcher() = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
-            text?.toString()?.let(viewModel::onQueryChanged)
-        }
-
-        override fun afterTextChanged(s: Editable?) {}
     }
 
     @Parcelize

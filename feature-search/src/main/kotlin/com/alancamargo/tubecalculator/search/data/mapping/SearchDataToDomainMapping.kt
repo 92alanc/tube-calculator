@@ -4,7 +4,7 @@ import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.data.model.StationResponse
-import com.alancamargo.tubecalculator.search.data.model.db.DbStation
+import com.alancamargo.tubecalculator.search.data.model.DbStation
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 

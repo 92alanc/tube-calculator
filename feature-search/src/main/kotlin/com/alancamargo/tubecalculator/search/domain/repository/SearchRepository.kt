@@ -5,5 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface SearchRepository {
 
-    fun searchStation(query: String): Flow<StationListResult>
+    fun getAllStations(): Flow<StationListResult>
 }

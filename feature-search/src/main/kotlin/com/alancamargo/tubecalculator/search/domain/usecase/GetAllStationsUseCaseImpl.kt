@@ -5,11 +5,11 @@ import com.alancamargo.tubecalculator.search.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-internal class SearchStationUseCaseImpl @Inject constructor(
+internal class GetAllStationsUseCaseImpl @Inject constructor(
     private val repository: SearchRepository
-) : SearchStationUseCase {
+) : GetAllStationsUseCase {
 
-    override fun invoke(query: String): Flow<StationListResult> {
-        return repository.searchStation(query)
+    override fun invoke(): Flow<StationListResult> {
+        return repository.getAllStations()
     }
 }

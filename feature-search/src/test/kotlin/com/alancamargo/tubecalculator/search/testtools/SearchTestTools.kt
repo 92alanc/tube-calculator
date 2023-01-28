@@ -6,17 +6,15 @@ import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.common.ui.model.UiMode
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.search.data.model.ModeResponse
-import com.alancamargo.tubecalculator.search.data.model.StationResponse
-import com.alancamargo.tubecalculator.search.data.model.StationSearchResultsResponse
-import com.alancamargo.tubecalculator.search.data.model.db.DbStation
+import com.alancamargo.tubecalculator.search.data.model.DbStation
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-internal const val SEARCH_QUERY = "camden"
+internal const val MIN_QUERY_LENGTH = 3
 
-internal fun stubSuccessfulSearchFlow() = flow<StationListResult> {
+internal fun stubSuccessfulStationListResultFlow() = flow<StationListResult> {
     val stations = stubStationList()
     val result = StationListResult.Success(stations)
     emit(result)
@@ -25,21 +23,6 @@ internal fun stubSuccessfulSearchFlow() = flow<StationListResult> {
 internal fun stubUiStationList() = stubStationList().map { it.toUi() }
 
 internal fun stubDbStationList() = stubStationList().map { it.toDb() }
-
-internal fun stubSearchResultsResponse() = StationSearchResultsResponse(
-    matches = listOf(
-        StationResponse(
-            id = "12345",
-            name = "Camden Road",
-            modes = listOf(ModeResponse.OVERGROUND)
-        ),
-        StationResponse(
-            id = "67890",
-            name = "Camden Town",
-            modes = listOf(ModeResponse.UNDERGROUND)
-        )
-    )
-)
 
 internal fun stubStationList() = listOf(
     Station(
