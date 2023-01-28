@@ -14,9 +14,10 @@ class CalculateCheapestTotalFareUseCaseImplTest {
         // GIVEN
         val railFares = stubRailFaresWithAlternativeRoute()
         val busAndTramFare = stubBusAndTramFare()
+        val fares = railFares + busAndTramFare
 
         // WHEN
-        val actual = useCase(railFares, busAndTramFare)
+        val actual = useCase(fares)
 
         // THEN
         val expected = "6.00"
@@ -29,7 +30,7 @@ class CalculateCheapestTotalFareUseCaseImplTest {
         val railFares = stubRailFaresWithAlternativeRoute()
 
         // WHEN
-        val actual = useCase(railFares, busAndTramFare = null)
+        val actual = useCase(railFares)
 
         // THEN
         val expected = "2.70"

@@ -1,28 +1,28 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
 import com.alancamargo.tubecalculator.core.extensions.roundUpAsMoney
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import java.math.BigDecimal
 import javax.inject.Inject
 
 internal class CalculateCheapestTotalFareUseCaseImpl @Inject constructor(
 ) : CalculateCheapestTotalFareUseCase {
 
-    override fun invoke(
-        railFares: List<FareRoot.RailFare>,
-        busAndTramFare: FareRoot.BusAndTramFare?
-    ): String {
-        val cheapestRailFare = railFares.minOf { railFare ->
-            railFare.fareOptions.minOf { fareOption ->
+    override fun invoke(fares: List<Fare>): String {
+        val cheapestRailFare = fares.filterIsInstance<Fare.RailFare>().minOf { fare ->
+            fare.fareOptions.minOf { fareOption ->
                 fareOption.tickets.minOf { ticket ->
-                    BigDecimal(ticket.cost)
+                    ticket.cost.toDouble()
                 }
             }
         }
 
-        val busAndTramFareValue = busAndTramFare?.fare?.let(::BigDecimal) ?: BigDecimal.ZERO
+        val busAndTramFare = fares.filterIsInstance<Fare.BusAndTramFare>().sumOf { fare ->
+            fare.cost.toDouble()
+        }
 
-        val sum = cheapestRailFare + busAndTramFareValue
-        return sum.roundUpAsMoney()
+        val sum = cheapestRailFare + busAndTramFare
+        val cheapestTotalFare = BigDecimal(sum)
+        return cheapestTotalFare.roundUpAsMoney()
     }
 }

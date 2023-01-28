@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.ListAdapter
 import com.alancamargo.tubecalculator.core.tools.GenericDiffCallback
 import com.alancamargo.tubecalculator.fares.databinding.ItemBusTramFareBinding
 import com.alancamargo.tubecalculator.fares.databinding.ItemFareListRootBinding
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 
 private const val VIEW_TYPE_RAIL_FARES = 0
 private const val VIEW_TYPE_BUS_AND_TRAM_FARE = 1
 
 internal class FareRootAdapter(
     private val onMessagesButtonClicked: (List<String>) -> Unit
-) : ListAdapter<FareRoot, FareRootViewHolder>(GenericDiffCallback()) {
+) : ListAdapter<Fare, FareRootViewHolder>(GenericDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FareRootViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -40,8 +40,8 @@ internal class FareRootAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is FareRoot.RailFare -> VIEW_TYPE_RAIL_FARES
-            is FareRoot.BusAndTramFare -> VIEW_TYPE_BUS_AND_TRAM_FARE
+            is Fare.RailFare -> VIEW_TYPE_RAIL_FARES
+            is Fare.BusAndTramFare -> VIEW_TYPE_BUS_AND_TRAM_FARE
         }
     }
 }

@@ -1,11 +1,8 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 
 internal interface CalculateCheapestTotalFareUseCase {
 
-    operator fun invoke(
-        railFares: List<FareRoot.RailFare>,
-        busAndTramFare: FareRoot.BusAndTramFare?
-    ): String
+    operator fun invoke(fares: List<Fare>): String
 }

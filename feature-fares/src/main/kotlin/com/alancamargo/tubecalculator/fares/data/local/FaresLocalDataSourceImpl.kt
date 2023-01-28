@@ -6,7 +6,7 @@ import com.alancamargo.tubecalculator.fares.data.mapping.toData
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.DbRailFare
 import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -32,7 +32,7 @@ internal class FaresLocalDataSourceImpl @Inject constructor(
     override suspend fun saveRailFares(
         origin: Station,
         destination: Station,
-        railFares: List<FareRoot.RailFare>
+        railFares: List<Fare.RailFare>
     ) {
         val id = "${origin.id}#${destination.id}"
         val dbRailFares = DbRailFare(

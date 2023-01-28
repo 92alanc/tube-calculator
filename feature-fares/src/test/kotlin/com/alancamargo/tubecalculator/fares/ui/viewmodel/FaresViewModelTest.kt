@@ -6,14 +6,12 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
+import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateCheapestTotalFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
-import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_FARE
-import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_JOURNEY_COUNT
-import com.alancamargo.tubecalculator.fares.testtools.stubRailFare
-import com.alancamargo.tubecalculator.fares.testtools.stubStation
+import com.alancamargo.tubecalculator.fares.testtools.*
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -32,6 +30,7 @@ class FaresViewModelTest {
 
     private val mockGetRailFaresUseCase = mockk<GetRailFaresUseCase>()
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
+    private val mockCalculateCheapestTotalFareUseCase = mockk<CalculateCheapestTotalFareUseCase>()
     private val mockBulletListFormatter = mockk<BulletListFormatter>()
     private val mockRailFaresCacheWorkScheduler = mockk<RailFaresCacheWorkScheduler>(relaxed = true)
     private val mockAnalytics = mockk<FaresAnalytics>(relaxed = true)
@@ -41,6 +40,7 @@ class FaresViewModelTest {
     private val viewModel = FaresViewModel(
         mockGetRailFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
+        mockCalculateCheapestTotalFareUseCase,
         mockBulletListFormatter,
         mockRailFaresCacheWorkScheduler,
         mockAnalytics,
@@ -61,7 +61,11 @@ class FaresViewModelTest {
     fun setUp() {
         every {
             mockCalculateBusAndTramFareUseCase(BUS_AND_TRAM_JOURNEY_COUNT)
-        } returns FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE)
+        } returns Fare.BusAndTramFare(BUS_AND_TRAM_FARE)
+
+        every {
+            mockCalculateCheapestTotalFareUseCase(fares = any())
+        } returns CHEAPEST_TOTAL_FARE
     }
 
     @Test
@@ -116,10 +120,14 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val fares = listOf(stubRailFare(), FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
             val expected = listOf(
                 FaresViewState(isLoading = true),
-                FaresViewState(isLoading = false, fares = fares)
+                FaresViewState(
+                    isLoading = false,
+                    fares = fares,
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
             )
             assertThat(states).containsAtLeastElementsIn(expected)
         }
@@ -155,7 +163,8 @@ class FaresViewModelTest {
 
             // THEN
             val expected = FaresViewState(
-                fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                cheapestTotalFare = CHEAPEST_TOTAL_FARE
             )
             assertThat(states).contains(expected)
         }
@@ -194,7 +203,8 @@ class FaresViewModelTest {
                 FaresViewState(isLoading = true),
                 FaresViewState(
                     isLoading = false,
-                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
             )
             assertThat(states).containsAtLeastElementsIn(expected)
@@ -224,7 +234,8 @@ class FaresViewModelTest {
                 FaresViewState(isLoading = true),
                 FaresViewState(
                     isLoading = false,
-                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
             )
             assertThat(states).containsAtLeastElementsIn(expected)
@@ -270,7 +281,8 @@ class FaresViewModelTest {
                 FaresViewState(isLoading = true),
                 FaresViewState(
                     isLoading = false,
-                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
             )
             assertThat(states).containsAtLeastElementsIn(expected)
@@ -318,7 +330,8 @@ class FaresViewModelTest {
                 FaresViewState(isLoading = true),
                 FaresViewState(
                     isLoading = false,
-                    fares = listOf(FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE))
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
             )
             assertThat(states).containsAtLeastElementsIn(expected)

@@ -5,11 +5,11 @@ import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareRespons
 import com.alancamargo.tubecalculator.fares.data.model.responses.TicketResponse
 import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTimeResponse
 import com.alancamargo.tubecalculator.fares.domain.model.FareOption
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.Ticket
 import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
 
-internal fun RailFareResponse.toDomain() = FareRoot.RailFare(
+internal fun RailFareResponse.toDomain() = Fare.RailFare(
     header = header,
     fareOptions = fareOptions.map { it.toDomain() },
     messages = messages.map { it.message }

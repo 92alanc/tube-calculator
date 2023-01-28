@@ -5,8 +5,8 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.DbRailFare
 import com.alancamargo.tubecalculator.fares.data.model.responses.*
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.FareOption
-import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 import com.alancamargo.tubecalculator.fares.domain.model.Ticket
 import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
 import kotlinx.serialization.encodeToString
@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 internal const val STATION_ID = "12345"
 internal const val BUS_AND_TRAM_JOURNEY_COUNT = 2
 internal const val BUS_AND_TRAM_FARE = "3.30"
+internal const val CHEAPEST_TOTAL_FARE = "2.70"
 
 private const val HEADER = "Single fare finder"
 
@@ -36,10 +37,10 @@ internal fun stubRailFareResponse() = RailFareResponse(
 
 internal fun stubRailFare() = stubRailFareResponse().toDomain()
 
-internal fun stubBusAndTramFare() = FareRoot.BusAndTramFare(BUS_AND_TRAM_FARE)
+internal fun stubBusAndTramFare() = Fare.BusAndTramFare(BUS_AND_TRAM_FARE)
 
 internal fun stubRailFaresWithAlternativeRoute() = listOf(
-    FareRoot.RailFare(
+    Fare.RailFare(
         header = "Single Fare Finder",
         fareOptions = listOf(
             FareOption(
@@ -70,7 +71,7 @@ internal fun stubRailFaresWithAlternativeRoute() = listOf(
         ),
         messages = emptyList()
     ),
-    FareRoot.RailFare(
+    Fare.RailFare(
         header = "Alternate Fares",
         fareOptions = listOf(
             FareOption(

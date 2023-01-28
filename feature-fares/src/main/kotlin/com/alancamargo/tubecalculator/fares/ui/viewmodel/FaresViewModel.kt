@@ -8,8 +8,10 @@ import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
+import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateCheapestTotalFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
 import com.alancamargo.tubecalculator.fares.ui.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
@@ -24,6 +26,7 @@ import javax.inject.Inject
 internal class FaresViewModel @Inject constructor(
     private val getRailFaresUseCase: GetRailFaresUseCase,
     private val calculateBusAndTramFareUseCase: CalculateBusAndTramFareUseCase,
+    private val calculateCheapestTotalFareUseCase: CalculateCheapestTotalFareUseCase,
     private val bulletListFormatter: BulletListFormatter,
     private val railFaresCacheWorkScheduler: RailFaresCacheWorkScheduler,
     private val analytics: FaresAnalytics,
@@ -36,6 +39,8 @@ internal class FaresViewModel @Inject constructor(
 
     val state: StateFlow<FaresViewState> = _state
     val action: SharedFlow<FaresViewAction> = _action
+
+    private val fares = mutableListOf<Fare>()
 
     fun onCreate(
         origin: UiStation?,
@@ -50,6 +55,7 @@ internal class FaresViewModel @Inject constructor(
             }
 
             calculateBusAndTramFare(busAndTramJourneyCount)
+            calculateCheapestTotalFare()
             railFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork()
         }
     }
@@ -100,8 +106,14 @@ internal class FaresViewModel @Inject constructor(
 
     private fun calculateBusAndTramFare(busAndTramJourneyCount: Int) {
         calculateBusAndTramFareUseCase(busAndTramJourneyCount)?.let { busAndTramFare ->
+            fares.add(busAndTramFare)
             _state.update { it.onReceivedBusAndTramFare(busAndTramFare) }
         }
+    }
+
+    private fun calculateCheapestTotalFare() {
+        val cheapestTotalFare = calculateCheapestTotalFareUseCase(fares)
+        _state.update { it.onReceivedCheapestTotalFare(cheapestTotalFare) }
     }
 
     private suspend fun handleRailFaresError(throwable: Throwable) {
@@ -117,6 +129,7 @@ internal class FaresViewModel @Inject constructor(
     private suspend fun handleRailFaresResult(result: RailFaresResult) {
         when (result) {
             is RailFaresResult.Success -> {
+                fares.addAll(result.railFares)
                 _state.update { it.onReceivedRailFares(result.railFares) }
             }
 
