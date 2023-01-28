@@ -6,10 +6,7 @@ import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.fares.data.repository.FaresRepositoryImpl
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
-import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
-import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCaseImpl
-import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
-import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCaseImpl
+import com.alancamargo.tubecalculator.fares.domain.usecase.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -41,4 +38,10 @@ internal abstract class FaresModule {
     @Binds
     @ViewModelScoped
     abstract fun bindFaresAnalytics(impl: FaresAnalyticsImpl): FaresAnalytics
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindCalculateCheapestFareUseCase(
+        impl: CalculateCheapestFareUseCaseImpl
+    ): CalculateCheapestFareUseCase
 }

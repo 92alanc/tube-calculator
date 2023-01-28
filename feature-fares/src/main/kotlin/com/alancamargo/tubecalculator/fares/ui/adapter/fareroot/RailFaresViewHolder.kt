@@ -17,6 +17,6 @@ internal class RailFaresViewHolder(
         binding.btMessages.isVisible = messages.isNotEmpty()
         binding.btMessages.setOnClickListener { onMessagesButtonClicked(messages) }
         binding.recyclerView.adapter = adapter
-        adapter.submitList(fares)
+        adapter.submitList(fareOptions)
     }
 }

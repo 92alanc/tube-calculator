@@ -1,9 +1,9 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
+import com.alancamargo.tubecalculator.core.extensions.roundUpAsMoney
 import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import java.math.BigDecimal
-import java.math.RoundingMode
 import javax.inject.Inject
 
 internal class CalculateBusAndTramFareUseCaseImpl @Inject constructor(
@@ -16,7 +16,7 @@ internal class CalculateBusAndTramFareUseCaseImpl @Inject constructor(
         return if (fare.toDouble() == 0.0) {
             null
         } else {
-            val formattedValue = fare.setScale(2, RoundingMode.HALF_UP).toPlainString()
+            val formattedValue = fare.roundUpAsMoney()
             FareRoot.BusAndTramFare(formattedValue)
         }
     }

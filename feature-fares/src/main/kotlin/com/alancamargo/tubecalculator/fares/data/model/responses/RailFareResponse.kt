@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class RailFareResponse(
     @SerialName("header") val header: String = "",
-    @SerialName("rows") val fares: List<FareResponse> = emptyList(),
+    @SerialName("rows") val fareOptions: List<FareOptionResponse> = emptyList(),
     @SerialName("messages") val messages: List<FareMessageResponse> = emptyList()
 )

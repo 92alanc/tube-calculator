@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.fares.domain.model
 
-internal data class Fare(
+internal data class FareOption(
     val label: String,
     val origin: String,
     val destination: String,

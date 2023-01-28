@@ -6,7 +6,7 @@ internal sealed class FareRoot {
 
     data class RailFare(
         val header: String,
-        val fares: List<Fare>,
+        val fareOptions: List<FareOption>,
         val messages: List<String>
     ) : FareRoot()
 }
