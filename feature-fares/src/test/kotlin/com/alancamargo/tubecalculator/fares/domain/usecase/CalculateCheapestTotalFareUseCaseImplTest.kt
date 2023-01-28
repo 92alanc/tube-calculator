@@ -5,9 +5,9 @@ import com.alancamargo.tubecalculator.fares.testtools.stubRailFaresWithAlternati
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class CalculateCheapestFareUseCaseImplTest {
+class CalculateCheapestTotalFareUseCaseImplTest {
 
-    private val useCase = CalculateCheapestFareUseCaseImpl()
+    private val useCase = CalculateCheapestTotalFareUseCaseImpl()
 
     @Test
     fun `with rail and bus and tram fares invoke should return sum of cheapest rail fare and bus and tram fare`() {

@@ -41,7 +41,7 @@ internal abstract class FaresModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindCalculateCheapestFareUseCase(
-        impl: CalculateCheapestFareUseCaseImpl
-    ): CalculateCheapestFareUseCase
+    abstract fun bindCalculateCheapestTotalFareUseCase(
+        impl: CalculateCheapestTotalFareUseCaseImpl
+    ): CalculateCheapestTotalFareUseCase
 }

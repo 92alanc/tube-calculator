@@ -5,8 +5,8 @@ import com.alancamargo.tubecalculator.fares.domain.model.FareRoot
 import java.math.BigDecimal
 import javax.inject.Inject
 
-internal class CalculateCheapestFareUseCaseImpl @Inject constructor(
-) : CalculateCheapestFareUseCase {
+internal class CalculateCheapestTotalFareUseCaseImpl @Inject constructor(
+) : CalculateCheapestTotalFareUseCase {
 
     override fun invoke(
         railFares: List<FareRoot.RailFare>,
