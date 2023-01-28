@@ -11,8 +11,8 @@ internal class SearchRepositoryImpl @Inject constructor(
     private val localDataSource: SearchLocalDataSource
 ) : SearchRepository {
 
-    override fun getAllStations(): Flow<StationListResult> = flow {
-        val stations = localDataSource.getAllStations()
+    override fun searchStation(query: String): Flow<StationListResult> = flow {
+        val stations = localDataSource.searchStation(query)
         emit(stations)
     }
 }

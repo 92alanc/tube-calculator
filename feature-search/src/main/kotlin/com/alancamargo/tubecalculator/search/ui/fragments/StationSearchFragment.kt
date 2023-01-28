@@ -2,6 +2,8 @@ package com.alancamargo.tubecalculator.search.ui.fragments
 
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,9 +66,10 @@ internal class StationSearchFragment : Fragment() {
         txtLabel.setText(args.searchType.labelRes)
         textInputLayout.hint = getString(args.searchType.hintRes)
         autoCompleteTextView.hint = getString(args.searchType.hintRes)
+        autoCompleteTextView.addTextChangedListener(getTextWatcher())
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
-            val item = parent.getItemAtPosition(position)
-            (item as? UiStation)?.let { station ->
+            (parent.adapter as? StationAdapter)?.let { adapter ->
+                val station = adapter.getStation(position)
                 viewModel.onStationSelected(station)
                 autoCompleteTextView.setText(station.name)
             }
@@ -99,6 +102,16 @@ internal class StationSearchFragment : Fragment() {
             titleRes = R.string.error,
             messageRes = error.messageRes
         )
+    }
+
+    private fun getTextWatcher() = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(query: CharSequence?, start: Int, before: Int, count: Int) {
+            query?.toString()?.let(viewModel::onQueryChanged)
+        }
+
+        override fun afterTextChanged(s: Editable?) {}
     }
 
     @Parcelize

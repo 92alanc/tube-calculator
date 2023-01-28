@@ -2,6 +2,7 @@ package com.alancamargo.tubecalculator.search.data.local
 
 import com.alancamargo.tubecalculator.search.data.database.SearchDao
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubDbStationList
 import com.alancamargo.tubecalculator.search.testtools.stubStationList
 import com.google.common.truth.Truth.assertThat
@@ -17,12 +18,12 @@ class SearchLocalDataSourceImplTest {
     private val localDataSource = SearchLocalDataSourceImpl(mockDao)
 
     @Test
-    fun `when database returns stations getAllStations should return Success`() {
+    fun `when database returns stations searchStation should return Success`() {
         // GIVEN
-        coEvery { mockDao.getAllStations() } returns stubDbStationList()
+        coEvery { mockDao.searchStation(SEARCH_QUERY) } returns stubDbStationList()
 
         // WHEN
-        val actual = runBlocking { localDataSource.getAllStations() }
+        val actual = runBlocking { localDataSource.searchStation(SEARCH_QUERY) }
 
         // THEN
         val stations = stubStationList()
@@ -31,12 +32,12 @@ class SearchLocalDataSourceImplTest {
     }
 
     @Test
-    fun `when database throws exception getAllStations should return GenericError`() {
+    fun `when database throws exception searchStation should return GenericError`() {
         // GIVEN
-        coEvery { mockDao.getAllStations() } throws IOException()
+        coEvery { mockDao.searchStation(SEARCH_QUERY) } throws IOException()
 
         // WHEN
-        val actual = runBlocking { localDataSource.getAllStations() }
+        val actual = runBlocking { localDataSource.searchStation(SEARCH_QUERY) }
 
         // THEN
         val expected = StationListResult.GenericError

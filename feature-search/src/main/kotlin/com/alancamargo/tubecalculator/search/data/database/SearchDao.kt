@@ -7,6 +7,6 @@ import com.alancamargo.tubecalculator.search.data.model.DbStation
 @Dao
 internal interface SearchDao {
 
-    @Query("SELECT * FROM STATIONS")
-    suspend fun getAllStations(): List<DbStation>
+    @Query("SELECT * FROM STATIONS WHERE NAME LIKE '%' || :query || '%'")
+    suspend fun searchStation(query: String): List<DbStation>
 }

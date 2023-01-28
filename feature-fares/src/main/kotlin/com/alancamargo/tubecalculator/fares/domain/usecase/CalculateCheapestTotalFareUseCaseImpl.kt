@@ -9,16 +9,24 @@ internal class CalculateCheapestTotalFareUseCaseImpl @Inject constructor(
 ) : CalculateCheapestTotalFareUseCase {
 
     override fun invoke(fares: List<Fare>): String {
-        val cheapestRailFare = fares.filterIsInstance<Fare.RailFare>().minOf { fare ->
-            fare.fareOptions.minOf { fareOption ->
-                fareOption.tickets.minOf { ticket ->
-                    ticket.cost.toDouble()
+        val cheapestRailFare = if (fares.any { it is Fare.RailFare }) {
+            fares.filterIsInstance<Fare.RailFare>().minOf { fare ->
+                fare.fareOptions.minOf { fareOption ->
+                    fareOption.tickets.minOf { ticket ->
+                        ticket.cost.toDouble()
+                    }
                 }
             }
+        } else {
+            0.0
         }
 
-        val busAndTramFare = fares.filterIsInstance<Fare.BusAndTramFare>().sumOf { fare ->
-            fare.cost.toDouble()
+        val busAndTramFare = if (fares.any { it is Fare.BusAndTramFare }) {
+            fares.filterIsInstance<Fare.BusAndTramFare>().sumOf { fare ->
+                fare.cost.toDouble()
+            }
+        } else {
+            0.0
         }
 
         val sum = cheapestRailFare + busAndTramFare

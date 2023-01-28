@@ -4,5 +4,5 @@ import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 
 internal interface SearchLocalDataSource {
 
-    suspend fun getAllStations(): StationListResult
+    suspend fun searchStation(query: String): StationListResult
 }

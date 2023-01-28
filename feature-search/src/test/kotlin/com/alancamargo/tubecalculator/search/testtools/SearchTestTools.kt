@@ -5,14 +5,15 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.common.ui.model.UiMode
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
-import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.data.model.DbStation
+import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 internal const val MIN_QUERY_LENGTH = 3
+internal const val SEARCH_QUERY = "camden"
 
 internal fun stubSuccessfulStationListResultFlow() = flow<StationListResult> {
     val stations = stubStationList()

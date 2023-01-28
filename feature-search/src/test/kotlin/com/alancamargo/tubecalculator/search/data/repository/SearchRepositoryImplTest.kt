@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.search.data.repository
 import app.cash.turbine.test
 import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSource
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
+import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
 import com.alancamargo.tubecalculator.search.testtools.stubStationList
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
@@ -16,14 +17,14 @@ class SearchRepositoryImplTest {
     private val repository = SearchRepositoryImpl(mockLocalDataSource)
 
     @Test
-    fun `getAllStations should return result from local`() {
+    fun `searchStation should return result from local`() {
         runBlocking {
             // GIVEN
             val expected = StationListResult.Success(stubStationList())
-            coEvery { mockLocalDataSource.getAllStations() } returns expected
+            coEvery { mockLocalDataSource.searchStation(SEARCH_QUERY) } returns expected
 
             // WHEN
-            val result = repository.getAllStations()
+            val result = repository.searchStation(SEARCH_QUERY)
 
             // THEN
             result.test {

@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.fares.domain.usecase
 
+import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_FARE
 import com.alancamargo.tubecalculator.fares.testtools.stubBusAndTramFare
 import com.alancamargo.tubecalculator.fares.testtools.stubRailFaresWithAlternativeRoute
 import com.google.common.truth.Truth.assertThat
@@ -34,6 +35,19 @@ class CalculateCheapestTotalFareUseCaseImplTest {
 
         // THEN
         val expected = "2.70"
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `with only bus and tram fare invoke should return bus and tram fare`() {
+        // GIVEN
+        val busAndTramFare = listOf(stubBusAndTramFare())
+
+        // WHEN
+        val actual = useCase(busAndTramFare)
+
+        // THEN
+        val expected = BUS_AND_TRAM_FARE
         assertThat(actual).isEqualTo(expected)
     }
 }

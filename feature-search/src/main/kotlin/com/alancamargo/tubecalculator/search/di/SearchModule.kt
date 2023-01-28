@@ -49,5 +49,5 @@ internal abstract class SearchModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindGetAllStationsUseCase(impl: GetAllStationsUseCaseImpl): GetAllStationsUseCase
+    abstract fun bindGetAllStationsUseCase(impl: SearchStationUseCaseImpl): SearchStationUseCase
 }

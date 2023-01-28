@@ -18,19 +18,17 @@ import com.alancamargo.tubecalculator.core.design.R as R2
 internal class StationAdapter(
     context: Context,
     private val stations: List<UiStation>
-) : ArrayAdapter<UiStation>(
+) : ArrayAdapter<String>(
     context,
     R.layout.item_station,
-    stations
+    stations.map { it.name }
 ) {
 
-    override fun getCount(): Int {
-        return stations.size
-    }
+    fun getStation(position: Int): UiStation = stations[position]
 
-    override fun getItem(position: Int): UiStation {
-        return stations[position]
-    }
+    override fun getCount(): Int = stations.size
+
+    override fun getItem(position: Int): String = stations[position].name
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

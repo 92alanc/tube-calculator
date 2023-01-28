@@ -7,8 +7,8 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
-import com.alancamargo.tubecalculator.search.domain.usecase.GetAllStationsUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
+import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class StationSearchViewModel @Inject constructor(
-    private val getAllStationsUseCase: GetAllStationsUseCase,
+    private val searchStationUseCase: SearchStationUseCase,
     private val getMinQueryLengthUseCase: GetMinQueryLengthUseCase,
     private val logger: Logger,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
@@ -34,11 +34,13 @@ internal class StationSearchViewModel @Inject constructor(
         private set
 
     fun onCreate() {
-        viewModelScope.launch(dispatcher) {
-            val minQueryLength = getMinQueryLengthUseCase()
-            _state.update { it.onReceivedMinQueryLength(minQueryLength) }
+        val minQueryLength = getMinQueryLengthUseCase()
+        _state.update { it.onReceivedMinQueryLength(minQueryLength) }
+    }
 
-            getAllStationsUseCase().catch { throwable ->
+    fun onQueryChanged(query: String) {
+        viewModelScope.launch(dispatcher) {
+            searchStationUseCase(query).catch { throwable ->
                 logger.error(throwable)
                 val error = UiSearchError.GENERIC
                 _action.emit(StationSearchViewAction.ShowErrorDialogue(error))
