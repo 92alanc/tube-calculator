@@ -57,6 +57,15 @@ class StationSearchViewModelTest {
     }
 
     @Test
+    fun `when query is blank onQueryChanged should not search station`() {
+        // WHEN
+        viewModel.onQueryChanged(query = "")
+
+        // THEN
+        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+    }
+
+    @Test
     fun `when use case returns Success onQueryChanged should set correct state`() {
         collector.test { states, _ ->
             // GIVEN

@@ -39,6 +39,11 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onQueryChanged(query: String) {
+        if (query.isBlank()) {
+            selectedStation = null
+            return
+        }
+
         viewModelScope.launch(dispatcher) {
             searchStationUseCase(query).catch { throwable ->
                 logger.error(throwable)
@@ -48,7 +53,7 @@ internal class StationSearchViewModel @Inject constructor(
         }
     }
 
-    fun onStationSelected(station: UiStation) {
+    fun onStationSelected(station: UiStation?) {
         this.selectedStation = station
     }
 
