@@ -13,6 +13,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.args
+import com.alancamargo.tubecalculator.core.extensions.hideKeyboard
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.databinding.FragmentStationSearchBinding
@@ -72,6 +73,7 @@ internal class StationSearchFragment : Fragment() {
                 val station = adapter.getStation(position)
                 viewModel.onStationSelected(station)
                 autoCompleteTextView.setText(station.name)
+                autoCompleteTextView.hideKeyboard()
             }
         }
     }
