@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_8"
-            android:src="@drawable/ic_messages"
+            android:src="@drawable/ic_info"
             android:contentDescription="@string/fares_messages"
             android:background="@android:color/transparent"
             app:tint="?colorOnBackground"

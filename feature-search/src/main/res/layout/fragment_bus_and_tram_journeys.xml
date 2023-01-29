@@ -27,11 +27,25 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
-        android:text="@string/search_bus_tram_journeys_info"
+        android:text="@string/search_bus_tram_journeys_info_short"
         app:layout_constraintTop_toBottomOf="@id/txtBusAndTramJourneyCountLabel"
         app:layout_constraintBottom_toTopOf="@+id/btUp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btInfo"/>
+
+    <ImageButton
+        android:id="@+id/btInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:contentDescription="@string/more_information"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_info"
+        app:layout_constraintTop_toTopOf="@id/txtBusAndTramJourneyCountInfo"
+        app:layout_constraintBottom_toBottomOf="@id/txtBusAndTramJourneyCountInfo"
+        app:layout_constraintStart_toEndOf="@id/txtBusAndTramJourneyCountInfo"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/txtBusAndTramJourneyCount"
