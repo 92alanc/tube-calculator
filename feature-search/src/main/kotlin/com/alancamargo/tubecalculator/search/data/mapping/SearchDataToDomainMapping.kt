@@ -2,17 +2,10 @@ package com.alancamargo.tubecalculator.search.data.mapping
 
 import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
-import com.alancamargo.tubecalculator.search.data.model.ModeResponse
-import com.alancamargo.tubecalculator.search.data.model.StationResponse
 import com.alancamargo.tubecalculator.search.data.model.DbStation
+import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-
-internal fun StationResponse.toDomain() = Station(
-    id = id,
-    name = name,
-    modes = modes.filterNot { it == ModeResponse.BUS }.map { it.toDomain() }
-)
 
 internal fun DbStation.toDomain(): Station {
     val modeResponseList = Json.decodeFromString<List<ModeResponse>>(modesJson)
