@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 private const val REMOTE_CONFIG_KEY = "should_clear_cache"
 
 @HiltWorker
-internal class FaresCacheWorker @AssistedInject constructor(
+internal class RailFaresCacheWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val remoteConfigManager: RemoteConfigManager,

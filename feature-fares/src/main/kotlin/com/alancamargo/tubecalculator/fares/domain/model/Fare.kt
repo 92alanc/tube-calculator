@@ -1,10 +1,12 @@
 package com.alancamargo.tubecalculator.fares.domain.model
 
-internal data class Fare(
-    val label: String,
-    val origin: String,
-    val destination: String,
-    val description: String,
-    val passengerType: String,
-    val tickets: List<Ticket>
-)
+internal sealed class Fare {
+
+    data class BusAndTramFare(val cost: String) : Fare()
+
+    data class RailFare(
+        val header: String,
+        val fareOptions: List<FareOption>,
+        val messages: List<String>
+    ) : Fare()
+}

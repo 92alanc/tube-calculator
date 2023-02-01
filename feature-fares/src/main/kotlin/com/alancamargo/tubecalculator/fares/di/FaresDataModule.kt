@@ -3,13 +3,13 @@ package com.alancamargo.tubecalculator.fares.di
 import android.content.Context
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
 import com.alancamargo.tubecalculator.core.network.ApiProvider
-import com.alancamargo.tubecalculator.fares.data.database.FaresDao
-import com.alancamargo.tubecalculator.fares.data.database.FaresDatabase
+import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
+import com.alancamargo.tubecalculator.fares.data.database.RailFaresDatabase
 import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSource
 import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSourceImpl
-import com.alancamargo.tubecalculator.fares.data.service.FaresService
-import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
-import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkSchedulerImpl
+import com.alancamargo.tubecalculator.fares.data.service.RailFaresService
+import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
+import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkSchedulerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,26 +23,26 @@ internal object FaresDataModule {
 
     @Provides
     @Singleton
-    fun provideFaresService(apiProvider: ApiProvider): FaresService {
-        return apiProvider.provideService(FaresService::class.java)
+    fun provideRailFaresService(apiProvider: ApiProvider): RailFaresService {
+        return apiProvider.provideService(RailFaresService::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideFaresDao(localDatabaseProvider: LocalDatabaseProvider): FaresDao {
+    fun provideRailFaresDao(localDatabaseProvider: LocalDatabaseProvider): RailFaresDao {
         val database = localDatabaseProvider.provideDatabase(
-            clazz = FaresDatabase::class,
+            clazz = RailFaresDatabase::class,
             databaseName = "fares"
         )
 
-        return database.getFaresDao()
+        return database.getRailFaresDao()
     }
 
     @Provides
     @Singleton
-    fun provideFaresCacheWorkScheduler(
+    fun provideRailFaresCacheWorkScheduler(
         @ApplicationContext context: Context
-    ): FaresCacheWorkScheduler = FaresCacheWorkSchedulerImpl(context)
+    ): RailFaresCacheWorkScheduler = RailFaresCacheWorkSchedulerImpl(context)
 
     @Provides
     @Singleton

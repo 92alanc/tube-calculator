@@ -14,7 +14,7 @@ class BusAndTramJourneysViewModelTest {
 
     private val collector = ViewModelFlowCollector(
         viewModel.state,
-        viewModel.state,
+        viewModel.action,
         dispatcher
     )
 
@@ -58,6 +58,18 @@ class BusAndTramJourneysViewModelTest {
             // THEN
             val expected = listOf(BusAndTramJourneysViewState())
             assertThat(states).isEqualTo(expected)
+        }
+    }
+
+    @Test
+    fun `onMoreInfoClicked should send ShowMoreInfo action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onMoreInfoClicked()
+
+            // THEN
+            val expected = BusAndTramJourneysViewAction.ShowMoreInfo
+            assertThat(actions).contains(expected)
         }
     }
 }

@@ -16,7 +16,7 @@ import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.databinding.ActivityFaresBinding
-import com.alancamargo.tubecalculator.fares.ui.adapter.farelistroot.FareListRootAdapter
+import com.alancamargo.tubecalculator.fares.ui.adapter.fareroot.FareRootAdapter
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewAction
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewModel
@@ -36,7 +36,7 @@ internal class FaresActivity : AppCompatActivity() {
 
     private val args by args<Args>()
     private val viewModel by viewModels<FaresViewModel>()
-    private val adapter by lazy { FareListRootAdapter(viewModel::onMessagesButtonClicked) }
+    private val adapter by lazy { FareRootAdapter(viewModel::onMessagesButtonClicked) }
 
     @Inject
     lateinit var searchActivityNavigation: SearchActivityNavigation
@@ -78,15 +78,15 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
-        binding.txtBusAndTramFares.isVisible = busAndTramFare != null
-        binding.recyclerView.isVisible = !showOnlyBusAndTramFare
-        busAndTramFare?.let {
-            binding.txtBusAndTramFares.text = getString(
-                R.string.fares_bus_and_tram_journey_count_format,
+        binding.recyclerView.isVisible = fares != null && !isLoading
+        binding.txtCheapestTotalFare.isVisible = cheapestTotalFare != null
+        cheapestTotalFare?.let {
+            binding.txtCheapestTotalFare.text = getString(
+                R.string.fares_cheapest_total_fare_format,
                 it
             )
         }
-        railFares?.let(adapter::submitList)
+        fares?.let(adapter::submitList)
     }
 
     private fun handleAction(action: FaresViewAction) {

@@ -13,12 +13,7 @@ internal class SearchLocalDataSourceImpl @Inject constructor(
         return try {
             val dbStations = dao.searchStation(query)
             val stations = dbStations.map { it.toDomain() }
-
-            if (stations.isEmpty()) {
-                StationListResult.Empty
-            } else {
-                StationListResult.Success(stations)
-            }
+            StationListResult.Success(stations)
         } catch (t: Throwable) {
             StationListResult.GenericError
         }

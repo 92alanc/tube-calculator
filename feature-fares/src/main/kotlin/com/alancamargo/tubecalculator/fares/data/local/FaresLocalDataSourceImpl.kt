@@ -1,57 +1,57 @@
 package com.alancamargo.tubecalculator.fares.data.local
 
 import com.alancamargo.tubecalculator.common.domain.model.Station
-import com.alancamargo.tubecalculator.fares.data.database.FaresDao
+import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
 import com.alancamargo.tubecalculator.fares.data.mapping.toData
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
-import com.alancamargo.tubecalculator.fares.data.model.database.DbFareListRoot
-import com.alancamargo.tubecalculator.fares.data.model.responses.FareListRootResponse
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
-import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
+import com.alancamargo.tubecalculator.fares.data.model.database.DbRailFare
+import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 internal class FaresLocalDataSourceImpl @Inject constructor(
-    private val dao: FaresDao
+    private val dao: RailFaresDao
 ) : FaresLocalDataSource {
 
-    override suspend fun getFares(origin: Station, destination: Station): FareListResult {
-        val json = dao.getFares(origin.id, destination.id)?.jsonResponse
+    override suspend fun getRailFares(origin: Station, destination: Station): RailFaresResult {
+        val json = dao.getRailFares(origin.id, destination.id)?.jsonResponse
         json?.let {
-            val fareList = Json.decodeFromString<List<FareListRootResponse>>(it).map { response ->
+            val railFares = Json.decodeFromString<List<RailFareResponse>>(it).map { response ->
                 response.toDomain()
             }
-            return FareListResult.Success(fareList)
+            return RailFaresResult.Success(railFares)
         } ?: run {
             throw Throwable("No results")
         }
     }
 
-    override suspend fun saveFares(
+    override suspend fun saveRailFares(
         origin: Station,
         destination: Station,
-        fares: List<FareListRoot>
+        railFares: List<Fare.RailFare>
     ) {
         val id = "${origin.id}#${destination.id}"
-        val dbFareListRoot = DbFareListRoot(
+        val dbRailFares = DbRailFare(
             id = id,
             originId = origin.id,
             destinationId = destination.id,
-            jsonResponse = Json.encodeToString(fares.map { it.toData() })
+            jsonResponse = Json.encodeToString(railFares.map { it.toData() })
         )
 
-        val count = dao.getFareCount(id)
+        val count = dao.getRailFareCount(id)
 
         if (count > 0) {
-            dao.updateFares(dbFareListRoot)
+            dao.updateRailFares(dbRailFares)
         } else {
-            dao.insertFares(dbFareListRoot)
+            dao.insertRailFares(dbRailFares)
         }
     }
 
     override suspend fun clearCache() {
-        dao.deleteAllFares()
+        dao.deleteAllRailFares()
     }
 }

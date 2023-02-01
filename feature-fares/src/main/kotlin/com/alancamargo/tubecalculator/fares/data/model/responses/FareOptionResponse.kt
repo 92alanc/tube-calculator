@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class FareResponse(
+internal data class FareOptionResponse(
     @SerialName("displayName") val label: String = "",
     @SerialName("from") val origin: String = "",
     @SerialName("to") val destination: String = "",

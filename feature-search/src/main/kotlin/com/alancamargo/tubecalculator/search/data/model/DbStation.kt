@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.data.model.db
+package com.alancamargo.tubecalculator.search.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

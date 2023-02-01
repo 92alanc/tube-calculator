@@ -4,7 +4,7 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.fares.data.local.FaresLocalDataSource
 import com.alancamargo.tubecalculator.fares.data.remote.FaresRemoteDataSource
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,13 +19,13 @@ internal class FaresRepositoryImpl @Inject constructor(
     private val localDataSource: FaresLocalDataSource
 ) : FaresRepository {
 
-    override fun getFares(origin: Station, destination: Station): Flow<FareListResult> = flow {
+    override fun getRailFares(origin: Station, destination: Station): Flow<RailFaresResult> = flow {
         val result = try {
-            localDataSource.getFares(origin, destination)
+            localDataSource.getRailFares(origin, destination)
         } catch (t: Throwable) {
-            remoteDataSource.getFares(origin, destination).apply {
-                if (this is FareListResult.Success) {
-                    localDataSource.saveFares(origin, destination, fareList)
+            remoteDataSource.getRailFares(origin, destination).apply {
+                if (this is RailFaresResult.Success) {
+                    localDataSource.saveRailFares(origin, destination, railFares)
                 }
             }
         }

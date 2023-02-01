@@ -1,27 +1,26 @@
 package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
-import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
 
 internal data class FaresViewState(
     val isLoading: Boolean = false,
-    val railFares: List<FareListRoot>? = null,
-    val busAndTramFare: String? = null,
-    val showOnlyBusAndTramFare: Boolean = false
+    val fares: List<Fare>? = null,
+    val cheapestTotalFare: String? = null
 ) {
 
-    fun onLoading() = copy(
-        isLoading = true,
-        railFares = null
-    )
+    fun onLoading() = copy(isLoading = true)
 
     fun onStopLoading() = copy(isLoading = false)
 
-    fun onReceivedRailFares(railFares: List<FareListRoot>) = copy(
-        railFares = railFares,
-        showOnlyBusAndTramFare = false
+    fun onReceivedRailFares(railFares: List<Fare.RailFare>) = copy(
+        fares = railFares + (fares ?: emptyList())
     )
 
-    fun onReceivedBusAndTramFare(busAndTramFare: String) = copy(busAndTramFare = busAndTramFare)
+    fun onReceivedBusAndTramFare(busAndTramFare: Fare.BusAndTramFare) = copy(
+        fares = fares?.plus(busAndTramFare) ?: listOf(busAndTramFare)
+    )
 
-    fun onShowOnlyBusAndTramFare() = copy(showOnlyBusAndTramFare = true)
+    fun onReceivedCheapestTotalFare(cheapestTotalFare: String) = copy(
+        cheapestTotalFare = cheapestTotalFare
+    )
 }

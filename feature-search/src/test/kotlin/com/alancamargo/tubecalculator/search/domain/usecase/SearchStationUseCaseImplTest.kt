@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.repository.SearchRepository
 import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
@@ -19,16 +19,16 @@ class SearchStationUseCaseImplTest {
     @Test
     fun `invoke should get result from repository`() = runBlocking {
         // GIVEN
-        val expected = StationListResult.Empty
+        val expected = StationListResult.GenericError
         every { mockRepository.searchStation(SEARCH_QUERY) } returns flowOf(expected)
 
         // WHEN
-        val result = useCase(SEARCH_QUERY)
+        val result = useCase.invoke(SEARCH_QUERY)
 
         // THEN
         result.test {
             val actual = awaitItem()
-            assertThat(actual).isEqualTo(expected)
+            Truth.assertThat(actual).isEqualTo(expected)
             awaitComplete()
         }
     }

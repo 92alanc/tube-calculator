@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,83 +33,35 @@ internal class StationSearchViewModel @Inject constructor(
     var selectedStation: UiStation? = null
         private set
 
-    fun onStationSelected(station: UiStation) {
-        this.selectedStation = station
+    fun onCreate() {
+        val minQueryLength = getMinQueryLengthUseCase()
+        _state.update { it.onReceivedMinQueryLength(minQueryLength) }
     }
 
-    fun onQueryChanged(query: String?) {
-        val trimmedQuery = query?.trim()
-
-        if (trimmedQuery.isNullOrBlank()) {
-            _state.update { it.clearSearchResults() }
+    fun onQueryChanged(query: String) {
+        if (query.isBlank()) {
             selectedStation = null
-        } else {
-            val minQueryLength = getMinQueryLengthUseCase()
-            val isTooShort = trimmedQuery.length < minQueryLength
+            return
+        }
 
-            if (isTooShort) {
-                return
-            }
-
-            viewModelScope.launch(dispatcher) {
-                searchStation(trimmedQuery)
-            }
+        viewModelScope.launch(dispatcher) {
+            searchStationUseCase(query).catch { throwable ->
+                logger.error(throwable)
+                val error = UiSearchError.GENERIC
+                _action.emit(StationSearchViewAction.ShowErrorDialogue(error))
+            }.collect(::handleResult)
         }
     }
 
-    private suspend fun searchStation(query: String) {
-        searchStationUseCase(query).onStart {
-            _state.update { it.onLoading() }
-        }.catch { throwable ->
-            logger.error(throwable)
-            handleThrowable(throwable)
-        }.onCompletion {
-            _state.update { it.onStopLoading() }
-        }.collect { result ->
-            val isServerError = result is StationListResult.ServerError
-            val isGenericError = result is StationListResult.GenericError
-
-            if (isServerError || isGenericError) {
-                logger.debug("Query: $query. Result: $result")
-            }
-
-            handleResult(result)
-        }
-    }
-
-    private suspend fun handleThrowable(throwable: Throwable) {
-        val error = if (throwable is IOException) {
-            UiSearchError.NETWORK
-        } else {
-            UiSearchError.GENERIC
-        }
-
-        _action.emit(StationSearchViewAction.ShowErrorDialogue(error))
+    fun onStationSelected(station: UiStation?) {
+        this.selectedStation = station
     }
 
     private suspend fun handleResult(result: StationListResult) {
         when (result) {
             is StationListResult.Success -> {
                 val stations = result.stations.map { it.toUi() }
-
-                if (stations.size == 1) {
-                    val station = stations.first()
-                    onStationSelected(station)
-                }
-
-                _state.update { it.onReceivedSearchResults(stations) }
-            }
-
-            is StationListResult.Empty -> _state.update { it.onEmptyState() }
-
-            is StationListResult.NetworkError -> {
-                val error = UiSearchError.NETWORK
-                _action.emit(StationSearchViewAction.ShowErrorDialogue(error))
-            }
-
-            is StationListResult.ServerError -> {
-                val error = UiSearchError.SERVER
-                _action.emit(StationSearchViewAction.ShowErrorDialogue(error))
+                _state.update { it.onReceivedStations(stations) }
             }
 
             is StationListResult.GenericError -> {

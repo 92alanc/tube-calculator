@@ -1,14 +1,18 @@
 package com.alancamargo.tubecalculator.fares.data.local
 
 import com.alancamargo.tubecalculator.common.domain.model.Station
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
-import com.alancamargo.tubecalculator.fares.domain.model.FareListRoot
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 
 internal interface FaresLocalDataSource {
 
-    suspend fun getFares(origin: Station, destination: Station): FareListResult
+    suspend fun getRailFares(origin: Station, destination: Station): RailFaresResult
 
-    suspend fun saveFares(origin: Station, destination: Station, fares: List<FareListRoot>)
+    suspend fun saveRailFares(
+        origin: Station,
+        destination: Station,
+        railFares: List<Fare.RailFare>
+    )
 
     suspend fun clearCache()
 }

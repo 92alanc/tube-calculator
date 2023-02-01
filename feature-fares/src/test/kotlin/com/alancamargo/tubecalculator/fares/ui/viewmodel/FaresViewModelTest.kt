@@ -5,14 +5,13 @@ import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
-import com.alancamargo.tubecalculator.fares.data.work.FaresCacheWorkScheduler
-import com.alancamargo.tubecalculator.fares.domain.model.FareListResult
+import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
-import com.alancamargo.tubecalculator.fares.domain.usecase.GetFaresUseCase
-import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_FARE
-import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_JOURNEY_COUNT
-import com.alancamargo.tubecalculator.fares.testtools.stubFareListRoot
-import com.alancamargo.tubecalculator.fares.testtools.stubStation
+import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateCheapestTotalFareUseCase
+import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
+import com.alancamargo.tubecalculator.fares.testtools.*
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -29,19 +28,21 @@ import java.io.IOException
 @OptIn(ExperimentalCoroutinesApi::class)
 class FaresViewModelTest {
 
-    private val mockGetFaresUseCase = mockk<GetFaresUseCase>()
+    private val mockGetRailFaresUseCase = mockk<GetRailFaresUseCase>()
     private val mockCalculateBusAndTramFareUseCase = mockk<CalculateBusAndTramFareUseCase>()
+    private val mockCalculateCheapestTotalFareUseCase = mockk<CalculateCheapestTotalFareUseCase>()
     private val mockBulletListFormatter = mockk<BulletListFormatter>()
-    private val mockFaresCacheWorkScheduler = mockk<FaresCacheWorkScheduler>(relaxed = true)
+    private val mockRailFaresCacheWorkScheduler = mockk<RailFaresCacheWorkScheduler>(relaxed = true)
     private val mockAnalytics = mockk<FaresAnalytics>(relaxed = true)
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = FaresViewModel(
-        mockGetFaresUseCase,
+        mockGetRailFaresUseCase,
         mockCalculateBusAndTramFareUseCase,
+        mockCalculateCheapestTotalFareUseCase,
         mockBulletListFormatter,
-        mockFaresCacheWorkScheduler,
+        mockRailFaresCacheWorkScheduler,
         mockAnalytics,
         mockLogger,
         dispatcher
@@ -60,15 +61,19 @@ class FaresViewModelTest {
     fun setUp() {
         every {
             mockCalculateBusAndTramFareUseCase(BUS_AND_TRAM_JOURNEY_COUNT)
-        } returns BUS_AND_TRAM_FARE
+        } returns Fare.BusAndTramFare(BUS_AND_TRAM_FARE)
+
+        every {
+            mockCalculateCheapestTotalFareUseCase(fares = any())
+        } returns CHEAPEST_TOTAL_FARE
     }
 
     @Test
     fun `onCreate should track screen view event`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = any(), destination = any())
-        } returns flowOf(FareListResult.NetworkError)
+            mockGetRailFaresUseCase(origin = any(), destination = any())
+        } returns flowOf(RailFaresResult.NetworkError)
 
         // WHEN
         viewModel.onCreate(
@@ -85,8 +90,8 @@ class FaresViewModelTest {
     fun `onCreate should schedule fares cache background work`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = any(), destination = any())
-        } returns flowOf(FareListResult.NetworkError)
+            mockGetRailFaresUseCase(origin = any(), destination = any())
+        } returns flowOf(RailFaresResult.NetworkError)
 
         // WHEN
         viewModel.onCreate(
@@ -96,7 +101,7 @@ class FaresViewModelTest {
         )
 
         // WHEN
-        verify { mockFaresCacheWorkScheduler.scheduleFaresCacheBackgroundWork() }
+        verify { mockRailFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork() }
     }
 
     @Test
@@ -104,8 +109,8 @@ class FaresViewModelTest {
         collector.test { states, _ ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.Success(listOf(stubFareListRoot())))
+                mockGetRailFaresUseCase(origin = station, destination = station)
+            } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
 
             // WHEN
             viewModel.onCreate(
@@ -115,13 +120,16 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val railFares = listOf(stubFareListRoot())
-            val expected = FaresViewState(
-                isLoading = true,
-                railFares = railFares,
-                busAndTramFare = BUS_AND_TRAM_FARE
+            val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = fares,
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
             )
-            assertThat(states).contains(expected)
+            assertThat(states).containsAtLeastElementsIn(expected)
         }
     }
 
@@ -129,8 +137,8 @@ class FaresViewModelTest {
     fun `when use case returns Success onCreate should not log result`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = station, destination = station)
-        } returns flowOf(FareListResult.Success(listOf(stubFareListRoot())))
+            mockGetRailFaresUseCase(origin = station, destination = station)
+        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
 
         // WHEN
         viewModel.onCreate(
@@ -155,9 +163,8 @@ class FaresViewModelTest {
 
             // THEN
             val expected = FaresViewState(
-                railFares = null,
-                busAndTramFare = BUS_AND_TRAM_FARE,
-                showOnlyBusAndTramFare = true
+                fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                cheapestTotalFare = CHEAPEST_TOTAL_FARE
             )
             assertThat(states).contains(expected)
         }
@@ -181,8 +188,8 @@ class FaresViewModelTest {
         collector.test { states, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.InvalidQueryError)
+                mockGetRailFaresUseCase(origin = station, destination = station)
+            } returns flowOf(RailFaresResult.InvalidQueryError)
 
             // WHEN
             viewModel.onCreate(
@@ -192,8 +199,15 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
-            assertThat(states).contains(expected)
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
+            )
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(
                 FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
             )
@@ -205,8 +219,8 @@ class FaresViewModelTest {
         collector.test { states, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.NetworkError)
+                mockGetRailFaresUseCase(origin = station, destination = station)
+            } returns flowOf(RailFaresResult.NetworkError)
 
             // WHEN
             viewModel.onCreate(
@@ -216,8 +230,15 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
-            assertThat(states).contains(expected)
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
+            )
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK))
         }
     }
@@ -226,8 +247,8 @@ class FaresViewModelTest {
     fun `when use case returns NetworkError onCreate should not log result`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = station, destination = station)
-        } returns flowOf(FareListResult.NetworkError)
+            mockGetRailFaresUseCase(origin = station, destination = station)
+        } returns flowOf(RailFaresResult.NetworkError)
 
         // WHEN
         viewModel.onCreate(
@@ -245,8 +266,8 @@ class FaresViewModelTest {
         collector.test { states, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.ServerError)
+                mockGetRailFaresUseCase(origin = station, destination = station)
+            } returns flowOf(RailFaresResult.ServerError)
 
             // WHEN
             viewModel.onCreate(
@@ -256,8 +277,15 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
-            assertThat(states).contains(expected)
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
+            )
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.SERVER))
         }
     }
@@ -266,8 +294,8 @@ class FaresViewModelTest {
     fun `when use case returns ServerError onCreate should log result`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = station, destination = station)
-        } returns flowOf(FareListResult.ServerError)
+            mockGetRailFaresUseCase(origin = station, destination = station)
+        } returns flowOf(RailFaresResult.ServerError)
 
         // WHEN
         viewModel.onCreate(
@@ -277,7 +305,8 @@ class FaresViewModelTest {
         )
 
         // THEN
-        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${FareListResult.ServerError}"
+        val message =
+            "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.ServerError}"
         verify { mockLogger.debug(message) }
     }
 
@@ -286,8 +315,8 @@ class FaresViewModelTest {
         collector.test { states, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
-            } returns flowOf(FareListResult.GenericError)
+                mockGetRailFaresUseCase(origin = station, destination = station)
+            } returns flowOf(RailFaresResult.GenericError)
 
             // WHEN
             viewModel.onCreate(
@@ -297,8 +326,15 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = FaresViewState(isLoading = true, busAndTramFare = BUS_AND_TRAM_FARE)
-            assertThat(states).contains(expected)
+            val expected = listOf(
+                FaresViewState(isLoading = true),
+                FaresViewState(
+                    isLoading = false,
+                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
+                )
+            )
+            assertThat(states).containsAtLeastElementsIn(expected)
             assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC))
         }
     }
@@ -307,8 +343,8 @@ class FaresViewModelTest {
     fun `when use case returns GenericError onCreate should log result`() {
         // GIVEN
         every {
-            mockGetFaresUseCase(origin = station, destination = station)
-        } returns flowOf(FareListResult.GenericError)
+            mockGetRailFaresUseCase(origin = station, destination = station)
+        } returns flowOf(RailFaresResult.GenericError)
 
         // WHEN
         viewModel.onCreate(
@@ -318,7 +354,8 @@ class FaresViewModelTest {
         )
 
         // THEN
-        val message = "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${FareListResult.GenericError}"
+        val message =
+            "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.GenericError}"
         verify { mockLogger.debug(message) }
     }
 
@@ -327,7 +364,7 @@ class FaresViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
+                mockGetRailFaresUseCase(origin = station, destination = station)
             } returns flow { throw IOException() }
 
             // WHEN
@@ -348,7 +385,7 @@ class FaresViewModelTest {
         collector.test { _, actions ->
             // GIVEN
             every {
-                mockGetFaresUseCase(origin = station, destination = station)
+                mockGetRailFaresUseCase(origin = station, destination = station)
             } returns flow { throw Throwable() }
 
             // WHEN
@@ -369,7 +406,7 @@ class FaresViewModelTest {
         // GIVEN
         val exception = Throwable()
         every {
-            mockGetFaresUseCase(origin = station, destination = station)
+            mockGetRailFaresUseCase(origin = station, destination = station)
         } returns flow { throw exception }
 
         // WHEN

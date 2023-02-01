@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.alancamargo.tubecalculator.core.tools.GenericDiffCallback
 import com.alancamargo.tubecalculator.fares.databinding.ItemFareBinding
-import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.domain.model.FareOption
 
-internal class FareAdapter : ListAdapter<Fare, FareViewHolder>(GenericDiffCallback()) {
+internal class FareAdapter : ListAdapter<FareOption, FareViewHolder>(GenericDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FareViewHolder {
         val inflater = LayoutInflater.from(parent.context)

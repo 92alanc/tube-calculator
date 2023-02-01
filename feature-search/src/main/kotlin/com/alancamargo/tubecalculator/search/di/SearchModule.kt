@@ -4,8 +4,6 @@ import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalyticsImpl
 import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSource
 import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSourceImpl
-import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSource
-import com.alancamargo.tubecalculator.search.data.remote.SearchRemoteDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.repository.SearchRepositoryImpl
 import com.alancamargo.tubecalculator.search.domain.repository.SearchRepository
 import com.alancamargo.tubecalculator.search.domain.usecase.*
@@ -21,21 +19,9 @@ internal abstract class SearchModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindSearchRemoteDataSource(
-        impl: SearchRemoteDataSourceImpl
-    ): SearchRemoteDataSource
-
-    @Binds
-    @ViewModelScoped
     abstract fun bindSearchRepository(
         impl: SearchRepositoryImpl
     ): SearchRepository
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindSearchStationUseCase(
-        impl: SearchStationUseCaseImpl
-    ): SearchStationUseCase
 
     @Binds
     @ViewModelScoped
@@ -60,4 +46,8 @@ internal abstract class SearchModule {
     @Binds
     @ViewModelScoped
     abstract fun bindSearchLocalDataSource(impl: SearchLocalDataSourceImpl): SearchLocalDataSource
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindGetAllStationsUseCase(impl: SearchStationUseCaseImpl): SearchStationUseCase
 }
