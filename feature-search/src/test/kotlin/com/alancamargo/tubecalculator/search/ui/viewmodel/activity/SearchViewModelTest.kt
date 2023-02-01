@@ -118,6 +118,17 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `onPrivacyPolicyClicked should send ShowPrivacyPolicyDialogue action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onPrivacyPolicyClicked()
+
+            // THEN
+            assertThat(actions).contains(SearchViewAction.ShowPrivacyPolicyDialogue)
+        }
+    }
+
+    @Test
     fun `onAppInfoClicked should track button click event`() {
         // WHEN
         viewModel.onAppInfoClicked()

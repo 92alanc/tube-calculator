@@ -9,6 +9,11 @@
         android:title="@string/settings" />
 
     <item
+        android:id="@+id/itemPrivacy"
+        android:icon="@drawable/ic_privacy"
+        android:title="@string/privacy_policy"/>
+
+    <item
         android:id="@+id/itemAbout"
         android:icon="@drawable/ic_app_info"
         android:title="@string/search_about" />

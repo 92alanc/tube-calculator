@@ -7,6 +7,7 @@ private const val SCREEN_NAME = "search"
 
 private const val BUTTON_CALCULATE = "calculate"
 private const val BUTTON_SETTINGS = "settings"
+private const val BUTTON_PRIVACY_POLICY = "privacy_policy"
 private const val BUTTON_APP_INFO = "app_info"
 
 private const val PROPERTY_ORIGIN = "origin"
@@ -39,6 +40,13 @@ internal class SearchAnalyticsImpl @Inject constructor(
     override fun trackSettingsClicked() {
         analytics.trackButtonClicked(
             buttonName = BUTTON_SETTINGS,
+            screenName = SCREEN_NAME
+        )
+    }
+
+    override fun trackPrivacyPolicyClicked() {
+        analytics.trackButtonClicked(
+            buttonName = BUTTON_PRIVACY_POLICY,
             screenName = SCREEN_NAME
         )
     }

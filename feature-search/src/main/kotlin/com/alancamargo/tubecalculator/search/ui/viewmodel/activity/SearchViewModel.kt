@@ -73,6 +73,14 @@ internal class SearchViewModel(
         }
     }
 
+    fun onPrivacyPolicyClicked() {
+        analytics.trackPrivacyPolicyClicked()
+
+        viewModelScope.launch(dispatcher) {
+            _action.emit(SearchViewAction.ShowPrivacyPolicyDialogue)
+        }
+    }
+
     fun onAppInfoClicked() {
         analytics.trackAppInfoClicked()
 
