@@ -2,8 +2,7 @@ package com.alancamargo.tubecalculator.fares.data.remote
 
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
-import com.alancamargo.tubecalculator.core.extensions.isRequestError
-import com.alancamargo.tubecalculator.core.extensions.isServerError
+import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.RemoteDatabaseFareListWrapper
 import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
@@ -16,12 +15,32 @@ private const val REMOTE_DATABASE_COLLECTION_NAME = "fares"
 
 internal class FaresRemoteDataSourceImpl @Inject constructor(
     private val service: RailFaresService,
-    private val remoteDatabase: RemoteDatabase
+    private val remoteDatabase: RemoteDatabase,
+    private val logger: Logger
 ) : FaresRemoteDataSource {
 
     override suspend fun getRailFares(origin: Station, destination: Station): RailFaresResult {
         val documentId = "${origin.id}#${destination.id}"
 
+        return try {
+            val response = service.getRailFares(
+                originId = origin.id,
+                destinationId = destination.id
+            )
+
+            return if (response.isSuccessful) {
+                handleSuccess(documentId, response)
+            } else {
+                logger.debug("Origin: ${origin.id}. Destination: ${destination.id} Response: ${response.code()} - ${response.errorBody()}")
+                fetchFromRemoteDatabase(documentId)
+            }
+        } catch (t: Throwable) {
+            logger.error(t)
+            fetchFromRemoteDatabase(documentId)
+        }
+    }
+
+    private suspend fun fetchFromRemoteDatabase(documentId: String): RailFaresResult {
         return try {
             val response = remoteDatabase.load(
                 collectionName = REMOTE_DATABASE_COLLECTION_NAME,
@@ -29,31 +48,13 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
                 outputClass = RemoteDatabaseFareListWrapper::class.java
             )
 
-            response?.let {
+            return response?.let {
                 val railFares = it.fareList.map { fare -> fare.toDomain() }
                 RailFaresResult.Success(railFares)
-            } ?: run {
-                fetchFromService(origin, destination, documentId)
-            }
+            } ?: RailFaresResult.GenericError
         } catch (t: Throwable) {
-            fetchFromService(origin, destination, documentId)
-        }
-    }
-
-    private suspend fun fetchFromService(
-        origin: Station,
-        destination: Station,
-        documentId: String
-    ): RailFaresResult {
-        val response = service.getRailFares(
-            originId = origin.id,
-            destinationId = destination.id
-        )
-
-        return if (response.isSuccessful) {
-            handleSuccess(documentId, response)
-        } else {
-            handleError(response)
+            logger.error(t)
+            RailFaresResult.GenericError
         }
     }
 
@@ -71,17 +72,7 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
                 RailFaresResult.Success(railFares)
             }
         } ?: run {
-            RailFaresResult.GenericError
-        }
-    }
-
-    private fun handleError(response: Response<List<RailFareResponse>>): RailFaresResult {
-        return if (response.isRequestError()) {
-            RailFaresResult.GenericError
-        } else if (response.isServerError()) {
-            RailFaresResult.ServerError
-        } else {
-            RailFaresResult.GenericError
+            fetchFromRemoteDatabase(documentId)
         }
     }
 }
