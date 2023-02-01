@@ -27,6 +27,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_16"
         android:layout_marginHorizontal="@dimen/spacing_16"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
         app:layout_constraintBottom_toTopOf="@+id/barrier"
