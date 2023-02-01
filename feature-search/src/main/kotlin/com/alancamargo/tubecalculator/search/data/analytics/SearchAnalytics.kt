@@ -12,5 +12,7 @@ internal interface SearchAnalytics {
 
     fun trackSettingsClicked()
 
+    fun trackPrivacyPolicyClicked()
+
     fun trackAppInfoClicked()
 }

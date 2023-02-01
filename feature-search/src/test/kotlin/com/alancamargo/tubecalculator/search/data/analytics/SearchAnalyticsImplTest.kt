@@ -56,6 +56,20 @@ class SearchAnalyticsImplTest {
     }
 
     @Test
+    fun `trackPrivacyPolicyClicked should track button click event`() {
+        // WHEN
+        searchAnalytics.trackPrivacyPolicyClicked()
+
+        // THEN
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "privacy_policy",
+                screenName = SCREEN_NAME
+            )
+        }
+    }
+
+    @Test
     fun `trackAppInfoClicked should track button click event`() {
         // WHEN
         searchAnalytics.trackAppInfoClicked()

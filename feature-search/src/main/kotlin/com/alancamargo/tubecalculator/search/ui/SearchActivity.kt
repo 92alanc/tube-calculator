@@ -110,6 +110,8 @@ internal class SearchActivity : AppCompatActivity() {
 
             is SearchViewAction.NavigateToSettings -> navigateToSettings()
 
+            is SearchViewAction.ShowPrivacyPolicyDialogue -> showPrivacyPolicyDialogue()
+
             is SearchViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
         }
     }
@@ -125,6 +127,11 @@ internal class SearchActivity : AppCompatActivity() {
             R.id.itemSettings -> {
                 viewModel.onSettingsClicked()
                 binding.drawerLayout.close()
+                true
+            }
+
+            R.id.itemPrivacy -> {
+                viewModel.onPrivacyPolicyClicked()
                 true
             }
 
@@ -189,6 +196,14 @@ internal class SearchActivity : AppCompatActivity() {
             origin = origin,
             destination = destination,
             busAndTramJourneyCount = busAndTramJourneyCount
+        )
+    }
+
+    private fun showPrivacyPolicyDialogue() {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R2.string.privacy_policy,
+            messageRes = R2.string.privacy_policy_content
         )
     }
 
