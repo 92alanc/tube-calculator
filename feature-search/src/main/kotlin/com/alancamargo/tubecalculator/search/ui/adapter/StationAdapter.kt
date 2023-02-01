@@ -1,5 +1,6 @@
 package com.alancamargo.tubecalculator.search.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -29,17 +30,16 @@ internal class StationAdapter(
 
     override fun getItem(position: Int): String = stations[position].name
 
+    @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return convertView ?: run {
-            val inflater = LayoutInflater.from(context)
-            val binding = ItemStationBinding.inflate(inflater, parent, false).apply {
-                val station = stations[position]
-                imageContainer.addIconsForModes(station.modes)
-                txtName.text = station.name
-            }
-
-            binding.root
+        val inflater = LayoutInflater.from(context)
+        val binding = ItemStationBinding.inflate(inflater, parent, false).apply {
+            val station = stations[position]
+            imageContainer.addIconsForModes(station.modes)
+            txtName.text = station.name
         }
+
+        return binding.root
     }
 
     private fun GridLayout.addIconsForModes(modes: List<UiMode>) = modes.forEach { mode ->

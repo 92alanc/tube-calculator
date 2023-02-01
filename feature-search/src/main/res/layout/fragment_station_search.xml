@@ -27,7 +27,7 @@
         app:boxBackgroundMode="outline"
         app:boxBackgroundColor="?colorOnPrimary"
         tools:hint="@sample/search_screen.json/data/hint">
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+        <com.alancamargo.tubecalculator.core.design.view.CustomAutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
