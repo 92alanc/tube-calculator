@@ -12,6 +12,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
+import com.alancamargo.tubecalculator.core.extensions.getVersionName
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
@@ -73,6 +74,7 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.drawerLayout)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
+        viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
     }
 
     override fun onStart() {
@@ -92,7 +94,6 @@ internal class SearchActivity : AppCompatActivity() {
         setUpNavigationDrawer()
         setSupportActionBar(appBar.toolbar)
         setUpCalculateButton()
-        appBar.content.setUpFragments()
         adLoader.loadBannerAds(appBar.content.banner)
     }
 
@@ -113,6 +114,8 @@ internal class SearchActivity : AppCompatActivity() {
             is SearchViewAction.ShowPrivacyPolicyDialogue -> showPrivacyPolicyDialogue()
 
             is SearchViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
+
+            is SearchViewAction.AttachFragments -> binding.appBar.content.addFragments()
         }
     }
 
@@ -155,16 +158,6 @@ internal class SearchActivity : AppCompatActivity() {
                 destination = destination,
                 busAndTramJourneyCount = busAndTramJourneyCount
             )
-        }
-    }
-
-    private fun ContentSearchBinding.setUpFragments() {
-        val origin = supportFragmentManager.findFragmentByTag(TAG_ORIGIN)
-        val destination = supportFragmentManager.findFragmentByTag(TAG_DESTINATION)
-        val busAndTramJourneys = supportFragmentManager.findFragmentByTag(TAG_BUS_AND_TRAM_JOURNEYS)
-
-        if (origin == null || destination == null || busAndTramJourneys == null) {
-            addFragments()
         }
     }
 
@@ -222,10 +215,17 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun showAppInfoDialogue() {
+        val appName = getString(R2.string.app_name)
+        val appNameAndVersion = getString(
+            R2.string.app_name_and_version_format,
+            appName,
+            getVersionName()
+        )
+
         dialogueHelper.showDialogue(
             context = this,
             iconRes = R2.mipmap.ic_launcher_round,
-            titleRes = R2.string.app_name,
+            title = appNameAndVersion,
             messageRes = R.string.search_app_info
         )
     }

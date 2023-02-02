@@ -45,8 +45,13 @@ internal class FaresViewModel @Inject constructor(
     fun onCreate(
         origin: UiStation?,
         destination: UiStation?,
-        busAndTramJourneyCount: Int
+        busAndTramJourneyCount: Int,
+        isFirstLaunch: Boolean
     ) {
+        if (!isFirstLaunch) {
+            return
+        }
+
         analytics.trackScreenViewed()
 
         viewModelScope.launch(dispatcher) {

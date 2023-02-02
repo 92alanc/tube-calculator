@@ -19,14 +19,14 @@ import javax.inject.Inject
 /**
  * Without this delay the UI won't have time to process the action
  */
-private const val FIRST_ACCESS_DELAY_MILLIS = 200L
+private const val UI_DELAY_MILLIS = 200L
 
 @HiltViewModel
 internal class SearchViewModel(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
     private val analytics: SearchAnalytics,
-    private val firstAccessDelay: Long,
+    private val uiDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -39,7 +39,7 @@ internal class SearchViewModel(
         isFirstAccessUseCase,
         disableFirstAccessUseCase,
         analytics,
-        FIRST_ACCESS_DELAY_MILLIS,
+        UI_DELAY_MILLIS,
         dispatcher
     )
 
@@ -47,12 +47,23 @@ internal class SearchViewModel(
 
     val action: SharedFlow<SearchViewAction> = _action
 
+    fun onCreate(isFirstLaunch: Boolean) {
+        if (!isFirstLaunch) {
+            return
+        }
+
+        viewModelScope.launch(dispatcher) {
+            delay(uiDelay)
+            _action.emit(SearchViewAction.AttachFragments)
+        }
+    }
+
     fun onStart() {
         analytics.trackScreenViewed()
 
         viewModelScope.launch(dispatcher) {
             if (isFirstAccessUseCase()) {
-                delay(firstAccessDelay)
+                delay(uiDelay)
                 _action.emit(SearchViewAction.ShowFirstAccessDialogue)
             }
         }
