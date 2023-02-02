@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "label": "@string/search_where_are_you_travelling_from",
+      "hint": "@string/search_label_origin"
+    },
+    {
+      "label": "@string/search_where_are_you_travelling_to",
+      "hint": "@string/search_label_destination"
+    }
+  ]
+}

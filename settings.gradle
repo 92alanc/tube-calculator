@@ -17,3 +17,11 @@ dependencyResolutionManagement {
 rootProject.name = "Tube Calculator"
 
 include ':app'
+include ':core-design'
+include ':core'
+include ':core-test'
+include ':feature-search'
+include ':common'
+include ':navigation'
+include ':feature-fares'
+include ':feature-settings'

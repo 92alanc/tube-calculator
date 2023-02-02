@@ -1,0 +1,61 @@
+plugins {
+    id 'com.android.library'
+    id 'com.google.firebase.crashlytics'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+}
+
+android {
+    namespace 'com.alancamargo.tubecalculator.core'
+    compileSdk target_sdk_version
+
+    defaultConfig {
+        minSdk min_sdk_version
+        targetSdk target_sdk_version
+
+        buildConfigField "String", "APP_ID", "\"$tube_calculator_app_id\""
+        buildConfigField "String", "APP_KEY", "\"$tube_calculator_app_key\""
+        buildConfigField "String", "BASE_URL", "\"$tube_calculator_base_url\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues true
+    }
+}
+
+dependencies {
+    implementation platform("$firebase_bom")
+
+    implementation "$android_appcompat"
+    implementation "$android_material"
+    implementation "$firebase_analytics"
+    implementation "$firebase_config"
+    implementation "$firebase_crashlytics"
+    implementation "$firebase_firestore"
+    implementation "$hilt_android"
+    implementation "$kotlin_serialisation_converter"
+    implementation "$logging_interceptor"
+    implementation "$okhttp"
+    implementation "$room"
+    implementation "$room_runtime"
+    implementation "$work"
+
+    api "$android_activity"
+    api "$kotlin_serialisation"
+    api "$retrofit"
+
+    kapt "$hilt_compiler"
+    kapt "$room_compiler"
+
+    testImplementation "$junit"
+    testImplementation "$mockk_android"
+    testImplementation "$truth"
+}

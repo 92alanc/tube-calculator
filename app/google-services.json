@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1008153898574",
+    "project_id": "tube-radar",
+    "storage_bucket": "tube-radar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008153898574:android:075d4296a95b3be98f9d1f",
+        "android_client_info": {
+          "package_name": "com.alancamargo.tubecalculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008153898574-fmoqd7c5lli2ls13glm2e5vh2p5bt5mq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWb9ZvulOQkrLK0hSs2UVtgRXgNcdrK_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008153898574-fmoqd7c5lli2ls13glm2e5vh2p5bt5mq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008153898574:android:a9db066dd3f8052d8f9d1f",
+        "android_client_info": {
+          "package_name": "com.alancamargo.tubecalculator.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008153898574-fmoqd7c5lli2ls13glm2e5vh2p5bt5mq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWb9ZvulOQkrLK0hSs2UVtgRXgNcdrK_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008153898574-fmoqd7c5lli2ls13glm2e5vh2p5bt5mq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
