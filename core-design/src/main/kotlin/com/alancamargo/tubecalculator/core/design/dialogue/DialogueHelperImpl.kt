@@ -10,13 +10,15 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
     override fun showDialogue(
         context: Context,
         iconRes: Int,
-        titleRes: Int,
+        title: String,
         messageRes: Int
     ) {
+        val message = context.getString(messageRes)
+
         val builder = getBuilder(
             context = context,
-            titleRes = titleRes,
-            messageRes = messageRes
+            title = title,
+            message = message
         )
 
         builder.setIcon(iconRes).show()
@@ -29,10 +31,13 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         buttonTextRes: Int,
         onDismiss: (() -> Unit)?
     ) {
+        val title = context.getString(titleRes)
+        val message = context.getString(messageRes)
+
         val builder = getBuilder(
             context = context,
-            titleRes = titleRes,
-            messageRes = messageRes,
+            title = title,
+            message = message,
             buttonTextRes = buttonTextRes,
             onDismiss = onDismiss
         )
@@ -41,9 +46,11 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
     }
 
     override fun showDialogue(context: Context, titleRes: Int, message: CharSequence) {
+        val title = context.getString(titleRes)
+
         val builder = getBuilder(
             context = context,
-            titleRes = titleRes,
+            title = title,
             message = message
         )
 
@@ -52,14 +59,14 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
 
     private fun getBuilder(
         context: Context,
-        titleRes: Int,
-        messageRes: Int,
+        title: String,
+        message: CharSequence,
         buttonTextRes: Int = R.string.ok,
         onDismiss: (() -> Unit)? = null
     ): MaterialAlertDialogBuilder {
         val builder = MaterialAlertDialogBuilder(context)
-            .setTitle(titleRes)
-            .setMessage(messageRes)
+            .setTitle(title)
+            .setMessage(message)
             .setCancelable(false)
 
         onDismiss?.let {
@@ -72,17 +79,5 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         }
 
         return builder
-    }
-
-    private fun getBuilder(
-        context: Context,
-        titleRes: Int,
-        message: CharSequence
-    ): MaterialAlertDialogBuilder {
-        return MaterialAlertDialogBuilder(context)
-            .setTitle(titleRes)
-            .setMessage(message)
-            .setNeutralButton(R.string.ok, null)
-            .setCancelable(false)
     }
 }

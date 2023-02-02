@@ -12,6 +12,7 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
+import com.alancamargo.tubecalculator.core.extensions.getVersionName
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
@@ -214,10 +215,17 @@ internal class SearchActivity : AppCompatActivity() {
     }
 
     private fun showAppInfoDialogue() {
+        val appName = getString(R2.string.app_name)
+        val appNameAndVersion = getString(
+            R2.string.app_name_and_version_format,
+            appName,
+            getVersionName()
+        )
+
         dialogueHelper.showDialogue(
             context = this,
             iconRes = R2.mipmap.ic_launcher_round,
-            titleRes = R2.string.app_name,
+            title = appNameAndVersion,
             messageRes = R.string.search_app_info
         )
     }
