@@ -10,7 +10,7 @@ interface DialogueHelper {
     fun showDialogue(
         context: Context,
         @DrawableRes iconRes: Int,
-        @StringRes titleRes: Int,
+        title: String,
         @StringRes messageRes: Int
     )
 
