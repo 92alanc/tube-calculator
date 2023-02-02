@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1008153898574:android:655f8d089dcfb1b98f9d1f",
+        "mobilesdk_app_id": "1:1008153898574:android:075d4296a95b3be98f9d1f",
         "android_client_info": {
           "package_name": "com.alancamargo.tubecalculator"
         }
@@ -36,7 +36,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1008153898574:android:92a33ad56bc012cc8f9d1f",
+        "mobilesdk_app_id": "1:1008153898574:android:a9db066dd3f8052d8f9d1f",
         "android_client_info": {
           "package_name": "com.alancamargo.tubecalculator.debug"
         }

@@ -54,17 +54,11 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDatabase(): RemoteDatabase {
-        val firestore = Firebase.firestore
-        return RemoteDatabaseImpl(firestore)
-    }
+    fun provideRemoteDatabase(): RemoteDatabase = RemoteDatabaseImpl(Firebase.firestore)
 
     @Provides
     @Singleton
-    fun provideLogger(): Logger {
-        val crashlytics = Firebase.crashlytics
-        return LoggerImpl(crashlytics)
-    }
+    fun provideLogger(): Logger = LoggerImpl(Firebase.crashlytics)
 
     @Provides
     @Singleton
