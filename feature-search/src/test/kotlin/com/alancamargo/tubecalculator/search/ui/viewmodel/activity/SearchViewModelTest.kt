@@ -20,14 +20,14 @@ class SearchViewModelTest {
     private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
     private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
-    private val firstAccessDelay = 0L
+    private val uiDelay = 0L
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = SearchViewModel(
         mockIsFirstAccessUseCase,
         mockDisableFirstAccessUseCase,
         mockAnalytics,
-        firstAccessDelay,
+        uiDelay,
         dispatcher
     )
 
@@ -36,6 +36,30 @@ class SearchViewModelTest {
         actionFlow = viewModel.action,
         dispatcher = dispatcher
     )
+
+    @Test
+    fun `on first launch onCreate should send AttachFragments action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onCreate(isFirstLaunch = true)
+
+            // THEN
+            val expected = SearchViewAction.AttachFragments
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when not on first launch onCreate should not send AttachFragments action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onCreate(isFirstLaunch = false)
+
+            // THEN
+            val expected = SearchViewAction.AttachFragments
+            assertThat(actions).doesNotContain(expected)
+        }
+    }
 
     @Test
     fun `onStart should track screen view event`() {

@@ -53,10 +53,12 @@ internal class FaresActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewStateAndAction()
+
         viewModel.onCreate(
             origin = args.origin,
             destination = args.destination,
-            busAndTramJourneyCount = args.busAndTramJourneyCount
+            busAndTramJourneyCount = args.busAndTramJourneyCount,
+            isFirstLaunch = savedInstanceState == null
         )
     }
 

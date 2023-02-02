@@ -73,6 +73,7 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.drawerLayout)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
+        viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
     }
 
     override fun onStart() {
@@ -92,7 +93,6 @@ internal class SearchActivity : AppCompatActivity() {
         setUpNavigationDrawer()
         setSupportActionBar(appBar.toolbar)
         setUpCalculateButton()
-        appBar.content.setUpFragments()
         adLoader.loadBannerAds(appBar.content.banner)
     }
 
@@ -113,6 +113,8 @@ internal class SearchActivity : AppCompatActivity() {
             is SearchViewAction.ShowPrivacyPolicyDialogue -> showPrivacyPolicyDialogue()
 
             is SearchViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
+
+            is SearchViewAction.AttachFragments -> binding.appBar.content.addFragments()
         }
     }
 
@@ -155,16 +157,6 @@ internal class SearchActivity : AppCompatActivity() {
                 destination = destination,
                 busAndTramJourneyCount = busAndTramJourneyCount
             )
-        }
-    }
-
-    private fun ContentSearchBinding.setUpFragments() {
-        val origin = supportFragmentManager.findFragmentByTag(TAG_ORIGIN)
-        val destination = supportFragmentManager.findFragmentByTag(TAG_DESTINATION)
-        val busAndTramJourneys = supportFragmentManager.findFragmentByTag(TAG_BUS_AND_TRAM_JOURNEYS)
-
-        if (origin == null || destination == null || busAndTramJourneys == null) {
-            addFragments()
         }
     }
 
