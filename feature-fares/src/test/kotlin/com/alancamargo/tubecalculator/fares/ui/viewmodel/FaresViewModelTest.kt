@@ -69,6 +69,83 @@ class FaresViewModelTest {
     }
 
     @Test
+    fun `when not on first launch onCreate should not track screen view event`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = false
+        )
+
+        // THEN
+        verify(exactly = 0) { mockAnalytics.trackScreenViewed() }
+    }
+
+    @Test
+    fun `when not on first launch onCreate should not schedule fares cache background work`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = false
+        )
+
+        // THEN
+        verify(exactly = 0) {
+            mockRailFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork()
+        }
+    }
+
+    @Test
+    fun `when not on first launch onCreate should not calculate rail fares`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = false
+        )
+
+        // THEN
+        verify(exactly = 0) {
+            mockGetRailFaresUseCase(
+                origin = any(),
+                destination = any()
+            )
+        }
+    }
+
+    @Test
+    fun `when not on first launch onCreate should not calculate bus and tram fares`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = false
+        )
+
+        // THEN
+        verify(exactly = 0) { mockCalculateBusAndTramFareUseCase(busAndTramJourneyCount = any()) }
+    }
+
+    @Test
+    fun `when not on first launch onCreate should not calculate cheapest total fare`() {
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = false
+        )
+
+        // THEN
+        verify(exactly = 0) { mockCalculateCheapestTotalFareUseCase(fares = any()) }
+    }
+
+    @Test
     fun `onCreate should track screen view event`() {
         // GIVEN
         every {
@@ -79,7 +156,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -97,7 +175,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // WHEN
@@ -116,7 +195,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -144,7 +224,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -158,7 +239,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = null,
                 destination = null,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -176,7 +258,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = null,
             destination = null,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -195,7 +278,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -226,7 +310,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -254,7 +339,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -273,7 +359,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -301,7 +388,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -322,7 +410,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -350,7 +439,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
@@ -371,7 +461,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -392,7 +483,8 @@ class FaresViewModelTest {
             viewModel.onCreate(
                 origin = uiStation,
                 destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+                isFirstLaunch = true
             )
 
             // THEN
@@ -413,7 +505,8 @@ class FaresViewModelTest {
         viewModel.onCreate(
             origin = uiStation,
             destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
         )
 
         // THEN
