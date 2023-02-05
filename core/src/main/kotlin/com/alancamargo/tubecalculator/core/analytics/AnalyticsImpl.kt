@@ -7,6 +7,8 @@ import javax.inject.Inject
 
 private const val EVENT_BUTTON_CLICKED = "button_clicked"
 
+private const val PARAM_BUTTON_NAME = "button_name"
+
 internal class AnalyticsImpl @Inject constructor(
     private val firebaseAnalytics: FirebaseAnalytics
 ) : Analytics {
@@ -33,7 +35,14 @@ internal class AnalyticsImpl @Inject constructor(
         screenName: String,
         properties: (BundleBuilder.() -> Unit)?
     ) {
-        trackEvent(EVENT_BUTTON_CLICKED, screenName, properties)
+        val params = properties?.let {
+            BundleBuilder().apply(it)
+        }?.build()?.apply {
+            putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName)
+            putString(PARAM_BUTTON_NAME, buttonName)
+        }
+
+        firebaseAnalytics.logEvent(EVENT_BUTTON_CLICKED, params)
     }
 
     override fun trackEvent(
