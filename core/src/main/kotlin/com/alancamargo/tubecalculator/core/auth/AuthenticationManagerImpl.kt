@@ -2,7 +2,7 @@ package com.alancamargo.tubecalculator.core.auth
 
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.tasks.await
+import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 internal class AuthenticationManagerImpl @Inject constructor(
@@ -10,11 +10,14 @@ internal class AuthenticationManagerImpl @Inject constructor(
     private val logger: Logger
 ) : AuthenticationManager{
 
-    override suspend fun authenticateAnonymously() {
-        firebaseAuth.signInAnonymously().await()
-
-        if (firebaseAuth.currentUser == null) {
-            logger.debug("Authentication failed")
+    override fun authenticateAnonymously() {
+        if (!firebaseAuth.currentUser.isSignedIn()) {
+            firebaseAuth.signInAnonymously().addOnFailureListener {
+                logger.debug("Authentication failed")
+                logger.error(it)
+            }
         }
     }
+
+    private fun FirebaseUser?.isSignedIn(): Boolean = this != null
 }
