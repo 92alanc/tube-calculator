@@ -9,6 +9,7 @@ ext {
     android_material = "com.google.android.material:material:$android_material_version"
     coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
     firebase_analytics = "com.google.firebase:firebase-analytics-ktx"
+    firebase_auth = "com.google.firebase:firebase-auth-ktx"
     firebase_bom = "com.google.firebase:firebase-bom:$firebase_bom_version"
     firebase_config = "com.google.firebase:firebase-config"
     firebase_crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
