@@ -4,6 +4,8 @@ import android.content.Context
 import com.alancamargo.tubecalculator.core.R
 import com.alancamargo.tubecalculator.core.analytics.Analytics
 import com.alancamargo.tubecalculator.core.analytics.AnalyticsImpl
+import com.alancamargo.tubecalculator.core.auth.AuthenticationManager
+import com.alancamargo.tubecalculator.core.auth.AuthenticationManagerImpl
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderImpl
 import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
@@ -17,6 +19,7 @@ import com.alancamargo.tubecalculator.core.preferences.PreferencesManagerImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -69,4 +72,13 @@ internal object CoreModule {
     @Provides
     @Singleton
     fun provideAnalytics(): Analytics = AnalyticsImpl(Firebase.analytics)
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationManager(
+        logger: Logger
+    ): AuthenticationManager {
+        val firebaseAuth = Firebase.auth
+        return AuthenticationManagerImpl(firebaseAuth, logger)
+    }
 }
