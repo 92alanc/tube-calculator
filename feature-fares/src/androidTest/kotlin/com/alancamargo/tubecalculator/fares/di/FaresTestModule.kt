@@ -3,12 +3,11 @@ package com.alancamargo.tubecalculator.fares.di
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.di.CoreDesignModule
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
-import com.alancamargo.tubecalculator.core.di.FirebaseModule
+import com.alancamargo.tubecalculator.core.di.CoreLoggingModule
+import com.alancamargo.tubecalculator.core.log.Logger
+import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
+import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -19,7 +18,12 @@ import javax.inject.Singleton
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [CoreDesignModule::class, FirebaseModule::class]
+    replaces = [
+        CoreDesignModule::class,
+        CoreLoggingModule::class,
+        FaresRepositoryModule::class,
+        FaresAnalyticsModule::class
+    ]
 )
 internal object FaresTestModule {
 
@@ -39,17 +43,13 @@ internal object FaresTestModule {
 
     @Provides
     @Singleton
-    fun provideMockFirebaseRemoteConfig(): FirebaseRemoteConfig = mockk()
+    fun provideMockFaresRepository(): FaresRepository = mockk()
 
     @Provides
     @Singleton
-    fun provideMockFirebaseAnalytics(): FirebaseAnalytics = mockk(relaxed = true)
+    fun provideMockFaresAnalytics(): FaresAnalytics = mockk(relaxed = true)
 
     @Provides
     @Singleton
-    fun provideMockFirebaseCrashlytics(): FirebaseCrashlytics = mockk(relaxed = true)
-
-    @Provides
-    @Singleton
-    fun provideFirebaseFirestore(): FirebaseFirestore = mockk(relaxed = true)
+    fun provideMockLogger(): Logger = mockk(relaxed = true)
 }

@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object BaseUrlModule {
+object BaseUrlModule {
 
     @Provides
     @Singleton
