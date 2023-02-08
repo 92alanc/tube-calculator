@@ -1,0 +1,94 @@
+package com.alancamargo.tubecalculator.fares.ui
+
+import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
+import com.alancamargo.tubecalculator.core.design.ads.AdLoader
+import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.fares.R
+import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.every
+import io.mockk.verify
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import javax.inject.Inject
+
+@HiltAndroidTest
+internal class FaresActivityTest {
+
+    @get:Rule
+    val hiltAndroidRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var mockDialogueHelper: DialogueHelper
+
+    @Inject
+    lateinit var mockAdLoader: AdLoader
+
+    @Inject
+    lateinit var mockSearchActivityNavigation: SearchActivityNavigation
+
+    @Inject
+    lateinit var mockFirebaseRemoteConfig: FirebaseRemoteConfig
+
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    @Before
+    fun setUp() {
+        hiltAndroidRule.inject()
+        every { mockFirebaseRemoteConfig.getDouble(any()) } returns 1.65
+    }
+
+    @Test
+    fun shouldLoadBannerAds() {
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = null,
+            destination = null,
+            busAndTramJourneyCount = 2
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        verify { mockAdLoader.loadBannerAds(target = any()) }
+    }
+
+    @Test
+    fun shouldLoadInterstitialAds() {
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = null,
+            destination = null,
+            busAndTramJourneyCount = 2
+        )
+
+        ActivityScenario.launch<FaresActivity>(intent).onActivity {
+            verify {
+                mockAdLoader.loadInterstitialAds(
+                    activity = it,
+                    adIdRes = R.string.ads_interstitial_fares
+                )
+            }
+        }
+    }
+
+    @Test
+    fun whenClickNewSearch_shouldNavigateToSearch() {
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = null,
+            destination = null,
+            busAndTramJourneyCount = 2
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        onView(withId(R.id.btNewSearch)).perform(click())
+
+        verify { mockSearchActivityNavigation.startActivity(context = any()) }
+    }
+}

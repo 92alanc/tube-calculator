@@ -1,7 +1,6 @@
 package com.alancamargo.tubecalculator.core.di
 
 import android.content.Context
-import com.alancamargo.tubecalculator.core.R
 import com.alancamargo.tubecalculator.core.analytics.Analytics
 import com.alancamargo.tubecalculator.core.analytics.AnalyticsImpl
 import com.alancamargo.tubecalculator.core.auth.AuthenticationManager
@@ -18,11 +17,10 @@ import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManagerImpl
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
@@ -37,15 +35,13 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideApiProvider(impl: ApiProviderImpl): ApiProvider = impl
+    fun provideApiProvider(
+        @BaseUrl baseUrl: String
+    ): ApiProvider = ApiProviderImpl(baseUrl)
 
     @Provides
     @Singleton
-    fun provideRemoteConfigManager(): RemoteConfigManager {
-        val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance().apply {
-            setDefaultsAsync(R.xml.remote_config_defaults)
-        }
-
+    fun provideRemoteConfigManager(firebaseRemoteConfig: FirebaseRemoteConfig): RemoteConfigManager {
         return RemoteConfigManagerImpl(firebaseRemoteConfig)
     }
 
@@ -57,11 +53,15 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDatabase(): RemoteDatabase = RemoteDatabaseImpl(Firebase.firestore)
+    fun provideRemoteDatabase(
+        firebaseFirestore: FirebaseFirestore
+    ): RemoteDatabase = RemoteDatabaseImpl(firebaseFirestore)
 
     @Provides
     @Singleton
-    fun provideLogger(): Logger = LoggerImpl(Firebase.crashlytics)
+    fun provideLogger(
+        firebaseCrashlytics: FirebaseCrashlytics
+    ): Logger = LoggerImpl(firebaseCrashlytics)
 
     @Provides
     @Singleton
@@ -71,14 +71,16 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideAnalytics(): Analytics = AnalyticsImpl(Firebase.analytics)
+    fun provideAnalytics(
+        firebaseAnalytics: FirebaseAnalytics
+    ): Analytics = AnalyticsImpl(firebaseAnalytics)
 
     @Provides
     @Singleton
     fun provideAuthenticationManager(
-        logger: Logger
+        logger: Logger,
+        firebaseAuth: FirebaseAuth
     ): AuthenticationManager {
-        val firebaseAuth = Firebase.auth
         return AuthenticationManagerImpl(firebaseAuth, logger)
     }
 }

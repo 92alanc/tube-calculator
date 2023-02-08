@@ -18,7 +18,7 @@ android {
         versionCode version_code
         versionName "$version_name"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.alancamargo.tubecalculator.core.test.InstrumentedTestRunner"
     }
 
     signingConfigs {

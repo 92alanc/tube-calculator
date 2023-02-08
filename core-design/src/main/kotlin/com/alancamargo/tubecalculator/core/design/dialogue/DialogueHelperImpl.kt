@@ -1,11 +1,13 @@
 package com.alancamargo.tubecalculator.core.design.dialogue
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.alancamargo.tubecalculator.core.design.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
 
-internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+class DialogueHelperImpl @Inject internal constructor() : DialogueHelper {
 
     override fun showDialogue(
         context: Context,
