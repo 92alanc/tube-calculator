@@ -7,19 +7,13 @@ import com.alancamargo.tubecalculator.core.auth.AuthenticationManager
 import com.alancamargo.tubecalculator.core.auth.AuthenticationManagerImpl
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderImpl
-import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
-import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabaseImpl
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManagerImpl
-import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
-import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManagerImpl
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,21 +33,9 @@ internal object CoreModule {
 
     @Provides
     @Singleton
-    fun provideRemoteConfigManager(firebaseRemoteConfig: FirebaseRemoteConfig): RemoteConfigManager {
-        return RemoteConfigManagerImpl(firebaseRemoteConfig)
-    }
-
-    @Provides
-    @Singleton
     fun provideLocalDatabaseProvider(
         @ApplicationContext context: Context
     ): LocalDatabaseProvider = LocalDatabaseProviderImpl(context)
-
-    @Provides
-    @Singleton
-    fun provideRemoteDatabase(
-        firebaseFirestore: FirebaseFirestore
-    ): RemoteDatabase = RemoteDatabaseImpl(firebaseFirestore)
 
     @Provides
     @Singleton

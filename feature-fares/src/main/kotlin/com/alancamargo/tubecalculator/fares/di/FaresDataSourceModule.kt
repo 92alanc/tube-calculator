@@ -8,18 +8,18 @@ import com.alancamargo.tubecalculator.fares.domain.usecase.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 internal abstract class FaresDataSourceModule {
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindFaresLocalDataSource(impl: FaresLocalDataSourceImpl): FaresLocalDataSource
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindFaresRemoteDataSource(impl: FaresRemoteDataSourceImpl): FaresRemoteDataSource
 }

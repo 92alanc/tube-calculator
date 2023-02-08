@@ -30,6 +30,14 @@ android {
         viewBinding true
     }
 
+    sourceSets {
+        main {
+            assets {
+                srcDirs 'src/main/assets', 'src/androidTest/assets'
+            }
+        }
+    }
+
     testOptions {
         animationsDisabled true
     }

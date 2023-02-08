@@ -7,8 +7,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.fares.R
-import com.alancamargo.tubecalculator.fares.domain.repository.FaresRepository
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -17,7 +17,6 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.math.BigDecimal
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -36,16 +35,14 @@ internal class FaresActivityTest {
     lateinit var mockSearchActivityNavigation: SearchActivityNavigation
 
     @Inject
-    lateinit var mockFaresRepository: FaresRepository
+    lateinit var mockRemoteConfigManager: RemoteConfigManager
 
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
-        every {
-            mockFaresRepository.getBusAndTramBaseFare()
-        } returns BigDecimal(1.65)
+        every { mockRemoteConfigManager.getDouble(key = any()) } returns 1.65
     }
 
     @Test
