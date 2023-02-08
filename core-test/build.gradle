@@ -26,6 +26,7 @@ dependencies {
     implementation "$android_appcompat"
     implementation "$android_test_runner"
     implementation "$coroutines_test"
+    implementation "$mock_web_server"
 
     api "$hilt_testing"
 }

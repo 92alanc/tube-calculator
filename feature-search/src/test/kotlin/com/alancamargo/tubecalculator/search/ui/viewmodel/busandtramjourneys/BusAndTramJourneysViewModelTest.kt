@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys
 
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher

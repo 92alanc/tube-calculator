@@ -3,7 +3,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.Fare

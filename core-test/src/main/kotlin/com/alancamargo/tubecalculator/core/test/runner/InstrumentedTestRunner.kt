@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.test
+package com.alancamargo.tubecalculator.core.test.runner
 
 import android.app.Application
 import android.content.Context

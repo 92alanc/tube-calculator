@@ -20,6 +20,7 @@ ext {
     kotlin_serialisation_version = '1.4.1'
     kotlin_serialisation_converter_version = '0.8.0'
     lifecycle_view_model_version = '2.5.1'
+    mock_web_server_version = '4.10.0'
     mockk_version = '1.13.3'
     okhttp_version = '4.10.0'
     retrofit_version = '2.9.0'

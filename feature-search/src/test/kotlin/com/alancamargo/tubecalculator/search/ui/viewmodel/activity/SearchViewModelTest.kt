@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase

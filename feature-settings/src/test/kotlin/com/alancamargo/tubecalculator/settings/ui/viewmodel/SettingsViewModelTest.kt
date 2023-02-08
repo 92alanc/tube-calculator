@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.settings.ui.viewmodel
 
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.IsAnalyticsEnabledUseCase
