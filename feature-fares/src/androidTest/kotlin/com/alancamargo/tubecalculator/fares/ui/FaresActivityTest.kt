@@ -1,38 +1,21 @@
 package com.alancamargo.tubecalculator.fares.ui
 
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry
 import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
-import com.alancamargo.tubecalculator.core.test.assertions.withRecyclerViewItemCount
-import com.alancamargo.tubecalculator.core.test.web.delayWebResponse
-import com.alancamargo.tubecalculator.core.test.web.disconnect
-import com.alancamargo.tubecalculator.core.test.web.mockWebError
-import com.alancamargo.tubecalculator.core.test.web.mockWebResponse
-import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
 import com.alancamargo.tubecalculator.fares.data.model.database.RemoteDatabaseFareListWrapper
-import com.alancamargo.tubecalculator.fares.testtools.stubUiStation
+import com.alancamargo.tubecalculator.fares.ui.robots.given
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
 import io.mockk.every
-import io.mockk.verify
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.net.HttpURLConnection
 import javax.inject.Inject
-import com.alancamargo.tubecalculator.core.design.R as R2
 
 @HiltAndroidTest
 internal class FaresActivityTest {
@@ -58,8 +41,6 @@ internal class FaresActivityTest {
     @Inject
     lateinit var mockRemoteDatabase: RemoteDatabase
 
-    private val context = InstrumentationRegistry.getInstrumentation().targetContext
-
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
@@ -81,172 +62,86 @@ internal class FaresActivityTest {
 
     @Test
     fun onLaunch_shouldLoadBannerAds() {
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = null,
-            destination = null,
-            busAndTramJourneyCount = 2
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        verify { mockAdLoader.loadBannerAds(target = any()) }
+        given {
+            launchWithBusAndTramFaresOnly()
+        } then {
+            loadBannerAds()
+        }
     }
 
     @Test
     fun onLaunch_shouldLoadInterstitialAds() {
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = null,
-            destination = null,
-            busAndTramJourneyCount = 2
-        )
-
-        ActivityScenario.launch<FaresActivity>(intent).onActivity {
-            verify {
-                mockAdLoader.loadInterstitialAds(
-                    activity = it,
-                    adIdRes = R.string.ads_interstitial_fares
-                )
-            }
+        given {
+            launchWithBusAndTramFaresOnly()
+        } then {
+            loadInterstitialAds()
         }
     }
 
     @Test
     fun whenClickNewSearch_shouldNavigateToSearch() {
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = null,
-            destination = null,
-            busAndTramJourneyCount = 2
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        onView(withId(R.id.btNewSearch)).perform(click())
-
-        verify { mockSearchActivityNavigation.startActivity(context = any()) }
+        given {
+            launchWithBusAndTramFaresOnly()
+        } withAction {
+            clickNewSearch()
+        } then {
+            navigateToSearch()
+        }
     }
 
     @Test
     fun withSuccess_recyclerViewShouldHaveCorrectItemCount() {
-        mockWebResponse(jsonAssetPath = "fares_success.json")
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        onView(withId(R.id.rootRecyclerView)).check(withRecyclerViewItemCount(2))
+        given {
+            launchWithSuccess()
+        } then {
+            recyclerViewHasCorrectItemCount()
+        }
     }
 
     @Test
     fun whenLoading_shouldShowShimmer() {
-        delayWebResponse()
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        onView(withId(R.id.shimmerContainer)).check(matches(isDisplayed()))
+        given {
+            launchWithDelayedWebResponse()
+        } then {
+            shimmerIsDisplayed()
+        }
     }
 
     @Test
     fun whenDisconnected_shouldShowNetworkErrorDialogue() {
-        disconnect()
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        verify {
-            mockDialogueHelper.showDialogue(
-                context = any(),
-                titleRes = R2.string.error,
-                messageRes = R2.string.message_network_error,
-                onDismiss = any()
-            )
+        given {
+            launchDisconnected()
+        } then {
+            networkErrorDialogueIsDisplayed()
         }
     }
 
     @Test
     fun withInvalidQueryError_shouldShowInvalidQueryErrorDialogue() {
-        mockWebResponse(jsonAssetPath = "fares_invalid_query.json")
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        verify {
-            mockDialogueHelper.showDialogue(
-                context = any(),
-                titleRes = R2.string.error,
-                messageRes = R.string.fares_message_invalid_query_error,
-                onDismiss = any()
-            )
+        given {
+            launchWithInvalidQueryError()
+        } then {
+            invalidQueryErrorDialogueIsDisplayed()
         }
     }
 
     @Test
     fun withUnknownError_shouldShowGenericErrorDialogue() {
-        mockWebError(HttpURLConnection.HTTP_NOT_FOUND)
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        verify {
-            mockDialogueHelper.showDialogue(
-                context = any(),
-                titleRes = R2.string.error,
-                messageRes = R2.string.message_generic_error,
-                onDismiss = any()
-            )
+        given {
+            launchWithUnknownError()
+        } then {
+            genericErrorDialogueIsDisplayed()
         }
     }
 
     @Test
     fun whenClickingOnMessagesButton_shouldShowMessagesDialogue() {
-        mockWebResponse(jsonAssetPath = "fares_success.json")
-
-        val intent = FaresActivity.getIntent(
-            context = context,
-            origin = stubUiStation(),
-            destination = stubUiStation(),
-            busAndTramJourneyCount = 0
-        )
-        ActivityScenario.launch<FaresActivity>(intent)
-
-        onView(
-            allOf(
-                withId(R.id.btMessages),
-                isDisplayed()
-            )
-        ).perform(click())
-
-        verify {
-            mockDialogueHelper.showDialogue(
-                context = any(),
-                titleRes = R.string.fares_messages,
-                message = any()
-            )
+        given {
+            launchWithSuccess()
+        } withAction {
+            clickMessages()
+        } then {
+            messagesDialogueIsDisplayed()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.core.test.assertions
+package com.alancamargo.tubecalculator.core.test.ui
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
