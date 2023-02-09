@@ -3,12 +3,15 @@ package com.alancamargo.tubecalculator.fares.ui
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
+import com.alancamargo.tubecalculator.core.test.web.mockWebResponse
 import com.alancamargo.tubecalculator.fares.R
+import com.alancamargo.tubecalculator.fares.testtools.stubUiStation
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -46,7 +49,7 @@ internal class FaresActivityTest {
     }
 
     @Test
-    fun shouldLoadBannerAds() {
+    fun onLaunch_shouldLoadBannerAds() {
         val intent = FaresActivity.getIntent(
             context = context,
             origin = null,
@@ -59,7 +62,7 @@ internal class FaresActivityTest {
     }
 
     @Test
-    fun shouldLoadInterstitialAds() {
+    fun onLaunch_shouldLoadInterstitialAds() {
         val intent = FaresActivity.getIntent(
             context = context,
             origin = null,
@@ -90,5 +93,20 @@ internal class FaresActivityTest {
         onView(withId(R.id.btNewSearch)).perform(click())
 
         verify { mockSearchActivityNavigation.startActivity(context = any()) }
+    }
+
+    @Test
+    fun whenServiceReturnsSuccess_shouldShowRailFares() {
+        mockWebResponse(jsonAssetPath = "fares_success.json")
+
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = stubUiStation(),
+            destination = stubUiStation(),
+            busAndTramJourneyCount = 0
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        onView(withText("Single Fare Finder")).check(matches(isDisplayed()))
     }
 }
