@@ -32,6 +32,7 @@ android {
 
     testOptions {
         animationsDisabled true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     packagingOptions {
@@ -67,6 +68,9 @@ dependencies {
 
     androidTestImplementation project(':core-test')
 
+    androidTestImplementation("$android_espresso_contrib") {
+        exclude module: "protobuf-lite"
+    }
     androidTestImplementation "$android_espresso_core"
     androidTestImplementation "$android_fragment_testing"
     androidTestImplementation "$mockk_android"

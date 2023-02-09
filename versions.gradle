@@ -3,7 +3,7 @@ ext {
     android_activity_version = '1.6.1'
     android_appcompat_version = '1.6.0'
     android_core_version = '1.9.0'
-    android_espresso_core_version = '3.5.1'
+    android_espresso_version = '3.5.1'
     android_fragment_version = '1.5.5'
     android_hilt_compiler_version = '1.0.0'
     android_material_version = '1.8.0'

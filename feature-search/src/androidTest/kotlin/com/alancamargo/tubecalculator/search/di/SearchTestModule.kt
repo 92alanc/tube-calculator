@@ -1,8 +1,14 @@
 package com.alancamargo.tubecalculator.search.di
 
+import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.di.CoreDesignModule
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.di.CoreDataModule
+import com.alancamargo.tubecalculator.core.di.PreferencesModule
+import com.alancamargo.tubecalculator.core.log.Logger
+import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
+import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
@@ -18,7 +24,9 @@ import javax.inject.Singleton
     components = [SingletonComponent::class],
     replaces = [
         CoreDesignModule::class,
-        SearchAnalyticsModule::class
+        SearchAnalyticsModule::class,
+        PreferencesModule::class,
+        CoreDataModule::class
     ]
 )
 internal object SearchTestModule {
@@ -42,4 +50,20 @@ internal object SearchTestModule {
     @Provides
     @Singleton
     fun provideMockSearchAnalytics(): SearchAnalytics = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    fun provideMockPreferencesManager(): PreferencesManager = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    fun provideMockRemoteConfigManager(): RemoteConfigManager = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    fun provideMockRemoteDatabase(): RemoteDatabase = mockk()
+
+    @Provides
+    @Singleton
+    fun provideMockLogger(): Logger = mockk(relaxed = true)
 }

@@ -10,8 +10,6 @@ import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderI
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
-import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
-import com.alancamargo.tubecalculator.core.preferences.PreferencesManagerImpl
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
@@ -36,12 +34,6 @@ internal object CoreModule {
     fun provideLocalDatabaseProvider(
         @ApplicationContext context: Context
     ): LocalDatabaseProvider = LocalDatabaseProviderImpl(context)
-
-    @Provides
-    @Singleton
-    fun providePreferencesManager(
-        @ApplicationContext context: Context
-    ): PreferencesManager = PreferencesManagerImpl(context)
 
     @Provides
     @Singleton
