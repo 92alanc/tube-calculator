@@ -1,79 +1,45 @@
 package com.alancamargo.tubecalculator.search.di
 
-import android.content.Context
-import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.di.CoreDesignModule
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
+import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.testing.TestInstallIn
+import io.mockk.mockk
 import javax.inject.Singleton
 
 @Module
 @TestInstallIn(
     components = [SingletonComponent::class],
-    replaces = [CoreDesignModule::class]
+    replaces = [
+        CoreDesignModule::class,
+        SearchAnalyticsModule::class
+    ]
 )
-object SearchTestModule {
+internal object SearchTestModule {
 
     @Provides
     @Singleton
-    fun provideMockAdLoader(): AdLoader = object : AdLoader {
-        override fun loadBannerAds(target: View) {
-
-        }
-
-        override fun loadInterstitialAds(activity: AppCompatActivity, adIdRes: Int) {
-
-        }
-    }
+    fun provideMockAdLoader(): AdLoader = mockk(relaxed = true)
 
     @Provides
     @Singleton
-    fun provideMockDialogueHelper(): DialogueHelper = object : DialogueHelper {
-        override fun showDialogue(context: Context, iconRes: Int, title: String, messageRes: Int) {
-
-        }
-
-        override fun showDialogue(
-            context: Context,
-            titleRes: Int,
-            messageRes: Int,
-            buttonTextRes: Int,
-            onDismiss: (() -> Unit)?
-        ) {
-
-        }
-
-        override fun showDialogue(context: Context, titleRes: Int, message: CharSequence) {
-
-        }
-    }
+    fun provideMockDialogueHelper(): DialogueHelper = mockk(relaxed = true)
 
     @Provides
     @Singleton
-    fun provideMockSettingsActivityNavigation(): SettingsActivityNavigation = object : SettingsActivityNavigation {
-        override fun startActivity(context: Context) {
-
-        }
-    }
+    fun provideMockFaresActivityNavigation(): FaresActivityNavigation = mockk(relaxed = true)
 
     @Provides
     @Singleton
-    fun provideMockFaresActivityNavigation(): FaresActivityNavigation = object : FaresActivityNavigation {
-        override fun startActivity(
-            context: Context,
-            origin: UiStation?,
-            destination: UiStation?,
-            busAndTramJourneyCount: Int
-        ) {
+    fun provideMockSettingsActivityNavigation(): SettingsActivityNavigation = mockk(relaxed = true)
 
-        }
-    }
+    @Provides
+    @Singleton
+    fun provideMockSearchAnalytics(): SearchAnalytics = mockk(relaxed = true)
 }
