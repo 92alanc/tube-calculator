@@ -24,6 +24,14 @@ internal class SearchActivityActionRobot(private val testSuite: SearchActivityTe
         performClick(R.id.itemAbout)
     }
 
+    fun clickAddBusAndTramJourney() {
+        performClick(R.id.btUp)
+    }
+
+    fun clickCalculate() {
+        performClick(R.id.btCalculate)
+    }
+
     infix fun then(
         assertion: SearchActivityAssertionRobot.() -> Unit
     ): SearchActivityAssertionRobot {

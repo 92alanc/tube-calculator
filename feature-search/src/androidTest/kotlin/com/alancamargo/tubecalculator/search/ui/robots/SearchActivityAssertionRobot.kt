@@ -2,12 +2,9 @@ package com.alancamargo.tubecalculator.search.ui.robots
 
 import androidx.annotation.StringRes
 import androidx.test.platform.app.InstrumentationRegistry
-import com.alancamargo.tubecalculator.core.extensions.getVersionName
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.ui.SearchActivityTest
 import io.mockk.verify
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
 import com.alancamargo.tubecalculator.core.design.R as R2
 
 internal class SearchActivityAssertionRobot(private val testSuite: SearchActivityTest) {
@@ -19,13 +16,13 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
     }
 
     fun navigateToSettings() {
-        verify { testSuite.mockSettingsActivityNavigation.startActivity(context) }
+        verify { testSuite.mockSettingsActivityNavigation.startActivity(context = any()) }
     }
 
     fun navigateToFares() {
         verify {
             testSuite.mockFaresActivityNavigation.startActivity(
-                context = context,
+                context = any(),
                 origin = any(),
                 destination = any(),
                 busAndTramJourneyCount = any()
@@ -34,7 +31,6 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
     }
 
     fun showFirstAccessDialogue() {
-        runBlocking { delay(200) }
         verify {
             testSuite.mockDialogueHelper.showDialogue(
                 context = any(),
@@ -49,7 +45,7 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
     fun doNotShowFirstAccessDialogue() {
         verify(exactly = 0) {
             testSuite.mockDialogueHelper.showDialogue(
-                context = context,
+                context = any(),
                 titleRes = R.string.first_access_title,
                 messageRes = R.string.first_access_message,
                 buttonTextRes = R.string.sounds_good
@@ -60,7 +56,7 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
     fun showPrivacyPolicyDialogue() {
         verify {
             testSuite.mockDialogueHelper.showDialogue(
-                context = context,
+                context = any(),
                 titleRes = R2.string.privacy_policy,
                 messageRes = R2.string.privacy_policy_content
             )
@@ -73,12 +69,12 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
         val appNameAndVersion = context.getString(
             R2.string.app_name_and_version_format,
             appName,
-            context.getVersionName()
+            testSuite.appVersionName
         )
 
         verify {
             testSuite.mockDialogueHelper.showDialogue(
-                context = context,
+                context = any(),
                 iconRes = R2.mipmap.ic_launcher_round,
                 title = appNameAndVersion,
                 messageRes = R.string.search_app_info
@@ -101,7 +97,7 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
     private fun showErrorDialogue(@StringRes messageRes: Int) {
         verify {
             testSuite.mockDialogueHelper.showDialogue(
-                context = context,
+                context = any(),
                 titleRes = R2.string.error,
                 messageRes = messageRes
             )

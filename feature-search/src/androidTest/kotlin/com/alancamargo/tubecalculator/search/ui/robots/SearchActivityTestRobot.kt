@@ -4,6 +4,8 @@ import androidx.test.core.app.ActivityScenario
 import com.alancamargo.tubecalculator.search.ui.SearchActivity
 import com.alancamargo.tubecalculator.search.ui.SearchActivityTest
 import io.mockk.every
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 private const val KEY_FIRST_ACCESS = "is_first_access"
 
@@ -17,12 +19,12 @@ internal class SearchActivityTestRobot(private val testSuite: SearchActivityTest
 
     fun launchOnFirstAccess() {
         setIsFirstAccess(isFirstAccess = true)
-        ActivityScenario.launch(SearchActivity::class.java)
+        launch()
     }
 
     fun launchAfterFirstAccess() {
         setIsFirstAccess(isFirstAccess = false)
-        ActivityScenario.launch(SearchActivity::class.java)
+        launch()
     }
 
     infix fun withAction(action: SearchActivityActionRobot.() -> Unit): SearchActivityActionRobot {
@@ -33,6 +35,11 @@ internal class SearchActivityTestRobot(private val testSuite: SearchActivityTest
         assertion: SearchActivityAssertionRobot.() -> Unit
     ): SearchActivityAssertionRobot {
         return SearchActivityAssertionRobot(testSuite).apply(assertion)
+    }
+
+    private fun launch() {
+        ActivityScenario.launch(SearchActivity::class.java)
+        runBlocking { delay(200) }
     }
 
     private fun setIsFirstAccess(isFirstAccess: Boolean) {

@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.di.UiDelay
@@ -22,6 +23,7 @@ internal class SearchViewModel @Inject constructor(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
     private val analytics: SearchAnalytics,
+    @AppVersionName private val appVersionName: String,
     @UiDelay private val uiDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
@@ -79,7 +81,7 @@ internal class SearchViewModel @Inject constructor(
         analytics.trackAppInfoClicked()
 
         viewModelScope.launch(dispatcher) {
-            _action.emit(SearchViewAction.ShowAppInfo)
+            _action.emit(SearchViewAction.ShowAppInfo(appVersionName))
         }
     }
 

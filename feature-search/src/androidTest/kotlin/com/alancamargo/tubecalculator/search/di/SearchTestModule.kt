@@ -4,6 +4,8 @@ import com.alancamargo.tubecalculator.core.database.remote.RemoteDatabase
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.di.CoreDesignModule
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.di.AppDataModule
+import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.di.CoreDataModule
 import com.alancamargo.tubecalculator.core.di.PreferencesModule
 import com.alancamargo.tubecalculator.core.log.Logger
@@ -26,7 +28,8 @@ import javax.inject.Singleton
         CoreDesignModule::class,
         SearchAnalyticsModule::class,
         PreferencesModule::class,
-        CoreDataModule::class
+        CoreDataModule::class,
+        AppDataModule::class
     ]
 )
 internal object SearchTestModule {
@@ -66,4 +69,9 @@ internal object SearchTestModule {
     @Provides
     @Singleton
     fun provideMockLogger(): Logger = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    @AppVersionName
+    fun provideAppVersionName(): String = "2023.1.0"
 }

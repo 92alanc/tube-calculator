@@ -21,12 +21,14 @@ class SearchViewModelTest {
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
     private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
     private val uiDelay = 0L
+    private val appVersionName = "2023.1.0"
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = SearchViewModel(
         mockIsFirstAccessUseCase,
         mockDisableFirstAccessUseCase,
         mockAnalytics,
+        appVersionName,
         uiDelay,
         dispatcher
     )
@@ -168,7 +170,7 @@ class SearchViewModelTest {
             viewModel.onAppInfoClicked()
 
             // THEN
-            assertThat(actions).contains(SearchViewAction.ShowAppInfo)
+            assertThat(actions).contains(SearchViewAction.ShowAppInfo(appVersionName))
         }
     }
 

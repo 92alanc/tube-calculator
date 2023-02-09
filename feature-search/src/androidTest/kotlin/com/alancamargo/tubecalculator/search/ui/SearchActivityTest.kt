@@ -2,6 +2,7 @@ package com.alancamargo.tubecalculator.search.ui
 
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
@@ -34,6 +35,10 @@ internal class SearchActivityTest {
     @Inject
     lateinit var mockPreferencesManager: PreferencesManager
 
+    @Inject
+    @AppVersionName
+    lateinit var appVersionName: String
+
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
@@ -63,6 +68,62 @@ internal class SearchActivityTest {
             launchAfterFirstAccess()
         } then {
             loadBannerAds()
+        }
+    }
+
+    @Test
+    fun whenClickSettings_shouldNavigateToSettings() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickSettings()
+        } then {
+            navigateToSettings()
+        }
+    }
+
+    @Test
+    fun whenClickPrivacy_shouldShowPrivacyPolicyDialogue() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickPrivacy()
+        } then {
+            showPrivacyPolicyDialogue()
+        }
+    }
+
+    @Test
+    fun whenClickAbout_shouldShowAppInfoDialogue() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAbout()
+        } then {
+            showAppInfoDialogue()
+        }
+    }
+
+    @Test
+    fun whenClickCalculate_shouldShowMissingOriginOrDestinationErrorDialogue() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickCalculate()
+        } then {
+            showMissingOriginOrDestinationErrorDialogue()
+        }
+    }
+
+    @Test
+    fun withValidBusAndTramJourneyCount_whenClickCalculate_shouldNavigateToFares() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAddBusAndTramJourney()
+            clickCalculate()
+        } then {
+            navigateToFares()
         }
     }
 }
