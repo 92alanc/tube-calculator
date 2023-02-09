@@ -14,6 +14,11 @@ fun mockWebResponse(jsonAssetPath: String, code: Int = HttpURLConnection.HTTP_OK
     mockWebServer.enqueue(response)
 }
 
+fun mockWebError(code: Int) {
+    val response = MockResponse().setResponseCode(code)
+    mockWebServer.enqueue(response)
+}
+
 fun delayWebResponse() {
     val response = MockResponse().setSocketPolicy(SocketPolicy.NO_RESPONSE)
     mockWebServer.enqueue(response)

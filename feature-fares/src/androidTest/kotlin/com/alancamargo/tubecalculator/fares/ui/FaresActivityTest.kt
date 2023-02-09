@@ -14,6 +14,7 @@ import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.test.assertions.withRecyclerViewItemCount
 import com.alancamargo.tubecalculator.core.test.web.delayWebResponse
 import com.alancamargo.tubecalculator.core.test.web.disconnect
+import com.alancamargo.tubecalculator.core.test.web.mockWebError
 import com.alancamargo.tubecalculator.core.test.web.mockWebResponse
 import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
@@ -25,9 +26,11 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.verify
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.net.HttpURLConnection
 import javax.inject.Inject
 import com.alancamargo.tubecalculator.core.design.R as R2
 
@@ -124,7 +127,7 @@ internal class FaresActivityTest {
     }
 
     @Test
-    fun whenServiceReturnsSuccess_recyclerViewShouldHaveCorrectItemCount() {
+    fun withSuccess_recyclerViewShouldHaveCorrectItemCount() {
         mockWebResponse(jsonAssetPath = "fares_success.json")
 
         val intent = FaresActivity.getIntent(
@@ -171,6 +174,78 @@ internal class FaresActivityTest {
                 titleRes = R2.string.error,
                 messageRes = R2.string.message_network_error,
                 onDismiss = any()
+            )
+        }
+    }
+
+    @Test
+    fun withInvalidQueryError_shouldShowInvalidQueryErrorDialogue() {
+        mockWebResponse(jsonAssetPath = "fares_invalid_query.json")
+
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = stubUiStation(),
+            destination = stubUiStation(),
+            busAndTramJourneyCount = 0
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        verify {
+            mockDialogueHelper.showDialogue(
+                context = any(),
+                titleRes = R2.string.error,
+                messageRes = R.string.fares_message_invalid_query_error,
+                onDismiss = any()
+            )
+        }
+    }
+
+    @Test
+    fun withUnknownError_shouldShowGenericErrorDialogue() {
+        mockWebError(HttpURLConnection.HTTP_NOT_FOUND)
+
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = stubUiStation(),
+            destination = stubUiStation(),
+            busAndTramJourneyCount = 0
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        verify {
+            mockDialogueHelper.showDialogue(
+                context = any(),
+                titleRes = R2.string.error,
+                messageRes = R2.string.message_generic_error,
+                onDismiss = any()
+            )
+        }
+    }
+
+    @Test
+    fun whenClickingOnMessagesButton_shouldShowMessagesDialogue() {
+        mockWebResponse(jsonAssetPath = "fares_success.json")
+
+        val intent = FaresActivity.getIntent(
+            context = context,
+            origin = stubUiStation(),
+            destination = stubUiStation(),
+            busAndTramJourneyCount = 0
+        )
+        ActivityScenario.launch<FaresActivity>(intent)
+
+        onView(
+            allOf(
+                withId(R.id.btMessages),
+                isDisplayed()
+            )
+        ).perform(click())
+
+        verify {
+            mockDialogueHelper.showDialogue(
+                context = any(),
+                titleRes = R.string.fares_messages,
+                message = any()
             )
         }
     }

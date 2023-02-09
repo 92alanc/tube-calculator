@@ -8,7 +8,5 @@ internal sealed class RailFaresResult {
 
     object NetworkError : RailFaresResult()
 
-    object ServerError : RailFaresResult()
-
     object GenericError : RailFaresResult()
 }
