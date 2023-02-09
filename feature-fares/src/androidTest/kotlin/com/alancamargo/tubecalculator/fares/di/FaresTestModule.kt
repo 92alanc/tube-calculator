@@ -11,6 +11,8 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.test.web.mockWebServer
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
+import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
+import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import dagger.Module
 import dagger.Provides
@@ -28,7 +30,8 @@ import javax.inject.Singleton
         CoreDesignModule::class,
         CoreDataModule::class,
         FaresAnalyticsModule::class,
-        BaseUrlModule::class
+        BaseUrlModule::class,
+        FaresCacheModule::class
     ]
 )
 internal object FaresTestModule {
@@ -69,4 +72,14 @@ internal object FaresTestModule {
     @Provides
     @Singleton
     fun provideMockRemoteDatabase(): RemoteDatabase = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    fun provideMockRailFaresDao(): RailFaresDao = mockk(relaxed = true)
+
+    @Provides
+    @Singleton
+    fun provideMockRailFaresCacheWorkScheduler(): RailFaresCacheWorkScheduler {
+        return mockk(relaxed = true)
+    }
 }

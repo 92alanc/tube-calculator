@@ -40,6 +40,7 @@ android {
 
     testOptions {
         animationsDisabled true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     packagingOptions {
@@ -78,6 +79,7 @@ dependencies {
     androidTestImplementation project(':core-test')
 
     androidTestImplementation "$android_espresso_core"
+    androidTestImplementation "$coroutines_test"
     androidTestImplementation "$mockk_android"
     androidTestImplementation "$truth"
 

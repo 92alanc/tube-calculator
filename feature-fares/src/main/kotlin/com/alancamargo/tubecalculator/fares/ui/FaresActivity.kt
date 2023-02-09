@@ -64,7 +64,7 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun setUpUi() = with(binding) {
         setSupportActionBar(toolbar)
-        recyclerView.adapter = adapter
+        rootRecyclerView.adapter = adapter
         btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
         adLoader.loadBannerAds(banner)
         adLoader.loadInterstitialAds(
@@ -80,7 +80,7 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
-        binding.recyclerView.isVisible = fares != null && !isLoading
+        binding.rootRecyclerView.isVisible = fares != null && !isLoading
         binding.txtCheapestTotalFare.isVisible = cheapestTotalFare != null
         cheapestTotalFare?.let {
             binding.txtCheapestTotalFare.text = getString(
