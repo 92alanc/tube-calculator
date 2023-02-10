@@ -94,6 +94,16 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
         showErrorDialogue(R2.string.message_generic_error)
     }
 
+    fun showMoreInfoDialogue() {
+        verify {
+            testSuite.mockDialogueHelper.showDialogue(
+                context = any(),
+                titleRes = R.string.bus_tram_journeys,
+                messageRes = R.string.search_bus_tram_journeys_info
+            )
+        }
+    }
+
     private fun showErrorDialogue(@StringRes messageRes: Int) {
         verify {
             testSuite.mockDialogueHelper.showDialogue(

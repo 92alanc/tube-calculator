@@ -1,11 +1,17 @@
 package com.alancamargo.tubecalculator.search.ui.robots
 
 import androidx.test.core.app.ActivityScenario
+import com.alancamargo.tubecalculator.search.data.model.DbStation
+import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.ui.SearchActivity
 import com.alancamargo.tubecalculator.search.ui.SearchActivityTest
+import io.mockk.coEvery
 import io.mockk.every
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.IOException
 
 private const val KEY_FIRST_ACCESS = "is_first_access"
 
@@ -25,6 +31,27 @@ internal class SearchActivityTestRobot(private val testSuite: SearchActivityTest
     fun launchAfterFirstAccess() {
         setIsFirstAccess(isFirstAccess = false)
         launch()
+    }
+
+    fun withSearchResult(query: String, stationName: String) {
+        val modes = listOf(ModeResponse.UNDERGROUND, ModeResponse.OVERGROUND)
+        val modesJson = Json.encodeToString(modes)
+
+        coEvery {
+            testSuite.mockSearchDao.searchStation(query)
+        } returns listOf(
+            DbStation(
+                id = "12345",
+                name = stationName,
+                modesJson = modesJson
+            )
+        )
+    }
+
+    fun withGenericError() {
+        coEvery {
+            testSuite.mockSearchDao.searchStation(query = any())
+        } throws IOException()
     }
 
     infix fun withAction(action: SearchActivityActionRobot.() -> Unit): SearchActivityActionRobot {

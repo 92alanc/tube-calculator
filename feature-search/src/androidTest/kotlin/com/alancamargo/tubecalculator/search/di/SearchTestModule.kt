@@ -14,6 +14,7 @@ import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
+import com.alancamargo.tubecalculator.search.data.database.SearchDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -29,7 +30,8 @@ import javax.inject.Singleton
         SearchAnalyticsModule::class,
         PreferencesModule::class,
         CoreDataModule::class,
-        AppDataModule::class
+        AppDataModule::class,
+        SearchDataModule::class
     ]
 )
 internal object SearchTestModule {
@@ -74,4 +76,8 @@ internal object SearchTestModule {
     @Singleton
     @AppVersionName
     fun provideAppVersionName(): String = "2023.1.0"
+
+    @Provides
+    @Singleton
+    fun provideMockSearchDao(): SearchDao = mockk()
 }
