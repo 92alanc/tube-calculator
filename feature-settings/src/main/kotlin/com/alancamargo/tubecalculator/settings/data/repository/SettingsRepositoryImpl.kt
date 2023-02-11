@@ -22,7 +22,7 @@ internal class SettingsRepositoryImpl @Inject constructor(
     }
 
     override fun isCrashLoggingEnabled(): Boolean {
-        return preferencesManager.getBoolean(KEY_CRASH_LOGGING, defaultValue = false)
+        return preferencesManager.getBoolean(KEY_CRASH_LOGGING, defaultValue = true)
     }
 
     override fun setAdPersonalisationEnabled(isEnabled: Boolean) {
@@ -40,6 +40,6 @@ internal class SettingsRepositoryImpl @Inject constructor(
     }
 
     override fun isAnalyticsEnabled(): Boolean {
-        return preferencesManager.getBoolean(KEY_ANALYTICS, defaultValue = false)
+        return preferencesManager.getBoolean(KEY_ANALYTICS, defaultValue = true)
     }
 }

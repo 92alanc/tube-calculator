@@ -36,8 +36,10 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
                 context = any(),
                 titleRes = R.string.first_access_title,
                 messageRes = R.string.first_access_message,
-                buttonTextRes = R.string.sounds_good,
-                onDismiss = any()
+                positiveButtonTextRes = R2.string.settings,
+                onPositiveButtonClick = any(),
+                negativeButtonTextRes = R.string.not_now,
+                onNegativeButtonClick = any()
             )
         }
     }
@@ -48,7 +50,7 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
                 context = any(),
                 titleRes = R.string.first_access_title,
                 messageRes = R.string.first_access_message,
-                buttonTextRes = R.string.sounds_good
+                buttonTextRes = R2.string.settings
             )
         }
     }

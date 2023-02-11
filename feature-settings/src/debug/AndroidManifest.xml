@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application>
+        <activity android:name=".ui.SettingsActivity"
+            android:theme="@style/DebugTheme"
+            tools:replace="android:theme" />
+    </application>
+</manifest>

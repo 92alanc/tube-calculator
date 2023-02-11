@@ -1,8 +1,6 @@
 package com.alancamargo.tubecalculator.core.di
 
 import android.content.Context
-import com.alancamargo.tubecalculator.core.analytics.Analytics
-import com.alancamargo.tubecalculator.core.analytics.AnalyticsImpl
 import com.alancamargo.tubecalculator.core.auth.AuthenticationManager
 import com.alancamargo.tubecalculator.core.auth.AuthenticationManagerImpl
 import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProvider
@@ -10,7 +8,6 @@ import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderI
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -34,12 +31,6 @@ internal object CoreModule {
     fun provideLocalDatabaseProvider(
         @ApplicationContext context: Context
     ): LocalDatabaseProvider = LocalDatabaseProviderImpl(context)
-
-    @Provides
-    @Singleton
-    fun provideAnalytics(
-        firebaseAnalytics: FirebaseAnalytics
-    ): Analytics = AnalyticsImpl(firebaseAnalytics)
 
     @Provides
     @Singleton

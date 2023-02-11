@@ -104,23 +104,32 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `onFirstAccessDialogueDismissed should disable first access`() {
+    fun `onFirstAccessGoToSettingsClicked should disable first access`() {
         // WHEN
-        viewModel.onFirstAccessDialogueDismissed()
+        viewModel.onFirstAccessGoToSettingsClicked()
 
         // THEN
         verify { mockDisableFirstAccessUseCase() }
     }
 
     @Test
-    fun `onFirstAccessDialogueDismissed should send NavigateToSettings action`() {
+    fun `onFirstAccessGoToSettingsClicked should send NavigateToSettings action`() {
         collector.test { _, actions ->
             // WHEN
-            viewModel.onFirstAccessDialogueDismissed()
+            viewModel.onFirstAccessGoToSettingsClicked()
 
             // THEN
             assertThat(actions).contains(SearchViewAction.NavigateToSettings)
         }
+    }
+
+    @Test
+    fun `onFirstAccessNotNowClicked should disable first access`() {
+        // WHEN
+        viewModel.onFirstAccessNotNowClicked()
+
+        // THEN
+        verify { mockDisableFirstAccessUseCase() }
     }
 
     @Test

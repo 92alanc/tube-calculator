@@ -17,8 +17,8 @@
     <string name="search">Search</string>
     <string name="clear">Clear</string>
     <string name="first_access_title">Welcome!</string>
-    <string name="first_access_message">Since this is the first time you\'re using this app, perhaps it will be a good idea to have a quick look at the settings to make sure you\'re happy with the way your data is handled. You can always change it later if you want.</string>
-    <string name="sounds_good">Sounds good</string>
+    <string name="first_access_message">Let\'s make sure you\'re happy with the way your data is handled.\n\nYou can always change it later if you want.</string>
+    <string name="not_now">Not now</string>
     <string name="more_information">More information</string>
     <string name="bus_tram_journeys">Bus and/or tram journeys</string>
 </resources>

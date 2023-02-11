@@ -204,8 +204,10 @@ internal class SearchActivity : AppCompatActivity() {
             context = this,
             titleRes = R.string.first_access_title,
             messageRes = R.string.first_access_message,
-            buttonTextRes = R.string.sounds_good,
-            onDismiss = viewModel::onFirstAccessDialogueDismissed
+            positiveButtonTextRes = R2.string.settings,
+            onPositiveButtonClick = viewModel::onFirstAccessGoToSettingsClicked,
+            negativeButtonTextRes = R.string.not_now,
+            onNegativeButtonClick = viewModel::onFirstAccessNotNowClicked
         )
     }
 
