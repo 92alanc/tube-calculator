@@ -2,12 +2,9 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
-import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
-import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.testtools.stubUiStation
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -17,18 +14,12 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
 
-    private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
-    private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
     private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
     private val uiDelay = 0L
-    private val appVersionName = "2023.1.0"
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = SearchViewModel(
-        mockIsFirstAccessUseCase,
-        mockDisableFirstAccessUseCase,
         mockAnalytics,
-        appVersionName,
         uiDelay,
         dispatcher
     )
@@ -52,6 +43,15 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun `on first launch onCreate should track screen view event`() {
+        // WHEN
+        viewModel.onCreate(isFirstLaunch = true)
+
+        // THEN
+        verify { mockAnalytics.trackScreenViewed() }
+    }
+
+    @Test
     fun `when not on first launch onCreate should not send AttachFragments action`() {
         collector.test { _, actions ->
             // WHEN
@@ -64,123 +64,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `onStart should track screen view event`() {
-        // GIVEN
-        every { mockIsFirstAccessUseCase() } returns false
-
+    fun `when not on first launch onCreate should not track screen view event`() {
         // WHEN
-        viewModel.onStart()
+        viewModel.onCreate(isFirstLaunch = false)
 
         // THEN
-        verify { mockAnalytics.trackScreenViewed() }
-    }
-
-    @Test
-    fun `on first access onStart should send ShowFirstAccessDialogue action`() {
-        collector.test { _, actions ->
-            // GIVEN
-            every { mockIsFirstAccessUseCase() } returns true
-
-            // WHEN
-            viewModel.onStart()
-
-            // THEN
-            assertThat(actions).contains(SearchViewAction.ShowFirstAccessDialogue)
-        }
-    }
-
-    @Test
-    fun `when not on first access onStart should not send ShowFirstAccessDialogue action`() {
-        collector.test { _, actions ->
-            // GIVEN
-            every { mockIsFirstAccessUseCase() } returns false
-
-            // WHEN
-            viewModel.onStart()
-
-            // THEN
-            assertThat(actions).doesNotContain(SearchViewAction.ShowFirstAccessDialogue)
-        }
-    }
-
-    @Test
-    fun `onFirstAccessGoToSettingsClicked should disable first access`() {
-        // WHEN
-        viewModel.onFirstAccessGoToSettingsClicked()
-
-        // THEN
-        verify { mockDisableFirstAccessUseCase() }
-    }
-
-    @Test
-    fun `onFirstAccessGoToSettingsClicked should send NavigateToSettings action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onFirstAccessGoToSettingsClicked()
-
-            // THEN
-            assertThat(actions).contains(SearchViewAction.NavigateToSettings)
-        }
-    }
-
-    @Test
-    fun `onFirstAccessNotNowClicked should disable first access`() {
-        // WHEN
-        viewModel.onFirstAccessNotNowClicked()
-
-        // THEN
-        verify { mockDisableFirstAccessUseCase() }
-    }
-
-    @Test
-    fun `onSettingsClicked should track button click event`() {
-        // WHEN
-        viewModel.onSettingsClicked()
-
-        // THEN
-        verify { mockAnalytics.trackSettingsClicked() }
-    }
-
-    @Test
-    fun `onSettingsClicked should send NavigateToSettings action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onSettingsClicked()
-
-            // THEN
-            assertThat(actions).contains(SearchViewAction.NavigateToSettings)
-        }
-    }
-
-    @Test
-    fun `onPrivacyPolicyClicked should send ShowPrivacyPolicyDialogue action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onPrivacyPolicyClicked()
-
-            // THEN
-            assertThat(actions).contains(SearchViewAction.ShowPrivacyPolicyDialogue)
-        }
-    }
-
-    @Test
-    fun `onAppInfoClicked should track button click event`() {
-        // WHEN
-        viewModel.onAppInfoClicked()
-
-        // THEN
-        verify { mockAnalytics.trackAppInfoClicked() }
-    }
-
-    @Test
-    fun `onAppInfoClicked should send ShowAppInfo action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onAppInfoClicked()
-
-            // THEN
-            assertThat(actions).contains(SearchViewAction.ShowAppInfo(appVersionName))
-        }
+        verify(exactly = 0) { mockAnalytics.trackScreenViewed() }
     }
 
     @Test

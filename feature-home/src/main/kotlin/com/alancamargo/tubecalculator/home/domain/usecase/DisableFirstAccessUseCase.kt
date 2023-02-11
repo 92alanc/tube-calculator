@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.domain.usecase
+package com.alancamargo.tubecalculator.home.domain.usecase
 
 internal interface DisableFirstAccessUseCase {
 

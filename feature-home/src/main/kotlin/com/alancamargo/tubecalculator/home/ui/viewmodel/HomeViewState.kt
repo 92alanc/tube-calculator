@@ -8,19 +8,17 @@ internal data class HomeViewState(
     val showCalculateButton: Boolean = false
 ) {
 
-    fun onJourneyReceived(journey: Journey) = copy(
-        journeys = journeys?.plus(journey) ?: listOf(journey)
-    )
+    fun onJourneysUpdated(journeys: List<Journey>): HomeViewState {
+        val areJourneysFull = journeys.any {
+            it is Journey.Rail
+        } && journeys.any {
+            it is Journey.BusAndTram
+        }
 
-    fun onJourneyRemoved(journey: Journey) = copy(
-        journeys = journeys?.minus(journey) ?: emptyList()
-    )
-
-    fun onShowAddButton() = copy(showAddButton = true)
-
-    fun onHideAddButton() = copy(showAddButton = false)
-
-    fun onShowCalculateButton() = copy(showCalculateButton = true)
-
-    fun onHideCalculateButton() = copy(showCalculateButton = false)
+        return copy(
+            journeys = journeys,
+            showCalculateButton = journeys.isNotEmpty(),
+            showAddButton = !areJourneysFull
+        )
+    }
 }

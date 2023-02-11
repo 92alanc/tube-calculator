@@ -23,16 +23,6 @@ internal abstract class SearchModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindIsFirstAccessUseCase(impl: IsFirstAccessUseCaseImpl): IsFirstAccessUseCase
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindDisableFirstAccessUseCase(
-        impl: DisableFirstAccessUseCaseImpl
-    ): DisableFirstAccessUseCase
-
-    @Binds
-    @ViewModelScoped
     abstract fun bindGetMinQueryLengthUseCase(
         impl: GetMinQueryLengthUseCaseImpl
     ): GetMinQueryLengthUseCase

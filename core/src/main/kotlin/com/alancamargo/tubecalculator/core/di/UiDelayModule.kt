@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.di
+package com.alancamargo.tubecalculator.core.di
 
 import dagger.Module
 import dagger.Provides
@@ -8,7 +8,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal object UiDelayModule {
+object UiDelayModule {
 
     private const val UI_DELAY_MILLIS = 200L
 

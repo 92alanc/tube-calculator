@@ -1,4 +1,4 @@
-package com.alancamargo.tubecalculator.search.di
+package com.alancamargo.tubecalculator.core.di
 
 import javax.inject.Qualifier
 
