@@ -47,14 +47,14 @@ class SettingsRepositoryImplTest {
     fun `isCrashLoggingEnabled should get setting from preferences manager`() {
         // GIVEN
         every {
-            mockPreferencesManager.getBoolean(KEY_CRASH_LOGGING, defaultValue = false)
-        } returns true
+            mockPreferencesManager.getBoolean(KEY_CRASH_LOGGING, defaultValue = true)
+        } returns false
 
         // WHEN
         val actual = repository.isCrashLoggingEnabled()
 
         // THEN
-        assertThat(actual).isTrue()
+        assertThat(actual).isFalse()
     }
 
     @Test
@@ -111,13 +111,13 @@ class SettingsRepositoryImplTest {
     fun `isAnalyticsEnabled should get setting from preferences manager`() {
         // GIVEN
         every {
-            mockPreferencesManager.getBoolean(KEY_ANALYTICS, defaultValue = false)
-        } returns true
+            mockPreferencesManager.getBoolean(KEY_ANALYTICS, defaultValue = true)
+        } returns false
 
         // WHEN
         val actual = repository.isAnalyticsEnabled()
 
         // THEN
-        assertThat(actual).isTrue()
+        assertThat(actual).isFalse()
     }
 }
