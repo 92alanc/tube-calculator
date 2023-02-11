@@ -110,12 +110,10 @@ internal class HomeViewModel @Inject constructor(
 
     fun onAddClicked() {
         if (isAddButtonExpanded) {
-            _state.update { it.collapseAddButton() }
+            collapseAddButton()
         } else {
-            _state.update { it.expandAddButton() }
+            expandAddButton()
         }
-
-        isAddButtonExpanded = !isAddButtonExpanded
     }
 
     fun onJourneyClicked(journey: Journey) {
@@ -124,5 +122,31 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             _action.emit(HomeViewAction.EditJourney(journey))
         }
+    }
+
+    fun onAddRailJourneyClicked() {
+        collapseAddButton()
+
+        viewModelScope.launch(dispatcher) {
+            _action.emit(HomeViewAction.AddRailJourney)
+        }
+    }
+
+    fun onAddBusAndTramJourneyClicked() {
+        collapseAddButton()
+
+        viewModelScope.launch(dispatcher) {
+            _action.emit(HomeViewAction.AddBusAndTramJourney)
+        }
+    }
+
+    private fun expandAddButton() {
+        _state.update { it.expandAddButton() }
+        isAddButtonExpanded = true
+    }
+
+    private fun collapseAddButton() {
+        _state.update { it.collapseAddButton() }
+        isAddButtonExpanded = false
     }
 }

@@ -15,4 +15,8 @@ internal sealed class HomeViewAction {
     object ShowFirstAccessDialogue : HomeViewAction()
 
     data class EditJourney(val journey: Journey) : HomeViewAction()
+
+    object AddRailJourney : HomeViewAction()
+
+    object AddBusAndTramJourney : HomeViewAction()
 }

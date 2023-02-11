@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alancamargo.tubecalculator.common.ui.model.Journey
+import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
@@ -17,6 +18,7 @@ import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewAction
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewModel
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewState
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
+import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -54,6 +56,9 @@ internal class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var faresActivityNavigation: FaresActivityNavigation
 
+    @Inject
+    lateinit var searchActivityNavigation: SearchActivityNavigation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -77,6 +82,10 @@ internal class HomeActivity : AppCompatActivity() {
         setSupportActionBar(appBar.toolbar)
         setUpCalculateButton()
         appBar.content.btAdd.setOnClickListener { viewModel.onAddClicked() }
+        appBar.content.btAddRailJourney.setOnClickListener { viewModel.onAddRailJourneyClicked() }
+        appBar.content.btAddBusAndTramJourney.setOnClickListener {
+            viewModel.onAddBusAndTramJourneyClicked()
+        }
         appBar.content.recyclerView.adapter = adapter
         adLoader.loadBannerAds(appBar.content.banner)
     }
@@ -112,8 +121,10 @@ internal class HomeActivity : AppCompatActivity() {
             is HomeViewAction.NavigateToSettings -> navigateToSettings()
             is HomeViewAction.ShowPrivacyPolicyDialogue -> showPrivacyPolicyDialogue()
             is HomeViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
-            is HomeViewAction.EditJourney -> TODO()
+            is HomeViewAction.EditJourney -> editJourney(action.journey)
             is HomeViewAction.NavigateToFares -> navigateToFares(action.journeys)
+            is HomeViewAction.AddRailJourney -> addRailJourney()
+            is HomeViewAction.AddBusAndTramJourney -> addBusAndTramJourney()
         }
     }
 
@@ -200,6 +211,29 @@ internal class HomeActivity : AppCompatActivity() {
             iconRes = R2.mipmap.ic_launcher_round,
             title = appNameAndVersion,
             messageRes = R.string.home_app_info
+        )
+    }
+
+    private fun editJourney(journey: Journey) {
+        searchActivityNavigation.startActivity(
+            context = this,
+            journey = journey
+        )
+    }
+
+    private fun addRailJourney() {
+        val journeyType = JourneyType.RAIL
+        searchActivityNavigation.startActivity(
+            context = this,
+            journeyType = journeyType
+        )
+    }
+
+    private fun addBusAndTramJourney() {
+        val journeyType = JourneyType.BUS_AND_TRAM
+        searchActivityNavigation.startActivity(
+            context = this,
+            journeyType = journeyType
         )
     }
 }

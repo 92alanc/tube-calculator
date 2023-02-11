@@ -371,4 +371,52 @@ class HomeViewModelTest {
             assertThat(actions).contains(expected)
         }
     }
+
+    @Test
+    fun `onAddRailJourneyClicked should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onAddRailJourneyClicked()
+
+            // THEN
+            val expected = HomeViewState(isAddButtonExpanded = false)
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onAddRailJourneyClicked should send AddRailJourney action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onAddRailJourneyClicked()
+
+            // THEN
+            val expected = HomeViewAction.AddRailJourney
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onAddBusAndTramJourneyClicked should set correct state`() {
+        collector.test { states, _ ->
+            // WHEN
+            viewModel.onAddBusAndTramJourneyClicked()
+
+            // THEN
+            val expected = HomeViewState(isAddButtonExpanded = false)
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onAddBusAndTramJourneyClicked should send AddBusAndTramJourney action`() {
+        collector.test { _, actions ->
+            // WHEN
+            viewModel.onAddBusAndTramJourneyClicked()
+
+            // THEN
+            val expected = HomeViewAction.AddBusAndTramJourney
+            assertThat(actions).contains(expected)
+        }
+    }
 }
