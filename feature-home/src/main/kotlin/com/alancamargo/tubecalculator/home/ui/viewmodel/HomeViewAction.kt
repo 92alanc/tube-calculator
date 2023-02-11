@@ -16,4 +16,6 @@ internal sealed class HomeViewAction {
     data class ShowAppInfo(val appVersionName: String) : HomeViewAction()
 
     object ShowFirstAccessDialogue : HomeViewAction()
+
+    data class EditJourney(val journey: Journey) : HomeViewAction()
 }

@@ -14,6 +14,7 @@ private const val BUTTON_PRIVACY_POLICY = "privacy_policy"
 private const val BUTTON_APP_INFO = "app_info"
 
 private const val EVENT_REMOVE_JOURNEY = "remove_journey"
+private const val EVENT_EDIT_JOURNEY = "edit_journey"
 
 private const val PROPERTY_HAS_RAIL_JOURNEYS = "has_rail_journeys"
 private const val PROPERTY_HAS_BUS_AND_TRAM_JOURNEYS = "has_bus_and_tram_journeys"
@@ -77,6 +78,13 @@ internal class HomeAnalyticsImpl @Inject constructor(
     override fun trackAppInfoClicked() {
         analytics.trackButtonClicked(
             buttonName = BUTTON_APP_INFO,
+            screenName = SCREEN_NAME
+        )
+    }
+
+    override fun trackJourneyClicked() {
+        analytics.trackEvent(
+            eventName = EVENT_EDIT_JOURNEY,
             screenName = SCREEN_NAME
         )
     }

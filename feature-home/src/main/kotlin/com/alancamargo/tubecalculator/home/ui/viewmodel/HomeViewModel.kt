@@ -101,6 +101,8 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun onJourneyRemoved(journey: Journey) {
+        analytics.trackJourneyRemoved()
+
         journeys.remove(journey)
         _state.update { it.onJourneysUpdated(journeys) }
     }
@@ -110,6 +112,14 @@ internal class HomeViewModel @Inject constructor(
 
         viewModelScope.launch(dispatcher) {
             _action.emit(HomeViewAction.ExpandAddButton(options))
+        }
+    }
+
+    fun onJourneyClicked(journey: Journey) {
+        analytics.trackJourneyClicked()
+
+        viewModelScope.launch(dispatcher) {
+            _action.emit(HomeViewAction.EditJourney(journey))
         }
     }
 

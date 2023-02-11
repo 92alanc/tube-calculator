@@ -19,4 +19,6 @@ internal interface HomeAnalytics {
     fun trackPrivacyPolicyClicked()
 
     fun trackAppInfoClicked()
+
+    fun trackJourneyClicked()
 }

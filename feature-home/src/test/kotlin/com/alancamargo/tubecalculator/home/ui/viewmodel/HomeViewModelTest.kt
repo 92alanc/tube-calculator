@@ -216,6 +216,15 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `onJourneyRemoved should track event`() {
+        // WHEN
+        viewModel.onJourneyRemoved(journey = stubBusAndTramJourney())
+
+        // THEN
+        verify { mockAnalytics.trackJourneyRemoved() }
+    }
+
+    @Test
     fun `onJourneyRemoved should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
@@ -307,6 +316,30 @@ class HomeViewModelTest {
 
             // THEN
             val expected = HomeViewAction.ExpandAddButton(options = listOf(JourneyType.RAIL))
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `onJourneyClicked should track event`() {
+        // WHEN
+        viewModel.onJourneyClicked(journey = stubRailJourney())
+
+        // THEN
+        verify { mockAnalytics.trackJourneyClicked() }
+    }
+
+    @Test
+    fun `onJourneyClicked should send EditJourney event`() {
+        collector.test { _, actions ->
+            // GIVEN
+            val journey = stubRailJourney()
+
+            // WHEN
+            viewModel.onJourneyClicked(journey)
+            
+            // THEN
+            val expected = HomeViewAction.EditJourney(journey)
             assertThat(actions).contains(expected)
         }
     }

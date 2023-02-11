@@ -127,4 +127,18 @@ class HomeAnalyticsImplTest {
             )
         }
     }
+
+    @Test
+    fun `trackJourneyClicked should track event`() {
+        // WHEN
+        homeAnalytics.trackJourneyClicked()
+
+        // THEN
+        verify {
+            mockAnalytics.trackEvent(
+                eventName = "edit_journey",
+                screenName = SCREEN_NAME
+            )
+        }
+    }
 }
