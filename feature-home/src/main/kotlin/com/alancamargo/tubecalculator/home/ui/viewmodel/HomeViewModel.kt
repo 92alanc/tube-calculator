@@ -3,7 +3,6 @@ package com.alancamargo.tubecalculator.home.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.Journey
-import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.di.UiDelay
@@ -31,6 +30,8 @@ internal class HomeViewModel @Inject constructor(
     private val _action = MutableSharedFlow<HomeViewAction>()
 
     private val journeys = mutableListOf<Journey>()
+
+    private var isAddButtonExpanded = false
 
     val state: StateFlow<HomeViewState> = _state
     val action: SharedFlow<HomeViewAction> = _action
@@ -108,11 +109,13 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun onAddClicked() {
-        val options = getAddButtonOptions()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.ExpandAddButton(options))
+        if (isAddButtonExpanded) {
+            _state.update { it.collapseAddButton() }
+        } else {
+            _state.update { it.expandAddButton() }
         }
+
+        isAddButtonExpanded = !isAddButtonExpanded
     }
 
     fun onJourneyClicked(journey: Journey) {
@@ -121,19 +124,5 @@ internal class HomeViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             _action.emit(HomeViewAction.EditJourney(journey))
         }
-    }
-
-    private fun getAddButtonOptions(): List<JourneyType> {
-        val options = mutableListOf<JourneyType>()
-
-        if (journeys.none { it is Journey.Rail }) {
-            options.add(JourneyType.RAIL)
-        }
-
-        if (journeys.none { it is Journey.BusAndTram }) {
-            options.add(JourneyType.BUS_AND_TRAM)
-        }
-
-        return options
     }
 }

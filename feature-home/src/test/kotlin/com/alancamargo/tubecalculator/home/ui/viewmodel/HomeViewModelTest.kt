@@ -1,6 +1,5 @@
 package com.alancamargo.tubecalculator.home.ui.viewmodel
 
-import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalytics
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
@@ -275,48 +274,77 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `with no journeys onAddClicked should send ExpandAddButton with correct options`() {
-        collector.test { _, actions ->
+    fun `with no journeys onAddClicked should set correct state`() {
+        collector.test { states, _ ->
             // WHEN
             viewModel.onAddClicked()
 
             // THEN
-            val expected = HomeViewAction.ExpandAddButton(
-                options = listOf(JourneyType.RAIL, JourneyType.BUS_AND_TRAM)
+            val expected = HomeViewState(
+                isAddButtonExpanded = true,
+                showAddBusAndTramJourneyButton = true,
+                showAddRailJourneyButton = true
             )
-            assertThat(actions).contains(expected)
+            assertThat(states).contains(expected)
         }
     }
 
     @Test
-    fun `with rail journey onAddClicked should send ExpandAddButton with correct options`() {
-        collector.test { _, actions ->
+    fun `with rail journey onAddClicked should set correct state`() {
+        collector.test { states, _ ->
             // GIVEN
-            viewModel.onJourneyReceived(journey = stubRailJourney())
+            val journey = stubRailJourney()
+            viewModel.onJourneyReceived(journey)
 
             // WHEN
             viewModel.onAddClicked()
 
             // THEN
-            val expected = HomeViewAction.ExpandAddButton(
-                options = listOf(JourneyType.BUS_AND_TRAM)
+            val expected = HomeViewState(
+                journeys = listOf(journey),
+                showCalculateButton = true,
+                isAddButtonExpanded = true,
+                showAddBusAndTramJourneyButton = true,
+                showAddRailJourneyButton = false
             )
-            assertThat(actions).contains(expected)
+            assertThat(states).contains(expected)
         }
     }
 
     @Test
-    fun `with bus and tram journey onAddClicked should send ExpandAddButton with correct options`() {
-        collector.test { _, actions ->
+    fun `with bus and tram journey onAddClicked should set correct state`() {
+        collector.test { states, _ ->
             // GIVEN
-            viewModel.onJourneyReceived(journey = stubBusAndTramJourney())
+            val journey = stubBusAndTramJourney()
+            viewModel.onJourneyReceived(journey)
 
             // WHEN
             viewModel.onAddClicked()
 
             // THEN
-            val expected = HomeViewAction.ExpandAddButton(options = listOf(JourneyType.RAIL))
-            assertThat(actions).contains(expected)
+            val expected = HomeViewState(
+                journeys = listOf(journey),
+                showCalculateButton = true,
+                isAddButtonExpanded = true,
+                showAddBusAndTramJourneyButton = false,
+                showAddRailJourneyButton = true
+            )
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when button is expanded onAddedClicked should set correct state`() {
+        collector.test { states, _ ->
+            // GIVEN
+            viewModel.onAddClicked()
+
+            // WHEN
+            viewModel.onAddClicked()
+
+            // THEN
+            val expected = HomeViewState(isAddButtonExpanded = false)
+            assertThat(states).contains(expected)
         }
     }
 

@@ -7,7 +7,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.alancamargo.tubecalculator.common.ui.model.Journey
-import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
@@ -77,16 +76,34 @@ internal class HomeActivity : AppCompatActivity() {
         setUpNavigationDrawer()
         setSupportActionBar(appBar.toolbar)
         setUpCalculateButton()
-        appBar.content.btAdd.isExtended = false
         appBar.content.btAdd.setOnClickListener { viewModel.onAddClicked() }
         appBar.content.recyclerView.adapter = adapter
         adLoader.loadBannerAds(appBar.content.banner)
     }
 
-    private fun handleState(state: HomeViewState) = with(state) {
-        journeys?.let(adapter::submitList)
-        binding.appBar.content.btAdd.isVisible = showAddButton
-        binding.appBar.content.btCalculate.isVisible = showCalculateButton
+    private fun handleState(state: HomeViewState) = with(binding.appBar.content) {
+        state.journeys?.let(adapter::submitList)
+        btAdd.isVisible = state.showAddButton
+        btCalculate.isVisible = state.showCalculateButton
+        groupFabs.isVisible = state.isAddButtonExpanded
+        btAdd.isExtended = state.isAddButtonExpanded
+        txtEmptyState.isVisible = state.journeys.isNullOrEmpty()
+
+        if (state.showAddRailJourneyButton) {
+            btAddRailJourney.show()
+            labelRailJourney.isVisible = true
+        } else {
+            btAddRailJourney.hide()
+            labelRailJourney.isVisible = false
+        }
+
+        if (state.showAddBusAndTramJourneyButton) {
+            btAddBusAndTramJourney.show()
+            labelBusAndTramJourney.isVisible = true
+        } else {
+            btAddBusAndTramJourney.hide()
+            labelBusAndTramJourney.isVisible = false
+        }
     }
 
     private fun handleAction(action: HomeViewAction) {
@@ -95,7 +112,6 @@ internal class HomeActivity : AppCompatActivity() {
             is HomeViewAction.NavigateToSettings -> navigateToSettings()
             is HomeViewAction.ShowPrivacyPolicyDialogue -> showPrivacyPolicyDialogue()
             is HomeViewAction.ShowFirstAccessDialogue -> showFirstAccessDialogue()
-            is HomeViewAction.ExpandAddButton -> expandAddButton(action.options)
             is HomeViewAction.EditJourney -> TODO()
             is HomeViewAction.NavigateToFares -> navigateToFares(action.journeys)
         }
@@ -169,25 +185,6 @@ internal class HomeActivity : AppCompatActivity() {
             destination = railJourney?.destination,
             busAndTramJourneyCount = busAndTramJourney?.journeyCount ?: 0
         )
-    }
-
-    private fun expandAddButton(options: List<JourneyType>) = with(binding.appBar.content) {
-        btAdd.extend()
-        if (options.any { it == JourneyType.RAIL }) {
-            btAddRailJourney.isVisible = true
-            labelRailJourney.isVisible = true
-        } else {
-            btAddRailJourney.isVisible = false
-            labelRailJourney.isVisible = false
-        }
-
-        if (options.any { it == JourneyType.BUS_AND_TRAM }) {
-            btAddBusAndTramJourney.isVisible = true
-            labelBusAndTramJourney.isVisible = true
-        } else {
-            btAddBusAndTramJourney.isVisible = false
-            labelBusAndTramJourney.isVisible = false
-        }
     }
 
     private fun showAppInfoDialogue(appVersionName: String) {
