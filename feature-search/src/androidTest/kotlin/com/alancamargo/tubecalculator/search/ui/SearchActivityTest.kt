@@ -140,7 +140,7 @@ internal class SearchActivityTest {
     }
 
     @Test(timeout = 5000)
-    @Ignore("Not showing search results")
+    @Ignore("Dropdown suggestions not popping up with mock DAO")
     fun withSameOriginAndDestination_whenClickCalculate_shouldShowSameOriginAndDestinationErrorDialogue() {
         val query = "Hai"
         val stationName = "Hainault"
@@ -160,7 +160,7 @@ internal class SearchActivityTest {
     }
 
     @Test(timeout = 5000)
-    @Ignore("Not showing search results")
+    @Ignore("Dropdown suggestions not popping up with mock DAO")
     fun withDifferentOriginAndDestination_whenClickCalculate_shouldNavigateToFares() {
         val originQuery = "Rom"
         val origin = "Romford"

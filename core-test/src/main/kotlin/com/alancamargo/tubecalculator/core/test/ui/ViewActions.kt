@@ -5,8 +5,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.RootMatchers.isPlatformPopup
 import androidx.test.espresso.matcher.ViewMatchers.*
-import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 
 fun performClick(@IdRes viewId: Int) {
     onView(
@@ -19,9 +19,7 @@ fun performClick(@IdRes viewId: Int) {
 
 fun clickDropDownItem(text: String) {
     onView(
-        withText(
-            containsString(text)
-        )
+        withText(containsString(text))
     ).inRoot(
         isPlatformPopup()
     ).perform(click())

@@ -28,13 +28,13 @@ internal class StationAdapter(
 
     override fun getCount(): Int = stations.size
 
-    override fun getItem(position: Int): String = stations[position].name
+    override fun getItem(position: Int): String = getStation(position).name
 
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater = LayoutInflater.from(context)
         val binding = ItemStationBinding.inflate(inflater, parent, false).apply {
-            val station = stations[position]
+            val station = getStation(position)
             imageContainer.addIconsForModes(station.modes)
             txtName.text = station.name
         }
