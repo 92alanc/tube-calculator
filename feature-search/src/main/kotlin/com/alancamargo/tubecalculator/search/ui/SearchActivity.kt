@@ -60,7 +60,11 @@ internal class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
-        viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
+        viewModel.onCreate(
+            isFirstLaunch = savedInstanceState == null,
+            args.journey,
+            args.journeyType
+        )
     }
 
     private fun setUpUi() = with(binding) {

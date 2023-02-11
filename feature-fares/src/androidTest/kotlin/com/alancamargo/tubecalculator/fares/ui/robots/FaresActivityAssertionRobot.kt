@@ -25,8 +25,8 @@ internal class FaresActivityAssertionRobot(private val testSuite: FaresActivityT
         }
     }
 
-    fun navigateToSearch() {
-        verify { testSuite.mockSearchActivityNavigation.startActivity(context = any()) }
+    fun navigateToHome() {
+        verify { testSuite.mockHomeActivityNavigation.startActivity(context = any()) }
     }
 
     fun recyclerViewHasCorrectItemCount() {

@@ -2,9 +2,12 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alancamargo.tubecalculator.common.ui.model.Journey
+import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.di.UiDelay
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
+import com.alancamargo.tubecalculator.search.ui.SearchActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -24,7 +27,7 @@ internal class SearchViewModel @Inject constructor(
 
     val action: SharedFlow<SearchViewAction> = _action
 
-    fun onCreate(isFirstLaunch: Boolean) {
+    fun onCreate(isFirstLaunch: Boolean, journey: Journey?, journeyType: JourneyType) {
         if (!isFirstLaunch) {
             return
         }

@@ -483,13 +483,13 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onNewSearchClicked should send NavigateToSearch action`() {
+    fun `onNewSearchClicked should send NavigateToHome action`() {
         collector.test { _, actions ->
             // WHEN
             viewModel.onNewSearchClicked()
 
             // THEN
-            assertThat(actions).contains(FaresViewAction.NavigateToSearch)
+            assertThat(actions).contains(FaresViewAction.NavigateToHome)
         }
     }
 

@@ -1,5 +1,7 @@
 package com.alancamargo.tubecalculator.home.ui
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
@@ -10,6 +12,7 @@ import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.home.R
 import com.alancamargo.tubecalculator.home.databinding.ActivityHomeBinding
@@ -235,5 +238,9 @@ internal class HomeActivity : AppCompatActivity() {
             context = this,
             journeyType = journeyType
         )
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent = context.createIntent(HomeActivity::class)
     }
 }

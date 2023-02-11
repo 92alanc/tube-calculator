@@ -6,8 +6,6 @@ import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 
 interface SearchActivityNavigation {
 
-    fun startActivity(context: Context)
-
     fun startActivity(context: Context, journeyType: JourneyType)
 
     fun startActivity(context: Context, journey: Journey)

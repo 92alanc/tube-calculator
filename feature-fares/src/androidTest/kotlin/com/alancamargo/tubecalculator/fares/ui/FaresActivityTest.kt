@@ -7,7 +7,7 @@ import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
 import com.alancamargo.tubecalculator.fares.data.model.database.RemoteDatabaseFareListWrapper
 import com.alancamargo.tubecalculator.fares.ui.robots.given
-import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
+import com.alancamargo.tubecalculator.navigation.HomeActivityNavigation
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.mockk.coEvery
@@ -30,7 +30,7 @@ internal class FaresActivityTest {
     lateinit var mockAdLoader: AdLoader
 
     @Inject
-    lateinit var mockSearchActivityNavigation: SearchActivityNavigation
+    lateinit var mockHomeActivityNavigation: HomeActivityNavigation
 
     @Inject
     lateinit var mockRemoteConfigManager: RemoteConfigManager
@@ -79,13 +79,13 @@ internal class FaresActivityTest {
     }
 
     @Test
-    fun whenClickNewSearch_shouldNavigateToSearch() {
+    fun whenClickNewSearch_shouldNavigateToHome() {
         given {
             launchWithBusAndTramFaresOnly()
         } withAction {
             clickNewSearch()
         } then {
-            navigateToSearch()
+            navigateToHome()
         }
     }
 
