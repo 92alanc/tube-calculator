@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/spacing_16"
+    android:paddingHorizontal="@dimen/spacing_16"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.HomeActivity"
+    tools:showIn="@layout/app_bar_home">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btCalculate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_goneMarginBottom="@dimen/spacing_16"
+        tools:itemCount="1"
+        tools:listitem="@layout/item_rail_journey" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtEmptyState"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/no_journeys"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/banner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btCalculate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/spacing_16"
+        android:text="@string/calculate"
+        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/banner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/btAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_journey"
+        app:icon="@drawable/ic_add"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/red"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btAddBusAndTramJourney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:src="@drawable/ic_bus_tram_journey"
+        android:contentDescription="@string/bus_tram"
+        app:backgroundTint="@color/red"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btAdd"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/labelBusAndTramJourney"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:text="@string/bus_tram"
+        app:layout_constraintTop_toTopOf="@id/btAddBusAndTramJourney"
+        app:layout_constraintBottom_toBottomOf="@id/btAddBusAndTramJourney"
+        app:layout_constraintEnd_toStartOf="@id/btAddBusAndTramJourney"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btAddRailJourney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:src="@drawable/ic_rail_journey"
+        android:contentDescription="@string/rail"
+        app:backgroundTint="@color/red"
+        app:tint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btAddBusAndTramJourney"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/labelRailJourney"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:text="@string/rail"
+        app:layout_constraintTop_toTopOf="@id/btAddRailJourney"
+        app:layout_constraintBottom_toBottomOf="@id/btAddRailJourney"
+        app:layout_constraintEnd_toStartOf="@id/btAddRailJourney"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupFabs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="btAddBusAndTramJourney, labelBusAndTramJourney, btAddRailJourney, labelRailJourney"
+        tools:visibility="visible"/>
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/ads_banner_home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

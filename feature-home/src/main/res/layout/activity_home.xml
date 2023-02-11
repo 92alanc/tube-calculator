@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context=".ui.SearchActivity">
+    tools:context=".ui.HomeActivity">
 
     <include
         android:id="@+id/appBar"
-        layout="@layout/app_bar_search"
+        layout="@layout/app_bar_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -21,5 +21,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_search" />
+        app:headerLayout="@layout/nav_header_home"
+        app:menu="@menu/menu_home" />
 </androidx.drawerlayout.widget.DrawerLayout>

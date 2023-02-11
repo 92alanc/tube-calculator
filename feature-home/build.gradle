@@ -36,6 +36,7 @@ android {
 
 dependencies {
     implementation project(':core')
+    implementation project(':core-design')
     implementation project(':common')
     implementation project(':navigation')
 

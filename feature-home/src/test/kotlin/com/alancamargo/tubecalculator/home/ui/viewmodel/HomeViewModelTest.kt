@@ -269,7 +269,7 @@ class HomeViewModelTest {
 
             // THEN
             val journeys = listOf(journey)
-            val expected = HomeViewAction.NavigateToSearch(journeys)
+            val expected = HomeViewAction.NavigateToFares(journeys)
             assertThat(actions).contains(expected)
         }
     }

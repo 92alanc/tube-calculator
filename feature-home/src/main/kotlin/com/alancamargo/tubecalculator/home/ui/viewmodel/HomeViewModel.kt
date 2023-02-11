@@ -91,7 +91,7 @@ internal class HomeViewModel @Inject constructor(
         analytics.trackCalculateClicked(journeys)
 
         viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.NavigateToSearch(journeys))
+            _action.emit(HomeViewAction.NavigateToFares(journeys))
         }
     }
 

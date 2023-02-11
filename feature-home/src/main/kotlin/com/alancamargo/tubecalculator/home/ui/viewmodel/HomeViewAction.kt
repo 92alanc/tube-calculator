@@ -5,7 +5,7 @@ import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 
 internal sealed class HomeViewAction {
 
-    data class NavigateToSearch(val journeys: List<Journey>) : HomeViewAction()
+    data class NavigateToFares(val journeys: List<Journey>) : HomeViewAction()
 
     data class ExpandAddButton(val options: List<JourneyType>) : HomeViewAction()
 

@@ -4,11 +4,6 @@
         <activity android:name=".ui.SearchActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:configChanges="screenSize|orientation">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:configChanges="screenSize|orientation"/>
     </application>
 </manifest>
