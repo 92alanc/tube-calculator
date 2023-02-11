@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rail_journey">Rail journey</string>
+    <string name="bus_tram_journeys">Bus and/or tram journeys</string>
+    <string name="number_of_journeys_format">Number of journeys: %d</string>
+</resources>
