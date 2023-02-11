@@ -1,6 +1,8 @@
 package com.alancamargo.tubecalculator.home.data.analytics
 
 import com.alancamargo.tubecalculator.core.analytics.Analytics
+import com.alancamargo.tubecalculator.home.testtools.stubBusAndTramJourney
+import com.alancamargo.tubecalculator.home.testtools.stubRailJourney
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
@@ -51,14 +53,21 @@ class HomeAnalyticsImplTest {
 
     @Test
     fun `trackCalculateClicked should track button click event`() {
+        // GIVEN
+        val journeys = listOf(
+            stubRailJourney(),
+            stubBusAndTramJourney()
+        )
+
         // WHEN
-        homeAnalytics.trackCalculateClicked()
+        homeAnalytics.trackCalculateClicked(journeys)
 
         // THEN
         verify {
             mockAnalytics.trackButtonClicked(
                 buttonName = "calculate",
-                screenName = SCREEN_NAME
+                screenName = SCREEN_NAME,
+                properties = any()
             )
         }
     }
@@ -72,6 +81,48 @@ class HomeAnalyticsImplTest {
         verify {
             mockAnalytics.trackEvent(
                 eventName = "remove_journey",
+                screenName = SCREEN_NAME
+            )
+        }
+    }
+
+    @Test
+    fun `trackSettingsClicked should track button click event`() {
+        // WHEN
+        homeAnalytics.trackSettingsClicked()
+
+        // THEN
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "settings",
+                screenName = SCREEN_NAME
+            )
+        }
+    }
+
+    @Test
+    fun `trackPrivacyPolicyClicked should track button click event`() {
+        // WHEN
+        homeAnalytics.trackPrivacyPolicyClicked()
+
+        // THEN
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "privacy_policy",
+                screenName = SCREEN_NAME
+            )
+        }
+    }
+
+    @Test
+    fun `trackAppInfoClicked should track button click event`() {
+        // WHEN
+        homeAnalytics.trackAppInfoClicked()
+
+        // THEN
+        verify {
+            mockAnalytics.trackButtonClicked(
+                buttonName = "app_info",
                 screenName = SCREEN_NAME
             )
         }
