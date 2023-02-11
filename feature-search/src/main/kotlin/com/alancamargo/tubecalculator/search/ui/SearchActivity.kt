@@ -3,16 +3,19 @@ package com.alancamargo.tubecalculator.search.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.commit
+import com.alancamargo.tubecalculator.common.ui.model.Journey
+import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
+import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
-import com.alancamargo.tubecalculator.search.databinding.ContentSearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
 import com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
@@ -20,6 +23,7 @@ import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewAction
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 import com.alancamargo.tubecalculator.core.design.R as R2
 
@@ -34,6 +38,7 @@ internal class SearchActivity : AppCompatActivity() {
     private val binding: ActivitySearchBinding
         get() = _binding!!
 
+    private val args by args<Args>()
     private val viewModel by viewModels<SearchViewModel>()
 
     private val originFragment = StationSearchFragment.newInstance(SearchType.ORIGIN)
@@ -52,39 +57,23 @@ internal class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding.drawerLayout)
+        setContentView(binding.root)
         setUpUi()
         observeViewModelFlow(viewModel.action, ::handleAction)
         viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
     }
 
     private fun setUpUi() = with(binding) {
-        setSupportActionBar(appBar.toolbar)
-        adLoader.loadBannerAds(appBar.content.banner)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        adLoader.loadBannerAds(banner)
     }
 
     private fun handleAction(action: SearchViewAction) {
         when (action) {
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
-            is SearchViewAction.AttachFragments -> binding.appBar.content.addFragments()
-        }
-    }
-
-    private fun ContentSearchBinding.addFragments() {
-        supportFragmentManager.commit {
-            replace(
-                originContainer.id,
-                originFragment,
-                TAG_ORIGIN
-            ).replace(
-                destinationContainer.id,
-                destinationFragment,
-                TAG_DESTINATION
-            ).replace(
-                busAndTramJourneysContainer.id,
-                busAndTramJourneysFragment,
-                TAG_BUS_AND_TRAM_JOURNEYS
-            )
+            is SearchViewAction.AttachRailJourneyFragments -> TODO()
+            is SearchViewAction.AttachBusAndTramJourneyFragment -> TODO()
         }
     }
 
@@ -96,7 +85,28 @@ internal class SearchActivity : AppCompatActivity() {
         )
     }
 
+    @Parcelize
+    data class Args(
+        val journey: Journey?,
+        val journeyType: JourneyType
+    ) : Parcelable
+
     companion object {
-        fun getIntent(context: Context): Intent = context.createIntent(SearchActivity::class)
+
+        fun getIntent(context: Context, journey: Journey): Intent {
+            val journeyType = if (journey is Journey.Rail) {
+                JourneyType.RAIL
+            } else {
+                JourneyType.BUS_AND_TRAM
+            }
+
+            val args = Args(journey, journeyType)
+            return context.createIntent(SearchActivity::class).putArguments(args)
+        }
+
+        fun getIntent(context: Context, journeyType: JourneyType): Intent {
+            val args = Args(journey = null, journeyType)
+            return context.createIntent(SearchActivity::class).putArguments(args)
+        }
     }
 }
