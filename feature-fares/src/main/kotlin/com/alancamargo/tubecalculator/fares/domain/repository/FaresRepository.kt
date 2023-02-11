@@ -10,4 +10,6 @@ internal interface FaresRepository {
     fun getRailFares(origin: Station, destination: Station): Flow<RailFaresResult>
 
     fun getBusAndTramBaseFare(): BigDecimal
+
+    fun getBusAndTramDailyFareCap(): BigDecimal
 }

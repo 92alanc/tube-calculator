@@ -16,7 +16,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import java.math.BigDecimal
 
-private const val KEY = "bus_and_tram_base_fare"
+private const val KEY_BUS_AND_TRAM_BASE_FARE = "bus_and_tram_base_fare"
+private const val KEY_BUS_AND_TRAM_FARE_DAILY_CAP = "bus_and_tram_fare_daily_cap"
 
 class FaresRepositoryImplTest {
 
@@ -109,10 +110,25 @@ class FaresRepositoryImplTest {
     fun `getBusAndTramBaseFare should get base fare from remote config`() {
         // GIVEN
         val expected = 1.65
-        every { mockRemoteConfigManager.getDouble(KEY) } returns expected
+        every { mockRemoteConfigManager.getDouble(KEY_BUS_AND_TRAM_BASE_FARE) } returns expected
 
         // WHEN
         val actual = repository.getBusAndTramBaseFare()
+
+        // THEN
+        assertThat(actual).isEqualTo(BigDecimal.valueOf(expected))
+    }
+
+    @Test
+    fun `getBusAndTramFareDailyCap should get daily cap from remote config`() {
+        // GIVEN
+        val expected = 4.95
+        every {
+            mockRemoteConfigManager.getDouble(KEY_BUS_AND_TRAM_FARE_DAILY_CAP)
+        } returns expected
+
+        // WHEN
+        val actual = repository.getBusAndTramDailyFareCap()
 
         // THEN
         assertThat(actual).isEqualTo(BigDecimal.valueOf(expected))
