@@ -15,7 +15,7 @@ internal sealed class SearchViewAction {
 
     data class ShowErrorDialogue(val error: UiSearchError) : SearchViewAction()
 
-    object ShowAppInfo : SearchViewAction()
+    data class ShowAppInfo(val appVersionName: String) : SearchViewAction()
 
     object NavigateToSettings : SearchViewAction()
 

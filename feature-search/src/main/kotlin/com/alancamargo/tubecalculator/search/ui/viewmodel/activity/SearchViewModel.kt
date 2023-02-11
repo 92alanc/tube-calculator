@@ -3,8 +3,10 @@ package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
+import com.alancamargo.tubecalculator.search.di.UiDelay
 import com.alancamargo.tubecalculator.search.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.IsFirstAccessUseCase
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
@@ -16,32 +18,15 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * Without this delay the UI won't have time to process the action
- */
-private const val UI_DELAY_MILLIS = 200L
-
 @HiltViewModel
-internal class SearchViewModel(
+internal class SearchViewModel @Inject constructor(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
     private val analytics: SearchAnalytics,
-    private val uiDelay: Long,
+    @AppVersionName private val appVersionName: String,
+    @UiDelay private val uiDelay: Long,
     @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
-
-    @Inject constructor(
-        isFirstAccessUseCase: IsFirstAccessUseCase,
-        disableFirstAccessUseCase: DisableFirstAccessUseCase,
-        analytics: SearchAnalytics,
-        @IoDispatcher dispatcher: CoroutineDispatcher
-    ) : this(
-        isFirstAccessUseCase,
-        disableFirstAccessUseCase,
-        analytics,
-        UI_DELAY_MILLIS,
-        dispatcher
-    )
 
     private val _action = MutableSharedFlow<SearchViewAction>()
 
@@ -96,7 +81,7 @@ internal class SearchViewModel(
         analytics.trackAppInfoClicked()
 
         viewModelScope.launch(dispatcher) {
-            _action.emit(SearchViewAction.ShowAppInfo)
+            _action.emit(SearchViewAction.ShowAppInfo(appVersionName))
         }
     }
 

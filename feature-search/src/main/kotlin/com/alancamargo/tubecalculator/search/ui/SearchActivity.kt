@@ -12,7 +12,6 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
-import com.alancamargo.tubecalculator.core.extensions.getVersionName
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
@@ -105,7 +104,7 @@ internal class SearchActivity : AppCompatActivity() {
                 busAndTramJourneyCount = action.busAndTramJourneyCount
             )
 
-            is SearchViewAction.ShowAppInfo -> showAppInfoDialogue()
+            is SearchViewAction.ShowAppInfo -> showAppInfoDialogue(action.appVersionName)
 
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
 
@@ -214,12 +213,12 @@ internal class SearchActivity : AppCompatActivity() {
         settingsActivityNavigation.startActivity(context = this)
     }
 
-    private fun showAppInfoDialogue() {
+    private fun showAppInfoDialogue(appVersionName: String) {
         val appName = getString(R2.string.app_name)
         val appNameAndVersion = getString(
             R2.string.app_name_and_version_format,
             appName,
-            getVersionName()
+            appVersionName
         )
 
         dialogueHelper.showDialogue(

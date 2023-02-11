@@ -10,6 +10,6 @@ inline fun <reified T : Parcelable> AppCompatActivity.args(): Lazy<T> = lazy {
         intent.getParcelableExtra(EXTRA_ARGS, T::class.java)
     } else {
         @Suppress("DEPRECATION") // Deprecated from API 33 onwards
-        intent.getParcelableExtra(EXTRA_ARGS)
+        intent.getParcelableExtra(EXTRA_ARGS)!!
     } ?: throw IllegalStateException("Args not provided")
 }

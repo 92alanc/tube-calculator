@@ -22,7 +22,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/rootRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_16"
@@ -42,7 +42,7 @@
         android:layout_height="1dp"
         android:layout_marginTop="@dimen/spacing_16"
         android:background="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/recyclerView"
+        app:layout_constraintTop_toBottomOf="@id/rootRecyclerView"
         app:layout_constraintBottom_toTopOf="@+id/txtCheapestTotalFare"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

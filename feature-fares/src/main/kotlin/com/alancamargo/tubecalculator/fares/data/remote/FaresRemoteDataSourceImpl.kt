@@ -34,13 +34,16 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
                 logger.debug("Origin: ${origin.id}. Destination: ${destination.id} Response: ${response.code()} - ${response.errorBody()}")
                 fetchFromRemoteDatabase(documentId)
             }
-        } catch (t: Throwable) {
-            logger.error(t)
-            fetchFromRemoteDatabase(documentId)
+        } catch (serviceError: Throwable) {
+            logger.error(serviceError)
+            fetchFromRemoteDatabase(documentId, serviceError)
         }
     }
 
-    private suspend fun fetchFromRemoteDatabase(documentId: String): RailFaresResult {
+    private suspend fun fetchFromRemoteDatabase(
+        documentId: String,
+        serviceError: Throwable? = null
+    ): RailFaresResult {
         return try {
             val response = remoteDatabase.load(
                 collectionName = REMOTE_DATABASE_COLLECTION_NAME,
@@ -51,10 +54,10 @@ internal class FaresRemoteDataSourceImpl @Inject constructor(
             return response?.let {
                 val railFares = it.fareList.map { fare -> fare.toDomain() }
                 RailFaresResult.Success(railFares)
-            } ?: RailFaresResult.GenericError
+            } ?: serviceError?.let { throw it } ?: RailFaresResult.GenericError
         } catch (t: Throwable) {
             logger.error(t)
-            RailFaresResult.GenericError
+            serviceError?.let { throw it } ?: RailFaresResult.GenericError
         }
     }
 

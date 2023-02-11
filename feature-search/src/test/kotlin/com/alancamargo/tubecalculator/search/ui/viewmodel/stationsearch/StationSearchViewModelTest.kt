@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch
 
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
