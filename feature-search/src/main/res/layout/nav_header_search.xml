@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_nav_header"
     android:background="@drawable/shape_nav_header"
-    android:padding="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_48"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingHorizontal="@dimen/spacing_16"
     android:theme="@style/ThemeOverlay.MaterialComponents.Dark">
 
     <ImageView
