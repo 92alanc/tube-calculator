@@ -54,10 +54,16 @@ internal class SearchViewModel @Inject constructor(
         }
     }
 
-    fun onFirstAccessDialogueDismissed() {
+    fun onFirstAccessGoToSettingsClicked() {
         viewModelScope.launch(dispatcher) {
             disableFirstAccessUseCase()
             _action.emit(SearchViewAction.NavigateToSettings)
+        }
+    }
+
+    fun onFirstAccessNotNowClicked() {
+        viewModelScope.launch(dispatcher) {
+            disableFirstAccessUseCase()
         }
     }
 
