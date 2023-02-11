@@ -76,11 +76,6 @@ internal class SearchActivity : AppCompatActivity() {
         viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.onStart()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             true
