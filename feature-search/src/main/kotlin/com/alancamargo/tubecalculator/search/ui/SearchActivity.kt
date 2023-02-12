@@ -76,8 +76,10 @@ internal class SearchActivity : AppCompatActivity() {
     private fun handleAction(action: SearchViewAction) {
         when (action) {
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
-            is SearchViewAction.AttachRailJourneyFragments -> TODO()
-            is SearchViewAction.AttachBusAndTramJourneyFragment -> TODO()
+            is SearchViewAction.AttachBlankRailJourneyFragments -> TODO()
+            is SearchViewAction.AttachBlankBusAndTramJourneyFragment -> TODO()
+            is SearchViewAction.AttachPreFilledRailJourneyFragments -> TODO()
+            is SearchViewAction.AttachPreFilledBusAndTramJourneyFragment -> TODO()
         }
     }
 

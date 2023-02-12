@@ -7,7 +7,6 @@ import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.di.UiDelay
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
-import com.alancamargo.tubecalculator.search.ui.SearchActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -36,7 +35,33 @@ internal class SearchViewModel @Inject constructor(
 
         viewModelScope.launch(dispatcher) {
             delay(uiDelay)
-            _action.emit(SearchViewAction.AttachFragments)
+            val action = getActionForJourney(journey, journeyType)
+            _action.emit(action)
+        }
+    }
+
+    private fun getActionForJourney(
+        journey: Journey?,
+        journeyType: JourneyType
+    ) = journey?.let {
+        when (it) {
+            is Journey.Rail -> {
+                SearchViewAction.AttachPreFilledRailJourneyFragments(it)
+            }
+
+            is Journey.BusAndTram -> {
+                SearchViewAction.AttachPreFilledBusAndTramJourneyFragment(it)
+            }
+        }
+    } ?: run {
+        when (journeyType) {
+            JourneyType.RAIL -> {
+                SearchViewAction.AttachBlankRailJourneyFragments
+            }
+
+            JourneyType.BUS_AND_TRAM -> {
+                SearchViewAction.AttachBlankBusAndTramJourneyFragment
+            }
         }
     }
 }
