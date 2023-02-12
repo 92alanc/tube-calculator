@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
+import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.testtools.stubBusAndTramJourney
@@ -16,11 +17,13 @@ import org.junit.Test
 class SearchViewModelTest {
 
     private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
+    private val mockLogger = mockk<Logger>(relaxed = true)
     private val uiDelay = 0L
     private val dispatcher = TestCoroutineDispatcher()
 
     private val viewModel = SearchViewModel(
         mockAnalytics,
+        mockLogger,
         uiDelay,
         dispatcher
     )
