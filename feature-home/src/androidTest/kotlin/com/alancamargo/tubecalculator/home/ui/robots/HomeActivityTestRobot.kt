@@ -4,6 +4,8 @@ import androidx.test.core.app.ActivityScenario
 import com.alancamargo.tubecalculator.home.ui.HomeActivity
 import com.alancamargo.tubecalculator.home.ui.HomeActivityTest
 import io.mockk.every
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 private const val KEY_FIRST_ACCESS = "is_first_access"
 
@@ -37,6 +39,7 @@ internal class HomeActivityTestRobot(private val testSuite: HomeActivityTest) {
 
     private fun launch() {
         ActivityScenario.launch(HomeActivity::class.java)
+        runBlocking { delay(200) }
     }
 
     private fun setIsFirstAccess(isFirstAccess: Boolean) {
