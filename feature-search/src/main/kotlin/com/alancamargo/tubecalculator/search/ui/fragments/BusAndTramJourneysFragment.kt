@@ -1,19 +1,23 @@
 package com.alancamargo.tubecalculator.search.ui.fragments
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
+import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.search.R
 import com.alancamargo.tubecalculator.search.databinding.FragmentBusAndTramJourneysBinding
 import com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys.BusAndTramJourneysViewAction
 import com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys.BusAndTramJourneysViewModel
 import com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys.BusAndTramJourneysViewState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -23,6 +27,7 @@ internal class BusAndTramJourneysFragment : Fragment() {
     private val binding: FragmentBusAndTramJourneysBinding
         get() = _binding!!
 
+    private val args by args<Args>()
     private val viewModel by viewModels<BusAndTramJourneysViewModel>()
 
     @Inject
@@ -46,6 +51,7 @@ internal class BusAndTramJourneysFragment : Fragment() {
         observeViewModelFlow(viewModel.state, ::handleState)
         observeViewModelFlow(viewModel.action, ::handleAction)
         setUpUi()
+        viewModel.onCreate(args.journeyCount)
     }
 
     fun getBusAndTramJourneyCount(): Int = viewModel.busAndTramJourneyCount
@@ -73,6 +79,26 @@ internal class BusAndTramJourneysFragment : Fragment() {
             btUp.setOnClickListener { viewModel.increaseBusAndTramJourneyCount() }
             btDown.setOnClickListener { viewModel.decreaseBusAndTramJourneyCount() }
             btInfo.setOnClickListener { viewModel.onMoreInfoClicked() }
+        }
+    }
+
+    @Parcelize
+    data class Args(val journeyCount: Int) : Parcelable
+
+    companion object {
+
+        fun newInstance(): BusAndTramJourneysFragment {
+            val args = Args(journeyCount = 0)
+            return newInstance(args)
+        }
+
+        fun newInstance(journeyCount: Int): BusAndTramJourneysFragment {
+            val args = Args(journeyCount)
+            return newInstance(args)
+        }
+
+        private fun newInstance(args: Args): BusAndTramJourneysFragment {
+            return BusAndTramJourneysFragment().putArguments(args)
         }
     }
 }

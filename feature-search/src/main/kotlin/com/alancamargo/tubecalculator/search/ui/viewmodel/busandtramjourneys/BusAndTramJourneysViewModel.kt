@@ -23,6 +23,11 @@ internal class BusAndTramJourneysViewModel @Inject constructor(
     var busAndTramJourneyCount = 0
         private set
 
+    fun onCreate(journeyCount: Int) {
+        busAndTramJourneyCount = journeyCount
+        updateBusAndTramJourneyCount()
+    }
+
     fun increaseBusAndTramJourneyCount() {
         busAndTramJourneyCount = ++busAndTramJourneyCount
         updateBusAndTramJourneyCount()
