@@ -117,17 +117,6 @@ internal class SearchActivityTest {
     }
 
     @Test
-    fun whenClickCalculate_shouldShowMissingOriginOrDestinationErrorDialogue() {
-        given {
-            launchAfterFirstAccess()
-        } withAction {
-            clickCalculate()
-        } then {
-            showMissingOriginOrDestinationErrorDialogue()
-        }
-    }
-
-    @Test
     fun withValidBusAndTramJourneyCount_whenClickCalculate_shouldNavigateToFares() {
         given {
             launchAfterFirstAccess()

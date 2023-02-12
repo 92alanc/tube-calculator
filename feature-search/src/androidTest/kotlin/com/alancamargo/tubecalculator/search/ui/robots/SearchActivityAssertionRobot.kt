@@ -84,10 +84,6 @@ internal class SearchActivityAssertionRobot(private val testSuite: SearchActivit
         }
     }
 
-    fun showMissingOriginOrDestinationErrorDialogue() {
-        showErrorDialogue(R.string.search_error_missing_origin_destination)
-    }
-
     fun showSameOriginAndDestinationErrorDialogue() {
         showErrorDialogue(R.string.search_error_same_origin_destination)
     }
