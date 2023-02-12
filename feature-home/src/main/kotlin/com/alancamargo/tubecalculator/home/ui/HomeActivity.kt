@@ -209,6 +209,8 @@ internal class HomeActivity : AppCompatActivity() {
             destination = railJourney?.destination,
             busAndTramJourneyCount = busAndTramJourney?.journeyCount ?: 0
         )
+
+        finish()
     }
 
     private fun showAppInfoDialogue(appVersionName: String) {
