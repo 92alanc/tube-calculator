@@ -14,6 +14,6 @@ inline fun <reified A : Parcelable> Fragment.args(): Lazy<A> = lazy {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         arguments?.getParcelable(EXTRA_ARGS, A::class.java)
     } else {
-        arguments?.getParcelable(EXTRA_ARGS)
+        arguments?.getParcelable(EXTRA_ARGS)!!
     } ?: throw IllegalArgumentException("Args not provided")
 }

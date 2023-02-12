@@ -12,7 +12,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-internal abstract class CoreDesignModule {
+abstract class CoreDesignModule {
 
     @Binds
     @ActivityScoped

@@ -53,10 +53,8 @@ internal class StationSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeStateAndAction()
         setUpUi()
-        viewModel.onCreate()
+        viewModel.onCreate(args.searchType, args.station)
     }
-
-    fun getSelectedStation(): UiStation? = viewModel.selectedStation
 
     private fun observeStateAndAction() {
         observeViewModelFlow(viewModel.state, ::handleState)
@@ -64,23 +62,34 @@ internal class StationSearchFragment : Fragment() {
     }
 
     private fun setUpUi() = with(binding) {
-        txtLabel.setText(args.searchType.labelRes)
-        textInputLayout.hint = getString(args.searchType.hintRes)
-        autoCompleteTextView.hint = getString(args.searchType.hintRes)
         autoCompleteTextView.addTextChangedListener(getTextWatcher())
         autoCompleteTextView.setOnItemClickListener { parent, _, position, _ ->
             (parent.adapter as? StationAdapter)?.let { adapter ->
                 val station = adapter.getStation(position)
                 viewModel.onStationSelected(station)
-                autoCompleteTextView.setText(station.name)
-                autoCompleteTextView.hideKeyboard()
             }
         }
     }
 
     private fun handleState(state: StationSearchViewState) = with(state) {
+        labelRes?.let {
+            binding.txtLabel.setText(it)
+        }
+
+        hintRes?.let {
+            binding.textInputLayout.hint = getString(it)
+            binding.autoCompleteTextView.hint = getString(it)
+        }
+
         minQueryLength?.let {
             binding.autoCompleteTextView.threshold = it
+        }
+
+        args.onStationSelected(selectedStation)
+
+        selectedStation?.let {
+            binding.autoCompleteTextView.setText(it.name)
+            binding.autoCompleteTextView.hideKeyboard()
         }
 
         stations?.let {
@@ -117,11 +126,19 @@ internal class StationSearchFragment : Fragment() {
     }
 
     @Parcelize
-    data class Args(val searchType: SearchType) : Parcelable
+    data class Args(
+        val searchType: SearchType,
+        val station: UiStation?,
+        val onStationSelected: (UiStation?) -> Unit
+    ) : Parcelable
 
     companion object {
-        fun newInstance(searchType: SearchType): StationSearchFragment {
-            val args = Args(searchType)
+        fun newInstance(
+            searchType: SearchType,
+            station: UiStation? = null,
+            onStationSelected: (UiStation?) -> Unit
+        ): StationSearchFragment {
+            val args = Args(searchType, station, onStationSelected)
             return StationSearchFragment().putArguments(args)
         }
     }

@@ -13,7 +13,7 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -26,6 +26,15 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    testOptions {
+        animationsDisabled true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 
@@ -47,4 +56,11 @@ dependencies {
     testImplementation "$coroutines_test"
     testImplementation "$mockk_android"
     testImplementation "$truth"
+
+    androidTestImplementation project(':core-test')
+
+    androidTestImplementation "$android_espresso_core"
+    androidTestImplementation "$mockk_android"
+
+    kaptAndroidTest "$hilt_compiler"
 }

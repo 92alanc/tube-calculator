@@ -21,5 +21,15 @@ android {
 }
 
 dependencies {
+    implementation project(':core-design')
+
+    implementation "$android_appcompat"
+    implementation "$android_espresso_core"
+    implementation "$android_material"
+    implementation "$android_test_runner"
     implementation "$coroutines_test"
+    implementation "$truth"
+
+    api "$hilt_testing"
+    api "$mock_web_server"
 }

@@ -15,7 +15,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @OptIn(ExperimentalSerializationApi::class)
-internal class ApiProviderImpl @Inject constructor() : ApiProvider {
+internal class ApiProviderImpl @Inject constructor(
+    private val baseUrl: String
+) : ApiProvider {
 
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -24,7 +26,7 @@ internal class ApiProviderImpl @Inject constructor() : ApiProvider {
         val client = getClient()
 
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(converterFactory)
             .client(client)
             .build()

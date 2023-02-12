@@ -1,25 +1,25 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
-import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 
 internal sealed class SearchViewAction {
 
-    object AttachFragments : SearchViewAction()
+    object AttachBlankRailJourneyFragments : SearchViewAction()
 
-    data class NavigateToFares(
-        val origin: UiStation?,
-        val destination: UiStation?,
-        val busAndTramJourneyCount: Int
+    data class AttachPreFilledRailJourneyFragments(
+        val journey: Journey.Rail
+    ) : SearchViewAction()
+
+    object AttachBlankBusAndTramJourneyFragment : SearchViewAction()
+
+    data class AttachPreFilledBusAndTramJourneyFragment(
+        val journey: Journey.BusAndTram
     ) : SearchViewAction()
 
     data class ShowErrorDialogue(val error: UiSearchError) : SearchViewAction()
 
-    object ShowAppInfo : SearchViewAction()
+    object Finish : SearchViewAction()
 
-    object NavigateToSettings : SearchViewAction()
-
-    object ShowPrivacyPolicyDialogue : SearchViewAction()
-
-    object ShowFirstAccessDialogue : SearchViewAction()
+    data class SendJourney(val journey: Journey) : SearchViewAction()
 }

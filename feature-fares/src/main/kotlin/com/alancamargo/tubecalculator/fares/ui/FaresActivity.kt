@@ -21,7 +21,7 @@ import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewAction
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewModel
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewState
-import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
+import com.alancamargo.tubecalculator.navigation.HomeActivityNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -39,7 +39,7 @@ internal class FaresActivity : AppCompatActivity() {
     private val adapter by lazy { FareRootAdapter(viewModel::onMessagesButtonClicked) }
 
     @Inject
-    lateinit var searchActivityNavigation: SearchActivityNavigation
+    lateinit var homeActivityNavigation: HomeActivityNavigation
 
     @Inject
     lateinit var dialogueHelper: DialogueHelper
@@ -64,7 +64,7 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun setUpUi() = with(binding) {
         setSupportActionBar(toolbar)
-        recyclerView.adapter = adapter
+        rootRecyclerView.adapter = adapter
         btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
         adLoader.loadBannerAds(banner)
         adLoader.loadInterstitialAds(
@@ -80,7 +80,7 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun handleState(state: FaresViewState) = with(state) {
         binding.shimmerContainer.isVisible = isLoading
-        binding.recyclerView.isVisible = fares != null && !isLoading
+        binding.rootRecyclerView.isVisible = fares != null && !isLoading
         binding.txtCheapestTotalFare.isVisible = cheapestTotalFare != null
         cheapestTotalFare?.let {
             binding.txtCheapestTotalFare.text = getString(
@@ -93,15 +93,15 @@ internal class FaresActivity : AppCompatActivity() {
 
     private fun handleAction(action: FaresViewAction) {
         when (action) {
-            is FaresViewAction.NavigateToSearch -> navigateToSearch()
+            is FaresViewAction.NavigateToHome -> navigateToHome()
             is FaresViewAction.Finish -> finish()
             is FaresViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
             is FaresViewAction.ShowMessagesDialogue -> showMessagesDialogue(action.text)
         }
     }
 
-    private fun navigateToSearch() {
-        searchActivityNavigation.startActivity(context = this)
+    private fun navigateToHome() {
+        homeActivityNavigation.startActivity(context = this)
         finish()
     }
 

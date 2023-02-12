@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="@dimen/spacing_8">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_16">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtHeader"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/bus_tram_journeys"
+            android:drawableStart="@drawable/ic_bus"
+            android:drawableEnd="@drawable/ic_tram"
+            android:drawablePadding="@dimen/spacing_8"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtBusAndTramJourneyCount"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:gravity="center_horizontal"
+            tools:text="Number of journeys: 2"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

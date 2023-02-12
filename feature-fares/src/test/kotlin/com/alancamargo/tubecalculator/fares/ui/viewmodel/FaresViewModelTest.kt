@@ -3,7 +3,7 @@ package com.alancamargo.tubecalculator.fares.ui.viewmodel
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.Fare
@@ -348,57 +348,6 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns ServerError onCreate should set correct state and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
-            // GIVEN
-            every {
-                mockGetRailFaresUseCase(origin = station, destination = station)
-            } returns flowOf(RailFaresResult.ServerError)
-
-            // WHEN
-            viewModel.onCreate(
-                origin = uiStation,
-                destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
-                isFirstLaunch = true
-            )
-
-            // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(
-                    isLoading = false,
-                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
-                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
-                )
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-            assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.SERVER))
-        }
-    }
-
-    @Test
-    fun `when use case returns ServerError onCreate should log result`() {
-        // GIVEN
-        every {
-            mockGetRailFaresUseCase(origin = station, destination = station)
-        } returns flowOf(RailFaresResult.ServerError)
-
-        // WHEN
-        viewModel.onCreate(
-            origin = uiStation,
-            destination = uiStation,
-            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
-            isFirstLaunch = true
-        )
-
-        // THEN
-        val message =
-            "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.ServerError}"
-        verify { mockLogger.debug(message) }
-    }
-
-    @Test
     fun `when use case returns GenericError onCreate should set correct state and send ShowErrorDialogue action`() {
         collector.test { states, actions ->
             // GIVEN
@@ -534,13 +483,13 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onNewSearchClicked should send NavigateToSearch action`() {
+    fun `onNewSearchClicked should send NavigateToHome action`() {
         collector.test { _, actions ->
             // WHEN
             viewModel.onNewSearchClicked()
 
             // THEN
-            assertThat(actions).contains(FaresViewAction.NavigateToSearch)
+            assertThat(actions).contains(FaresViewAction.NavigateToHome)
         }
     }
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="search_error_missing_origin_destination">Either the origin or the destination is missing</string>
     <string name="search_error_same_origin_destination">The origin and the destination must not be the same station</string>
     <string name="search_where_are_you_travelling_from">Where are you travelling from?</string>
     <string name="search_label_origin">Origin</string>
@@ -9,16 +8,10 @@
     <string name="search_how_many_bus_tram_journeys">How many bus and/or tram journeys?</string>
     <string name="search_bus_tram_journeys_info_short">Bus and/or tram journeys made within one hour are considered as one</string>
     <string name="search_bus_tram_journeys_info">If your bus and/or tram journeys are all within the space of an hour, you should consider them as a single journey because you will only be charged once.\n\nExample: you catch a bus and tap your card at 10:00, then you catch a tram and tap at 10:30 and then another bus at 10:59. You will only be charged for the time you tapped at 10:00.</string>
-    <string name="search_calculate">Calculate</string>
     <string name="search_content_description_more">More</string>
     <string name="search_content_description_less">Less</string>
-    <string name="search_about">About</string>
-    <string name="search_app_info">App developed by Alan Camargo. Powered by TfL Open Data. Contains OS data © Crown copyright and database rights 2016. Contains Geomni UK Map data © and database rights [2019].</string>
     <string name="search">Search</string>
     <string name="clear">Clear</string>
-    <string name="first_access_title">Welcome!</string>
-    <string name="first_access_message">Since this is the first time you\'re using this app, perhaps it will be a good idea to have a quick look at the settings to make sure you\'re happy with the way your data is handled. You can always change it later if you want.</string>
-    <string name="sounds_good">Sounds good</string>
     <string name="more_information">More information</string>
     <string name="bus_tram_journeys">Bus and/or tram journeys</string>
 </resources>

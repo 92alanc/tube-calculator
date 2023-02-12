@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.core.design.ads
 
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -8,7 +9,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import javax.inject.Inject
 
-internal class AdLoaderImpl @Inject constructor() : AdLoader {
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+class AdLoaderImpl @Inject internal constructor() : AdLoader {
 
     override fun loadBannerAds(target: View) {
         (target as? AdView)?.let { adView ->

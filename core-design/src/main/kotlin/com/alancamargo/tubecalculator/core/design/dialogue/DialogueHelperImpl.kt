@@ -1,11 +1,13 @@
 package com.alancamargo.tubecalculator.core.design.dialogue
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.alancamargo.tubecalculator.core.design.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
 
-internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
+@VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
+class DialogueHelperImpl @Inject internal constructor() : DialogueHelper {
 
     override fun showDialogue(
         context: Context,
@@ -19,9 +21,12 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
             context = context,
             title = title,
             message = message
-        )
+        ).apply {
+            setNeutralButton(R.string.ok, null)
+            setIcon(iconRes)
+        }
 
-        builder.setIcon(iconRes).show()
+        builder.show()
     }
 
     override fun showDialogue(
@@ -37,10 +42,48 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
         val builder = getBuilder(
             context = context,
             title = title,
-            message = message,
-            buttonTextRes = buttonTextRes,
-            onDismiss = onDismiss
+            message = message
         )
+
+        onDismiss?.let {
+            builder.setNeutralButton(buttonTextRes) { dialogue, _ ->
+                it()
+                dialogue.dismiss()
+            }
+        } ?: run {
+            builder.setNeutralButton(R.string.ok, null)
+        }
+
+        builder.show()
+    }
+
+    override fun showDialogue(
+        context: Context,
+        titleRes: Int,
+        messageRes: Int,
+        positiveButtonTextRes: Int,
+        onPositiveButtonClick: () -> Unit,
+        negativeButtonTextRes: Int,
+        onNegativeButtonClick: () -> Unit
+    ) {
+        val title = context.getString(titleRes)
+        val message = context.getString(messageRes)
+
+        val builder = getBuilder(
+            context = context,
+            title = title,
+            message = message
+        ).apply {
+            setPositiveButton(positiveButtonTextRes) { dialogue, _ ->
+                onPositiveButtonClick()
+                dialogue.dismiss()
+            }
+
+            setNegativeButton(negativeButtonTextRes) { dialogue, _ ->
+                onNegativeButtonClick()
+                dialogue.dismiss()
+            }
+        }
 
         builder.show()
     }
@@ -52,7 +95,9 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
             context = context,
             title = title,
             message = message
-        )
+        ).apply {
+            setNeutralButton(R.string.ok, null)
+        }
 
         builder.show()
     }
@@ -60,24 +105,11 @@ internal class DialogueHelperImpl @Inject constructor() : DialogueHelper {
     private fun getBuilder(
         context: Context,
         title: String,
-        message: CharSequence,
-        buttonTextRes: Int = R.string.ok,
-        onDismiss: (() -> Unit)? = null
+        message: CharSequence
     ): MaterialAlertDialogBuilder {
-        val builder = MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(context)
             .setTitle(title)
             .setMessage(message)
             .setCancelable(false)
-
-        onDismiss?.let {
-            builder.setNeutralButton(buttonTextRes) { dialogue, _ ->
-                it()
-                dialogue.dismiss()
-            }
-        } ?: run {
-            builder.setNeutralButton(R.string.ok, null)
-        }
-
-        return builder
     }
 }

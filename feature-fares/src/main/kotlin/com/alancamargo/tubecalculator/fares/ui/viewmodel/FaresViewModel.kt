@@ -75,7 +75,7 @@ internal class FaresViewModel @Inject constructor(
         analytics.trackNewSearchClicked()
 
         viewModelScope.launch(dispatcher) {
-            _action.emit(FaresViewAction.NavigateToSearch)
+            _action.emit(FaresViewAction.NavigateToHome)
         }
     }
 
@@ -100,7 +100,7 @@ internal class FaresViewModel @Inject constructor(
         }.onCompletion {
             _state.update { it.onStopLoading() }
         }.collect { result ->
-            if (result is RailFaresResult.ServerError || result is RailFaresResult.GenericError) {
+            if (result is RailFaresResult.GenericError) {
                 val message = "Origin: ${origin.name}. Destination: ${destination.name}. Result: $result"
                 logger.debug(message)
             }
@@ -145,11 +145,6 @@ internal class FaresViewModel @Inject constructor(
 
             is RailFaresResult.NetworkError -> {
                 val error = UiFaresError.NETWORK
-                _action.emit(FaresViewAction.ShowErrorDialogue(error))
-            }
-
-            is RailFaresResult.ServerError -> {
-                val error = UiFaresError.SERVER
                 _action.emit(FaresViewAction.ShowErrorDialogue(error))
             }
 

@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys
 
-import com.alancamargo.tubecalculator.core.test.ViewModelFlowCollector
+import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -17,6 +17,21 @@ class BusAndTramJourneysViewModelTest {
         viewModel.action,
         dispatcher
     )
+
+    @Test
+    fun `onCreate should set correct view state`() {
+        collector.test { states, _ ->
+            // GIVEN
+            val journeyCount = 2
+
+            // WHEN
+            viewModel.onCreate(journeyCount)
+
+            // THEN
+            val expected = BusAndTramJourneysViewState(journeyCount)
+            assertThat(states).contains(expected)
+        }
+    }
 
     @Test
     fun `increaseBusAndTramJourneyCount should set correct state`() {

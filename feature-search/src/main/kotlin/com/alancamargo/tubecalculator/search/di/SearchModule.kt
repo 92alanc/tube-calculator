@@ -1,7 +1,5 @@
 package com.alancamargo.tubecalculator.search.di
 
-import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
-import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalyticsImpl
 import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSource
 import com.alancamargo.tubecalculator.search.data.local.SearchLocalDataSourceImpl
 import com.alancamargo.tubecalculator.search.data.repository.SearchRepositoryImpl
@@ -25,23 +23,9 @@ internal abstract class SearchModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindIsFirstAccessUseCase(impl: IsFirstAccessUseCaseImpl): IsFirstAccessUseCase
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindDisableFirstAccessUseCase(
-        impl: DisableFirstAccessUseCaseImpl
-    ): DisableFirstAccessUseCase
-
-    @Binds
-    @ViewModelScoped
     abstract fun bindGetMinQueryLengthUseCase(
         impl: GetMinQueryLengthUseCaseImpl
     ): GetMinQueryLengthUseCase
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindSearchAnalytics(impl: SearchAnalyticsImpl): SearchAnalytics
 
     @Binds
     @ViewModelScoped

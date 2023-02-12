@@ -1,0 +1,191 @@
+[
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Fares.FaresSection, Tfl.Api.Presentation.Entities",
+    "header": "Single Fare Finder",
+    "index": 1,
+    "journey": {
+      "$type": "Tfl.Api.Presentation.Entities.Fares.Journey, Tfl.Api.Presentation.Entities",
+      "fromStation": {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareStation, Tfl.Api.Presentation.Entities",
+        "atcoCode": "910GROMFORD",
+        "commonName": "Romford Rail Station",
+        "fareCategory": "All"
+      },
+      "toStation": {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareStation, Tfl.Api.Presentation.Entities",
+        "atcoCode": "910GCMDNRD",
+        "commonName": "Camden Road Rail Station",
+        "fareCategory": "All"
+      }
+    },
+    "rows": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareDetails, Tfl.Api.Presentation.Entities",
+        "startDate": "2022-09-03T23:00:00Z",
+        "endDate": "2023-09-03T23:00:00Z",
+        "passengerType": "Adult",
+        "contactlessPAYGOnlyFare": false,
+        "from": "Romford Rail Station",
+        "to": "Camden Road Rail Station",
+        "fromStation": "910GROMFORD",
+        "toStation": "910GCMDNRD",
+        "displayName": "Default Route",
+        "displayOrder": 0,
+        "routeDescription": "Default route",
+        "specialFare": false,
+        "throughFare": false,
+        "isTour": false,
+        "ticketsAvailable": [
+          {
+            "$type": "Tfl.Api.Presentation.Entities.Fares.Ticket, Tfl.Api.Presentation.Entities",
+            "passengerType": "Adult",
+            "ticketType": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketType, Tfl.Api.Presentation.Entities",
+              "type": "Pay as you go",
+              "description": "Pay as you go"
+            },
+            "ticketTime": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketTime, Tfl.Api.Presentation.Entities",
+              "type": "Off Peak",
+              "description": "At all other times including public holidays."
+            },
+            "cost": "3.50",
+            "description": "Pay as you go",
+            "mode": "tube",
+            "displayOrder": 1,
+            "messages": []
+          },
+          {
+            "$type": "Tfl.Api.Presentation.Entities.Fares.Ticket, Tfl.Api.Presentation.Entities",
+            "passengerType": "Adult",
+            "ticketType": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketType, Tfl.Api.Presentation.Entities",
+              "type": "Pay as you go",
+              "description": "Pay as you go"
+            },
+            "ticketTime": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketTime, Tfl.Api.Presentation.Entities",
+              "type": "Peak",
+              "description": "Monday to Friday from 0630 to 0930 and from 1600 to 1900."
+            },
+            "cost": "5.50",
+            "description": "Pay as you go",
+            "mode": "tube",
+            "displayOrder": 2,
+            "messages": []
+          }
+        ],
+        "messages": []
+      }
+    ],
+    "messages": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Message, Tfl.Api.Presentation.Entities",
+        "bulletOrder": 0,
+        "messageText": "When you pay as you go, you must touch your card on a yellow card reader at the start and end of your journey. If you do not, you may be charged a maximum fare."
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Message, Tfl.Api.Presentation.Entities",
+        "bulletOrder": 0,
+        "messageText": "Some journeys are charged via Zone 1 irrespective of the route taken."
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Message, Tfl.Api.Presentation.Entities",
+        "bulletOrder": 0,
+        "messageText": "Paper single and return tickets are valid for travel only on the date shown on the ticket and up to 04:29 the next day."
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Message, Tfl.Api.Presentation.Entities",
+        "bulletOrder": 0,
+        "messageText": "Where a fare for a paper ticket is shown, a return journey will be double the equivalent single fare. In some cases a Day Travelcard may be cheaper."
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Message, Tfl.Api.Presentation.Entities",
+        "bulletOrder": 0,
+        "messageText": "Fares shown do not include travel on Gatwick Express, Heathrow Express or Southeastern high speed services unless stated."
+      }
+    ]
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Fares.FaresSection, Tfl.Api.Presentation.Entities",
+    "header": "Alternate Fares",
+    "index": 2,
+    "journey": {
+      "$type": "Tfl.Api.Presentation.Entities.Fares.Journey, Tfl.Api.Presentation.Entities",
+      "fromStation": {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareStation, Tfl.Api.Presentation.Entities",
+        "atcoCode": "910GROMFORD",
+        "commonName": "Romford Rail Station",
+        "fareCategory": "All"
+      },
+      "toStation": {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareStation, Tfl.Api.Presentation.Entities",
+        "atcoCode": "910GCMDNRD",
+        "commonName": "Camden Road Rail Station",
+        "fareCategory": "All"
+      }
+    },
+    "rows": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.Fares.FareDetails, Tfl.Api.Presentation.Entities",
+        "startDate": "2022-09-03T23:00:00Z",
+        "endDate": "2023-09-03T23:00:00Z",
+        "passengerType": "Adult",
+        "contactlessPAYGOnlyFare": false,
+        "from": "Romford Rail Station",
+        "to": "Camden Road Rail Station",
+        "fromStation": "910GROMFORD",
+        "toStation": "910GCMDNRD",
+        "displayName": "Alternative Route",
+        "displayOrder": 0,
+        "routeDescription": "Avoiding Zone 1 via Stratford",
+        "validatorInformation": "Stratford",
+        "specialFare": false,
+        "throughFare": false,
+        "isTour": false,
+        "ticketsAvailable": [
+          {
+            "$type": "Tfl.Api.Presentation.Entities.Fares.Ticket, Tfl.Api.Presentation.Entities",
+            "passengerType": "Adult",
+            "ticketType": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketType, Tfl.Api.Presentation.Entities",
+              "type": "Pay as you go",
+              "description": "Pay as you go"
+            },
+            "ticketTime": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketTime, Tfl.Api.Presentation.Entities",
+              "type": "Off Peak",
+              "description": "At all other times including public holidays."
+            },
+            "cost": "2.70",
+            "description": "Pay as you go",
+            "mode": "tube",
+            "displayOrder": 1,
+            "messages": []
+          },
+          {
+            "$type": "Tfl.Api.Presentation.Entities.Fares.Ticket, Tfl.Api.Presentation.Entities",
+            "passengerType": "Adult",
+            "ticketType": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketType, Tfl.Api.Presentation.Entities",
+              "type": "Pay as you go",
+              "description": "Pay as you go"
+            },
+            "ticketTime": {
+              "$type": "Tfl.Api.Presentation.Entities.Fares.TicketTime, Tfl.Api.Presentation.Entities",
+              "type": "Peak",
+              "description": "Monday to Friday from 0630 to 0930 and from 1600 to 1900."
+            },
+            "cost": "3.30",
+            "description": "Pay as you go",
+            "mode": "tube",
+            "displayOrder": 2,
+            "messages": []
+          }
+        ],
+        "messages": []
+      }
+    ],
+    "messages": []
+  }
+]

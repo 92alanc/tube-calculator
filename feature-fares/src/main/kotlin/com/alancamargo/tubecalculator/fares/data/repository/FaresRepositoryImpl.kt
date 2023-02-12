@@ -12,6 +12,7 @@ import java.math.BigDecimal
 import javax.inject.Inject
 
 private const val KEY_BUS_AND_TRAM_BASE_FARE = "bus_and_tram_base_fare"
+private const val KEY_BUS_AND_TRAM_FARE_DAILY_CAP = "bus_and_tram_fare_daily_cap"
 
 internal class FaresRepositoryImpl @Inject constructor(
     private val remoteDataSource: FaresRemoteDataSource,
@@ -36,5 +37,10 @@ internal class FaresRepositoryImpl @Inject constructor(
     override fun getBusAndTramBaseFare(): BigDecimal {
         val baseFare = remoteConfigManager.getDouble(KEY_BUS_AND_TRAM_BASE_FARE)
         return BigDecimal.valueOf(baseFare)
+    }
+
+    override fun getBusAndTramDailyFareCap(): BigDecimal {
+        val cap = remoteConfigManager.getDouble(KEY_BUS_AND_TRAM_FARE_DAILY_CAP)
+        return BigDecimal.valueOf(cap)
     }
 }

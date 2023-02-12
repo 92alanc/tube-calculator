@@ -15,7 +15,7 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -28,6 +28,15 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    testOptions {
+        animationsDisabled true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
 }
 
@@ -56,4 +65,15 @@ dependencies {
     testImplementation "$mockk_android"
     testImplementation "$truth"
     testImplementation "$turbine"
+
+    androidTestImplementation project(':core-test')
+
+    androidTestImplementation("$android_espresso_contrib") {
+        exclude module: "protobuf-lite"
+    }
+    androidTestImplementation "$android_espresso_core"
+    androidTestImplementation "$mockk_android"
+    androidTestImplementation "$truth"
+
+    kaptAndroidTest "$hilt_compiler"
 }
