@@ -5,7 +5,6 @@ import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.home.ui.robots.given
-import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -29,9 +28,6 @@ internal class HomeActivityTest {
 
     @Inject
     lateinit var mockPreferencesManager: PreferencesManager
-
-    @Inject
-    lateinit var mockFaresActivityNavigation: FaresActivityNavigation
 
     @Inject
     lateinit var mockSettingsActivityNavigation: SettingsActivityNavigation
@@ -105,6 +101,52 @@ internal class HomeActivityTest {
             clickAbout()
         } then {
             showAppInfoDialogue()
+        }
+    }
+
+    @Test
+    fun whenClickAddJourney_shouldShowAddRailJourneyButton() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAddJourney()
+        } then {
+            showAddRailJourneyButton()
+        }
+    }
+
+    @Test
+    fun whenClickAddJourney_shouldShowAddBusAndTramJourneyButton() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAddJourney()
+        } then {
+            showAddBusAndTramJourneyButton()
+        }
+    }
+
+    @Test
+    fun whenClickAddRailJourney_shouldNavigateToSearchToCreateJourney() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAddJourney()
+            clickAddRailJourney()
+        } then {
+            navigateToSearchToCreateJourney()
+        }
+    }
+
+    @Test
+    fun whenClickAddBusAndTramJourney_shouldNavigateToSearchToCreateJourney() {
+        given {
+            launchAfterFirstAccess()
+        } withAction {
+            clickAddJourney()
+            clickAddBusAndTramJourney()
+        } then {
+            navigateToSearchToCreateJourney()
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.alancamargo.tubecalculator.home.ui.robots
 
 import androidx.test.platform.app.InstrumentationRegistry
+import com.alancamargo.tubecalculator.core.test.ui.assertViewIsDisplayed
 import com.alancamargo.tubecalculator.home.R
 import com.alancamargo.tubecalculator.home.ui.HomeActivityTest
 import io.mockk.verify
@@ -18,34 +19,12 @@ internal class HomeActivityAssertionRobot(private val testSuite: HomeActivityTes
         verify { testSuite.mockSettingsActivityNavigation.startActivity(context = any()) }
     }
 
-    fun navigateToFares() {
-        verify {
-            testSuite.mockFaresActivityNavigation.startActivity(
-                context = any(),
-                origin = any(),
-                destination = any(),
-                busAndTramJourneyCount = any()
-            )
-        }
-    }
-
     fun navigateToSearchToCreateJourney() {
         verify {
             testSuite.mockSearchActivityNavigation.startActivityForResult(
                 context = any(),
                 launcher = any(),
                 journeyType = any(),
-                onResult = any()
-            )
-        }
-    }
-
-    fun navigateToSearchToEditJourney() {
-        verify {
-            testSuite.mockSearchActivityNavigation.startActivityForResult(
-                context = any(),
-                launcher = any(),
-                journey = any(),
                 onResult = any()
             )
         }
@@ -103,5 +82,13 @@ internal class HomeActivityAssertionRobot(private val testSuite: HomeActivityTes
                 messageRes = R.string.home_app_info
             )
         }
+    }
+
+    fun showAddRailJourneyButton() {
+        assertViewIsDisplayed(R.id.btAddRailJourney)
+    }
+
+    fun showAddBusAndTramJourneyButton() {
+        assertViewIsDisplayed(R.id.btAddBusAndTramJourney)
     }
 }

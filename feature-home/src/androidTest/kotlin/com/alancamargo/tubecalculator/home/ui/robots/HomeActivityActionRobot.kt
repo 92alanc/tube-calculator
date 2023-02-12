@@ -24,8 +24,16 @@ internal class HomeActivityActionRobot(private val testSuite: HomeActivityTest) 
         performClick(R.id.itemAbout)
     }
 
-    fun clickCalculate() {
-        performClick(R.id.btCalculate)
+    fun clickAddJourney() {
+        performClick(R.id.btAdd)
+    }
+
+    fun clickAddRailJourney() {
+        performClick(R.id.btAddRailJourney)
+    }
+
+    fun clickAddBusAndTramJourney() {
+        performClick(R.id.btAddBusAndTramJourney)
     }
 
     infix fun then(
