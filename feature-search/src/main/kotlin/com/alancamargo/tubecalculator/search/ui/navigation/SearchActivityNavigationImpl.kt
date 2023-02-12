@@ -1,6 +1,9 @@
 package com.alancamargo.tubecalculator.search.ui.navigation
 
-import android.content.Context
+import android.content.Intent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
@@ -10,13 +13,32 @@ import javax.inject.Inject
 internal class SearchActivityNavigationImpl @Inject constructor(
 ) : SearchActivityNavigation {
 
-    override fun startActivity(context: Context, journeyType: JourneyType) {
-        val intent = SearchActivity.getIntent(context, journeyType)
-        context.startActivity(intent)
+    override fun startActivityForResult(
+        activity: AppCompatActivity,
+        journeyType: JourneyType,
+        onResult: (ActivityResult) -> Unit
+    ) {
+        val intent = SearchActivity.getIntent(activity, journeyType)
+        activity.startActivityForResult(intent, onResult)
     }
 
-    override fun startActivity(context: Context, journey: Journey) {
-        val intent = SearchActivity.getIntent(context, journey)
-        context.startActivity(intent)
+    override fun startActivityForResult(
+        activity: AppCompatActivity,
+        journey: Journey,
+        onResult: (ActivityResult) -> Unit
+    ) {
+        val intent = SearchActivity.getIntent(activity, journey)
+        activity.startActivityForResult(intent, onResult)
+    }
+
+    private fun AppCompatActivity.startActivityForResult(
+        intent: Intent,
+        onResult: (ActivityResult) -> Unit
+    ) {
+        val request = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            onResult(it)
+        }
+
+        request.launch(intent)
     }
 }

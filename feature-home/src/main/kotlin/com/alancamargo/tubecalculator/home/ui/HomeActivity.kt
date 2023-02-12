@@ -218,26 +218,32 @@ internal class HomeActivity : AppCompatActivity() {
     }
 
     private fun editJourney(journey: Journey) {
-        searchActivityNavigation.startActivity(
-            context = this,
+        searchActivityNavigation.startActivityForResult(
+            activity = this,
             journey = journey
-        )
+        ) { result ->
+
+        }
     }
 
     private fun addRailJourney() {
         val journeyType = JourneyType.RAIL
-        searchActivityNavigation.startActivity(
-            context = this,
+        searchActivityNavigation.startActivityForResult(
+            activity = this,
             journeyType = journeyType
-        )
+        ) { result ->
+
+        }
     }
 
     private fun addBusAndTramJourney() {
         val journeyType = JourneyType.BUS_AND_TRAM
-        searchActivityNavigation.startActivity(
-            context = this,
+        searchActivityNavigation.startActivityForResult(
+            activity = this,
             journeyType = journeyType
-        )
+        ) { result ->
+
+        }
     }
 
     companion object {
