@@ -33,6 +33,8 @@ internal class SearchActivityTest {
     @Inject
     lateinit var mockRemoteConfigManager: RemoteConfigManager
 
+    var activity: SearchActivity? = null
+
     @Before
     fun setUp() {
         hiltAndroidRule.inject()
@@ -49,14 +51,14 @@ internal class SearchActivityTest {
     }
 
     @Test
-    fun withValidBusAndTramJourneyCount_whenClickNext_shouldSendJourneyResult() {
+    fun withValidBusAndTramJourneyCount_whenClickNext_shouldFinish() {
         given {
             launchWithBlankBusAndTramJourney()
         } withAction {
             clickAddBusAndTramJourney()
             clickNext()
         } then {
-            sendJourneyResult()
+            finish()
         }
     }
 
@@ -82,7 +84,7 @@ internal class SearchActivityTest {
 
     @Test(timeout = 5000)
     @Ignore("Dropdown suggestions not popping up with mock DAO")
-    fun withDifferentOriginAndDestination_whenClickNext_shouldSendJourneyResult() {
+    fun withDifferentOriginAndDestination_whenClickNext_shouldFinish() {
         val originQuery = "Rom"
         val origin = "Romford"
         val destinationQuery = "Far"
@@ -99,7 +101,7 @@ internal class SearchActivityTest {
             clickDropDownItem(destination)
             clickNext()
         } then {
-            sendJourneyResult()
+            finish()
         }
     }
 
@@ -123,6 +125,33 @@ internal class SearchActivityTest {
             clickMoreInfo()
         } then {
             showMoreInfoDialogue()
+        }
+    }
+
+    @Test
+    fun withPreFilledRailJourney_shouldShowOrigin() {
+        given {
+            launchWithPreFilledRailJourney()
+        } then {
+            showOrigin()
+        }
+    }
+
+    @Test
+    fun withPreFilledRailJourney_shouldShowDestination() {
+        given {
+            launchWithPreFilledRailJourney()
+        } then {
+            showDestination()
+        }
+    }
+
+    @Test
+    fun withPreFilledBusAndTramJourney_shouldShowJourneyCount() {
+        given {
+            launchWithPreFilledBusAndTramJourney()
+        } then {
+            showBusAndTramJourneyCount()
         }
     }
 }
