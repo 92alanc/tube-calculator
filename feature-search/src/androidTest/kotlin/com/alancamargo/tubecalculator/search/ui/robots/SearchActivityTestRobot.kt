@@ -1,19 +1,18 @@
 package com.alancamargo.tubecalculator.search.ui.robots
 
 import androidx.test.core.app.ActivityScenario
+import androidx.test.platform.app.InstrumentationRegistry
+import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.search.data.model.DbStation
 import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import com.alancamargo.tubecalculator.search.ui.SearchActivity
 import com.alancamargo.tubecalculator.search.ui.SearchActivityTest
 import io.mockk.coEvery
-import io.mockk.every
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.IOException
-
-private const val KEY_FIRST_ACCESS = "is_first_access"
 
 internal fun SearchActivityTest.given(
     block: SearchActivityTestRobot.() -> Unit
@@ -23,14 +22,17 @@ internal fun SearchActivityTest.given(
 
 internal class SearchActivityTestRobot(private val testSuite: SearchActivityTest) {
 
-    fun launchOnFirstAccess() {
-        setIsFirstAccess(isFirstAccess = true)
-        launch()
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+    fun launchWithBlankRailJourney() {
+        val intent = SearchActivity.getIntent(context, JourneyType.RAIL)
+        ActivityScenario.launch<SearchActivity>(intent)
+        runBlocking { delay(200) }
     }
 
-    fun launchAfterFirstAccess() {
-        setIsFirstAccess(isFirstAccess = false)
-        launch()
+    fun launchWithBlankBusAndTramJourney() {
+        val intent = SearchActivity.getIntent(context, JourneyType.BUS_AND_TRAM)
+        ActivityScenario.launch<SearchActivity>(intent)
     }
 
     fun withSearchResult(query: String, stationName: String) {
@@ -62,16 +64,5 @@ internal class SearchActivityTestRobot(private val testSuite: SearchActivityTest
         assertion: SearchActivityAssertionRobot.() -> Unit
     ): SearchActivityAssertionRobot {
         return SearchActivityAssertionRobot(testSuite).apply(assertion)
-    }
-
-    private fun launch() {
-        ActivityScenario.launch(SearchActivity::class.java)
-        runBlocking { delay(200) }
-    }
-
-    private fun setIsFirstAccess(isFirstAccess: Boolean) {
-        every {
-            testSuite.mockPreferencesManager.getBoolean(KEY_FIRST_ACCESS, defaultValue = true)
-        } returns isFirstAccess
     }
 }

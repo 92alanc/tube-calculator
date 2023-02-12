@@ -17,7 +17,6 @@ import com.alancamargo.tubecalculator.core.extensions.args
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
-import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.search.databinding.ActivitySearchBinding
 import com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment
 import com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment
@@ -48,9 +47,6 @@ internal class SearchActivity : AppCompatActivity() {
     private var originFragment: StationSearchFragment? = null
     private var destinationFragment: StationSearchFragment? = null
     private var busAndTramJourneysFragment: BusAndTramJourneysFragment? = null
-
-    @Inject
-    lateinit var faresActivityNavigation: FaresActivityNavigation
 
     @Inject
     lateinit var dialogueHelper: DialogueHelper
