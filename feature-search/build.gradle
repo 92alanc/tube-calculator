@@ -21,7 +21,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -54,7 +55,6 @@ dependencies {
     implementation "$hilt_android"
     implementation "$room"
     implementation "$room_runtime"
-    implementation "$shimmer"
 
     kapt "$hilt_compiler"
     kapt "$room_compiler"
