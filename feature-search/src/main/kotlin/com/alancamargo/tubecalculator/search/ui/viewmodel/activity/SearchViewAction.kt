@@ -18,4 +18,8 @@ internal sealed class SearchViewAction {
     ) : SearchViewAction()
 
     data class ShowErrorDialogue(val error: UiSearchError) : SearchViewAction()
+
+    object Finish : SearchViewAction()
+
+    data class SendJourney(val journey: Journey) : SearchViewAction()
 }

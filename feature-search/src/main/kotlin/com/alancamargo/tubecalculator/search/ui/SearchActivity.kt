@@ -1,11 +1,13 @@
 package com.alancamargo.tubecalculator.search.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.commit
 import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
@@ -23,6 +25,7 @@ import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewAction
 import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewModel
+import com.alancamargo.tubecalculator.search.ui.viewmodel.activity.SearchViewState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.parcelize.Parcelize
 import javax.inject.Inject
@@ -60,6 +63,7 @@ internal class SearchActivity : AppCompatActivity() {
         _binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpUi()
+        observeViewModelFlow(viewModel.state, ::handleState)
         observeViewModelFlow(viewModel.action, ::handleAction)
         viewModel.onCreate(
             isFirstLaunch = savedInstanceState == null,
@@ -68,10 +72,20 @@ internal class SearchActivity : AppCompatActivity() {
         )
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        viewModel.onBackPressed()
+        return true
+    }
+
     private fun setUpUi() = with(binding) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        btNext.setOnClickListener { viewModel.onNextClicked() }
         adLoader.loadBannerAds(banner)
+    }
+
+    private fun handleState(state: SearchViewState) {
+        binding.btNext.isVisible = state.showNextButton
     }
 
     private fun handleAction(action: SearchViewAction) {
@@ -93,6 +107,10 @@ internal class SearchActivity : AppCompatActivity() {
             is SearchViewAction.AttachPreFilledBusAndTramJourneyFragment -> {
                 attachBusAndTramJourneyFragment(action.journey)
             }
+
+            is SearchViewAction.Finish -> finish()
+
+            is SearchViewAction.SendJourney -> sendJourney(action.journey)
         }
     }
 
@@ -107,12 +125,14 @@ internal class SearchActivity : AppCompatActivity() {
     private fun attachRailJourneyFragments(journey: Journey.Rail?) {
         val originFragment = StationSearchFragment.newInstance(
             searchType = SearchType.ORIGIN,
-            station = journey?.origin
+            station = journey?.origin,
+            onStationSelected = viewModel::onOriginSelected
         )
 
         val destinationFragment = StationSearchFragment.newInstance(
             searchType = SearchType.DESTINATION,
-            station = journey?.destination
+            station = journey?.destination,
+            onStationSelected = viewModel::onDestinationSelected
         )
 
         supportFragmentManager.commit {
@@ -126,7 +146,8 @@ internal class SearchActivity : AppCompatActivity() {
 
     private fun attachBusAndTramJourneyFragment(journey: Journey.BusAndTram?) {
         val busAndTramJourneysFragment = BusAndTramJourneysFragment.newInstance(
-            journeyCount = journey?.journeyCount ?: 0
+            journeyCount = journey?.journeyCount ?: 0,
+            onJourneyCountSelected = viewModel::onBusAndTramJourneyCountSelected
         )
 
         supportFragmentManager.commit {
@@ -134,6 +155,12 @@ internal class SearchActivity : AppCompatActivity() {
         }
 
         this.busAndTramJourneysFragment = busAndTramJourneysFragment
+    }
+
+    private fun sendJourney(journey: Journey) {
+        val data = Intent().putArguments(journey)
+        setResult(Activity.RESULT_OK, data)
+        finish()
     }
 
     @Parcelize

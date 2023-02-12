@@ -1,20 +1,24 @@
 package com.alancamargo.tubecalculator.navigation
 
+import android.content.Context
+import android.content.Intent
 import androidx.activity.result.ActivityResult
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.ActivityResultLauncher
 import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 
 interface SearchActivityNavigation {
 
     fun startActivityForResult(
-        activity: AppCompatActivity,
+        context: Context,
+        launcher: ActivityResultLauncher<Intent>,
         journeyType: JourneyType,
         onResult: (ActivityResult) -> Unit
     )
 
     fun startActivityForResult(
-        activity: AppCompatActivity,
+        context: Context,
+        launcher: ActivityResultLauncher<Intent>,
         journey: Journey,
         onResult: (ActivityResult) -> Unit
     )

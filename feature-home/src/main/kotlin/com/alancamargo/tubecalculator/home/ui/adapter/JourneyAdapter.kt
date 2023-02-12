@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.alancamargo.tubecalculator.common.ui.model.Journey
-import com.alancamargo.tubecalculator.core.tools.GenericDiffCallback
 import com.alancamargo.tubecalculator.home.databinding.ItemBusTramJourneyBinding
 import com.alancamargo.tubecalculator.home.databinding.ItemRailJourneyBinding
 import com.alancamargo.tubecalculator.home.ui.adapter.viewholder.BusAndTramJourneyViewHolder
@@ -16,7 +15,7 @@ private const val VIEW_TYPE_BUS_TRAM = 1
 
 internal class JourneyAdapter(
     private val onItemClick: (Journey) -> Unit
-) : ListAdapter<Journey, JourneyViewHolder>(GenericDiffCallback()) {
+) : ListAdapter<Journey, JourneyViewHolder>(JourneyDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JourneyViewHolder {
         val inflater = LayoutInflater.from(parent.context)

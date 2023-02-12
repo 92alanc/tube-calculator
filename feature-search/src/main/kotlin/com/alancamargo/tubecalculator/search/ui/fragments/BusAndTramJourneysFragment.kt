@@ -54,10 +54,9 @@ internal class BusAndTramJourneysFragment : Fragment() {
         viewModel.onCreate(args.journeyCount)
     }
 
-    fun getBusAndTramJourneyCount(): Int = viewModel.busAndTramJourneyCount
-
-    private fun handleState(state: BusAndTramJourneysViewState) {
-        binding.txtBusAndTramJourneyCount.text = state.busAndTramJourneyCount.toString()
+    private fun handleState(state: BusAndTramJourneysViewState) = with(state) {
+        binding.txtBusAndTramJourneyCount.text = busAndTramJourneyCount.toString()
+        args.onJourneyCountSelected(busAndTramJourneyCount)
     }
 
     private fun handleAction(action: BusAndTramJourneysViewAction) {
@@ -83,17 +82,23 @@ internal class BusAndTramJourneysFragment : Fragment() {
     }
 
     @Parcelize
-    data class Args(val journeyCount: Int) : Parcelable
+    data class Args(
+        val journeyCount: Int,
+        val onJourneyCountSelected: (Int) -> Unit
+    ) : Parcelable
 
     companion object {
 
-        fun newInstance(): BusAndTramJourneysFragment {
-            val args = Args(journeyCount = 0)
+        fun newInstance(onJourneyCountSelected: (Int) -> Unit): BusAndTramJourneysFragment {
+            val args = Args(journeyCount = 0, onJourneyCountSelected)
             return newInstance(args)
         }
 
-        fun newInstance(journeyCount: Int): BusAndTramJourneysFragment {
-            val args = Args(journeyCount)
+        fun newInstance(
+            journeyCount: Int,
+            onJourneyCountSelected: (Int) -> Unit
+        ): BusAndTramJourneysFragment {
+            val args = Args(journeyCount, onJourneyCountSelected)
             return newInstance(args)
         }
 

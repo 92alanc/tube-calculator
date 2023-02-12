@@ -56,8 +56,6 @@ internal class StationSearchFragment : Fragment() {
         viewModel.onCreate(args.searchType, args.station)
     }
 
-    fun getSelectedStation(): UiStation? = viewModel.selectedStation
-
     private fun observeStateAndAction() {
         observeViewModelFlow(viewModel.state, ::handleState)
         observeViewModelFlow(viewModel.action, ::handleAction)
@@ -86,6 +84,8 @@ internal class StationSearchFragment : Fragment() {
         minQueryLength?.let {
             binding.autoCompleteTextView.threshold = it
         }
+
+        args.onStationSelected(selectedStation)
 
         selectedStation?.let {
             binding.autoCompleteTextView.setText(it.name)
@@ -128,15 +128,17 @@ internal class StationSearchFragment : Fragment() {
     @Parcelize
     data class Args(
         val searchType: SearchType,
-        val station: UiStation?
+        val station: UiStation?,
+        val onStationSelected: (UiStation?) -> Unit
     ) : Parcelable
 
     companion object {
         fun newInstance(
             searchType: SearchType,
-            station: UiStation? = null
+            station: UiStation? = null,
+            onStationSelected: (UiStation?) -> Unit
         ): StationSearchFragment {
-            val args = Args(searchType, station)
+            val args = Args(searchType, station, onStationSelected)
             return StationSearchFragment().putArguments(args)
         }
     }

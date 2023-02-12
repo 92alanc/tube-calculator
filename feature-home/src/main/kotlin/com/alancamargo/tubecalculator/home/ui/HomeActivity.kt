@@ -1,9 +1,13 @@
 package com.alancamargo.tubecalculator.home.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +17,7 @@ import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
+import com.alancamargo.tubecalculator.core.extensions.getArguments
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.home.R
 import com.alancamargo.tubecalculator.home.databinding.ActivityHomeBinding
@@ -62,6 +67,8 @@ internal class HomeActivity : AppCompatActivity() {
     @Inject
     lateinit var searchActivityNavigation: SearchActivityNavigation
 
+    private var launcher: ActivityResultLauncher<Intent>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -69,6 +76,9 @@ internal class HomeActivity : AppCompatActivity() {
         setUpUi()
         observeViewModelFlow(viewModel.state, ::handleState)
         observeViewModelFlow(viewModel.action, ::handleAction)
+        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            handleResult(it)
+        }
         viewModel.onCreate(isFirstLaunch = savedInstanceState == null)
     }
 
@@ -218,31 +228,45 @@ internal class HomeActivity : AppCompatActivity() {
     }
 
     private fun editJourney(journey: Journey) {
-        searchActivityNavigation.startActivityForResult(
-            activity = this,
-            journey = journey
-        ) { result ->
-
+        launcher?.let {
+            searchActivityNavigation.startActivityForResult(
+                context = this,
+                launcher = it,
+                journey = journey,
+                onResult = ::handleResult
+            )
         }
     }
 
     private fun addRailJourney() {
-        val journeyType = JourneyType.RAIL
-        searchActivityNavigation.startActivityForResult(
-            activity = this,
-            journeyType = journeyType
-        ) { result ->
+        launcher?.let {
+            val journeyType = JourneyType.RAIL
 
+            searchActivityNavigation.startActivityForResult(
+                context = this,
+                launcher = it,
+                journeyType = journeyType,
+                onResult = ::handleResult
+            )
         }
     }
 
     private fun addBusAndTramJourney() {
-        val journeyType = JourneyType.BUS_AND_TRAM
-        searchActivityNavigation.startActivityForResult(
-            activity = this,
-            journeyType = journeyType
-        ) { result ->
+        launcher?.let {
+            val journeyType = JourneyType.BUS_AND_TRAM
 
+            searchActivityNavigation.startActivityForResult(
+                context = this,
+                launcher = it,
+                journeyType = journeyType,
+                onResult = ::handleResult
+            )
+        }
+    }
+
+    private fun handleResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.getArguments<Journey>()?.let(viewModel::onJourneyReceived)
         }
     }
 

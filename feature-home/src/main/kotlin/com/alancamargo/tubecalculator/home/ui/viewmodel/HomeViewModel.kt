@@ -29,7 +29,7 @@ internal class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow(HomeViewState())
     private val _action = MutableSharedFlow<HomeViewAction>()
 
-    private val journeys = mutableListOf<Journey>()
+    private var journeys = emptyList<Journey>()
 
     private var isAddButtonExpanded = false
 
@@ -97,14 +97,14 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun onJourneyReceived(journey: Journey) {
-        journeys.add(journey)
+        journeys = journeys + journey
         _state.update { it.onJourneysUpdated(journeys) }
     }
 
     fun onJourneyRemoved(journey: Journey) {
         analytics.trackJourneyRemoved()
 
-        journeys.remove(journey)
+        journeys = journeys - journey
         _state.update { it.onJourneysUpdated(journeys) }
     }
 

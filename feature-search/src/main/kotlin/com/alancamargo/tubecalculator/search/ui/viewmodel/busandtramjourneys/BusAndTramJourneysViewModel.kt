@@ -20,8 +20,7 @@ internal class BusAndTramJourneysViewModel @Inject constructor(
     val state: StateFlow<BusAndTramJourneysViewState> = _state
     val action: SharedFlow<BusAndTramJourneysViewAction> = _action
 
-    var busAndTramJourneyCount = 0
-        private set
+    private var busAndTramJourneyCount = 0
 
     fun onCreate(journeyCount: Int) {
         busAndTramJourneyCount = journeyCount

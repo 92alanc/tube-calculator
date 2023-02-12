@@ -31,9 +31,6 @@ internal class StationSearchViewModel @Inject constructor(
     val state: StateFlow<StationSearchViewState> = _state
     val action: SharedFlow<StationSearchViewAction> = _action
 
-    var selectedStation: UiStation? = null
-        private set
-
     fun onCreate(searchType: SearchType, station: UiStation?) {
         _state.update { it.onReceivedSearchType(searchType) }
         val minQueryLength = getMinQueryLengthUseCase()
@@ -43,7 +40,7 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onQueryChanged(query: String) {
         if (query.isBlank()) {
-            selectedStation = null
+            onStationSelected(station = null)
             return
         }
 
@@ -57,7 +54,6 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onStationSelected(station: UiStation?) {
-        this.selectedStation = station
         _state.update { it.onStationSelected(station) }
     }
 
