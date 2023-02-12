@@ -1,7 +1,5 @@
 package com.alancamargo.tubecalculator.home.di
 
-import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalytics
-import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalyticsImpl
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCaseImpl
 import com.alancamargo.tubecalculator.home.domain.usecase.IsFirstAccessUseCase
@@ -15,10 +13,6 @@ import dagger.hilt.android.scopes.ViewModelScoped
 @Module
 @InstallIn(ViewModelComponent::class)
 internal abstract class HomeModule {
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindHomeAnalytics(impl: HomeAnalyticsImpl): HomeAnalytics
 
     @Binds
     @ViewModelScoped

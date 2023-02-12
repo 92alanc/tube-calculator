@@ -32,6 +32,10 @@ android {
         animationsDisabled true
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -53,4 +57,15 @@ dependencies {
     testImplementation "$coroutines_test"
     testImplementation "$mockk_android"
     testImplementation "$truth"
+
+    androidTestImplementation project(':core-test')
+
+    androidTestImplementation("$android_espresso_contrib") {
+        exclude module: "protobuf-lite"
+    }
+    androidTestImplementation "$android_espresso_core"
+    androidTestImplementation "$mockk_android"
+    androidTestImplementation "$truth"
+
+    kaptAndroidTest "$hilt_compiler"
 }
