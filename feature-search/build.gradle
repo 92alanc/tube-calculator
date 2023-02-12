@@ -72,7 +72,6 @@ dependencies {
         exclude module: "protobuf-lite"
     }
     androidTestImplementation "$android_espresso_core"
-    androidTestImplementation "$android_fragment_testing"
     androidTestImplementation "$mockk_android"
     androidTestImplementation "$truth"
 

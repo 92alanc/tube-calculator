@@ -6,7 +6,6 @@ import com.alancamargo.tubecalculator.core.design.R as R2
 
 internal enum class UiSearchError(@StringRes val messageRes: Int) {
 
-    MISSING_ORIGIN_OR_DESTINATION(messageRes = R.string.search_error_missing_origin_destination),
     SAME_ORIGIN_AND_DESTINATION(messageRes = R.string.search_error_same_origin_destination),
     GENERIC(messageRes = R2.string.message_generic_error)
 }

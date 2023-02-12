@@ -13,7 +13,7 @@ import com.alancamargo.tubecalculator.core.test.web.mockWebServer
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.database.RailFaresDao
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
-import com.alancamargo.tubecalculator.navigation.SearchActivityNavigation
+import com.alancamargo.tubecalculator.navigation.HomeActivityNavigation
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -46,9 +46,7 @@ internal object FaresTestModule {
 
     @Provides
     @Singleton
-    fun provideMockSearchActivityNavigation(): SearchActivityNavigation {
-        return mockk(relaxed = true)
-    }
+    fun provideMockHomeActivityNavigation(): HomeActivityNavigation = mockk(relaxed = true)
 
     @Provides
     @Singleton

@@ -2,12 +2,8 @@ package com.alancamargo.tubecalculator.search.ui
 
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
-import com.alancamargo.tubecalculator.core.di.AppVersionName
-import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
 import com.alancamargo.tubecalculator.core.test.ui.clickDropDownItem
-import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
-import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.data.database.SearchDao
 import com.alancamargo.tubecalculator.search.ui.robots.given
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -32,23 +28,12 @@ internal class SearchActivityTest {
     lateinit var mockAdLoader: AdLoader
 
     @Inject
-    lateinit var mockFaresActivityNavigation: FaresActivityNavigation
-
-    @Inject
-    lateinit var mockSettingsActivityNavigation: SettingsActivityNavigation
-
-    @Inject
-    lateinit var mockPreferencesManager: PreferencesManager
-
-    @Inject
     lateinit var mockSearchDao: SearchDao
 
     @Inject
-    @AppVersionName
-    lateinit var appVersionName: String
-
-    @Inject
     lateinit var mockRemoteConfigManager: RemoteConfigManager
+
+    var activity: SearchActivity? = null
 
     @Before
     fun setUp() {
@@ -57,103 +42,41 @@ internal class SearchActivityTest {
     }
 
     @Test
-    fun onFirstAccess_shouldShowFirstAccessDialogue() {
-        given {
-            launchOnFirstAccess()
-        } then {
-            showFirstAccessDialogue()
-        }
-    }
-
-    @Test
-    fun afterFirstAccess_shouldNotShowFirstAccessDialogue() {
-        given {
-            launchAfterFirstAccess()
-        } then {
-            doNotShowFirstAccessDialogue()
-        }
-    }
-
-    @Test
     fun onLaunch_shouldLoadBannerAds() {
         given {
-            launchAfterFirstAccess()
+            launchWithBlankRailJourney()
         } then {
             loadBannerAds()
         }
     }
 
     @Test
-    fun whenClickSettings_shouldNavigateToSettings() {
+    fun withValidBusAndTramJourneyCount_whenClickNext_shouldFinish() {
         given {
-            launchAfterFirstAccess()
-        } withAction {
-            clickSettings()
-        } then {
-            navigateToSettings()
-        }
-    }
-
-    @Test
-    fun whenClickPrivacy_shouldShowPrivacyPolicyDialogue() {
-        given {
-            launchAfterFirstAccess()
-        } withAction {
-            clickPrivacy()
-        } then {
-            showPrivacyPolicyDialogue()
-        }
-    }
-
-    @Test
-    fun whenClickAbout_shouldShowAppInfoDialogue() {
-        given {
-            launchAfterFirstAccess()
-        } withAction {
-            clickAbout()
-        } then {
-            showAppInfoDialogue()
-        }
-    }
-
-    @Test
-    fun whenClickCalculate_shouldShowMissingOriginOrDestinationErrorDialogue() {
-        given {
-            launchAfterFirstAccess()
-        } withAction {
-            clickCalculate()
-        } then {
-            showMissingOriginOrDestinationErrorDialogue()
-        }
-    }
-
-    @Test
-    fun withValidBusAndTramJourneyCount_whenClickCalculate_shouldNavigateToFares() {
-        given {
-            launchAfterFirstAccess()
+            launchWithBlankBusAndTramJourney()
         } withAction {
             clickAddBusAndTramJourney()
-            clickCalculate()
+            clickNext()
         } then {
-            navigateToFares()
+            finish()
         }
     }
 
     @Test(timeout = 5000)
     @Ignore("Dropdown suggestions not popping up with mock DAO")
-    fun withSameOriginAndDestination_whenClickCalculate_shouldShowSameOriginAndDestinationErrorDialogue() {
+    fun withSameOriginAndDestination_whenClickNext_shouldShowSameOriginAndDestinationErrorDialogue() {
         val query = "Hai"
         val stationName = "Hainault"
 
         given {
             withSearchResult(query, stationName)
-            launchAfterFirstAccess()
+            launchWithBlankRailJourney()
         } withAction {
             typeOrigin(query)
             clickDropDownItem(stationName)
             typeDestination(query)
             clickDropDownItem(stationName)
-            clickCalculate()
+            clickNext()
         } then {
             showSameOriginAndDestinationErrorDialogue()
         }
@@ -161,7 +84,7 @@ internal class SearchActivityTest {
 
     @Test(timeout = 5000)
     @Ignore("Dropdown suggestions not popping up with mock DAO")
-    fun withDifferentOriginAndDestination_whenClickCalculate_shouldNavigateToFares() {
+    fun withDifferentOriginAndDestination_whenClickNext_shouldFinish() {
         val originQuery = "Rom"
         val origin = "Romford"
         val destinationQuery = "Far"
@@ -170,15 +93,15 @@ internal class SearchActivityTest {
         given {
             withSearchResult(originQuery, origin)
             withSearchResult(destinationQuery, destination)
-            launchAfterFirstAccess()
+            launchWithBlankRailJourney()
         } withAction {
             typeOrigin(originQuery)
             clickDropDownItem(origin)
             typeDestination(destinationQuery)
             clickDropDownItem(destination)
-            clickCalculate()
+            clickNext()
         } then {
-            navigateToFares()
+            finish()
         }
     }
 
@@ -186,7 +109,7 @@ internal class SearchActivityTest {
     fun withGenericError_whenTypeQuery_shouldShowGenericErrorDialogue() {
         given {
             withGenericError()
-            launchAfterFirstAccess()
+            launchWithBlankRailJourney()
         } withAction {
             typeOrigin(origin = "Knightsbridge")
         } then {
@@ -197,11 +120,38 @@ internal class SearchActivityTest {
     @Test
     fun whenClickMoreInfo_shouldShowMoreInfoDialogue() {
         given {
-            launchAfterFirstAccess()
+            launchWithBlankBusAndTramJourney()
         } withAction {
             clickMoreInfo()
         } then {
             showMoreInfoDialogue()
+        }
+    }
+
+    @Test
+    fun withPreFilledRailJourney_shouldShowOrigin() {
+        given {
+            launchWithPreFilledRailJourney()
+        } then {
+            showOrigin()
+        }
+    }
+
+    @Test
+    fun withPreFilledRailJourney_shouldShowDestination() {
+        given {
+            launchWithPreFilledRailJourney()
+        } then {
+            showDestination()
+        }
+    }
+
+    @Test
+    fun withPreFilledBusAndTramJourney_shouldShowJourneyCount() {
+        given {
+            launchWithPreFilledBusAndTramJourney()
+        } then {
+            showBusAndTramJourneyCount()
         }
     }
 }

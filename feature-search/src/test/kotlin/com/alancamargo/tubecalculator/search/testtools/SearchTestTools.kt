@@ -3,6 +3,7 @@ package com.alancamargo.tubecalculator.search.testtools
 import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
+import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.UiMode
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.search.data.model.DbStation
@@ -38,10 +39,17 @@ internal fun stubStationList() = listOf(
     )
 )
 
-internal fun stubUiStation(name: String) = UiStation(
+internal fun stubRailJourney() = Journey.Rail(
+    origin = stubUiStation(),
+    destination = stubUiStation()
+)
+
+internal fun stubBusAndTramJourney() = Journey.BusAndTram(journeyCount = 2)
+
+internal fun stubUiStation() = UiStation(
     id = "123",
-    name = name,
-    modes = listOf(UiMode.ELIZABETH_LINE, UiMode.NATIONAL_RAIL, UiMode.OVERGROUND)
+    name = "Maida Vale Underground Station",
+    modes = listOf(UiMode.OVERGROUND)
 )
 
 private fun Station.toDb(): DbStation {

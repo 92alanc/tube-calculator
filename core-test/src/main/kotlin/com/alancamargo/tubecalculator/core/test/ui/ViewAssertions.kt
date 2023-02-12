@@ -9,6 +9,10 @@ fun assertViewIsDisplayed(@IdRes viewId: Int) {
     onView(withId(viewId)).check(matches(isDisplayed()))
 }
 
+fun assertTextIsDisplayed(text: String) {
+    onView(withText(text)).check(matches(isDisplayed()))
+}
+
 fun assertViewIsChecked(@IdRes viewId: Int) {
     onView(withId(viewId)).check(matches(isChecked()))
 }

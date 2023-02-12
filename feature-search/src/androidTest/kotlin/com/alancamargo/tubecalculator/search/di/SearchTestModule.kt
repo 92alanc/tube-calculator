@@ -11,7 +11,6 @@ import com.alancamargo.tubecalculator.core.di.PreferencesModule
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.preferences.PreferencesManager
 import com.alancamargo.tubecalculator.core.remoteconfig.RemoteConfigManager
-import com.alancamargo.tubecalculator.navigation.FaresActivityNavigation
 import com.alancamargo.tubecalculator.navigation.SettingsActivityNavigation
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.data.database.SearchDao
@@ -43,10 +42,6 @@ internal object SearchTestModule {
     @Provides
     @Singleton
     fun provideMockDialogueHelper(): DialogueHelper = mockk(relaxed = true)
-
-    @Provides
-    @Singleton
-    fun provideMockFaresActivityNavigation(): FaresActivityNavigation = mockk(relaxed = true)
 
     @Provides
     @Singleton

@@ -22,4 +22,6 @@ android {
 
 dependencies {
     implementation project(':common')
+
+    implementation "$android_appcompat"
 }

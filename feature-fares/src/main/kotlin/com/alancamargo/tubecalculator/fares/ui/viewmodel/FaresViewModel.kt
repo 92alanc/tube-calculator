@@ -75,7 +75,7 @@ internal class FaresViewModel @Inject constructor(
         analytics.trackNewSearchClicked()
 
         viewModelScope.launch(dispatcher) {
-            _action.emit(FaresViewAction.NavigateToSearch)
+            _action.emit(FaresViewAction.NavigateToHome)
         }
     }
 

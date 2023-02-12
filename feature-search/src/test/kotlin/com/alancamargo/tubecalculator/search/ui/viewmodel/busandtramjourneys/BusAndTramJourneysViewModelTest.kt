@@ -19,6 +19,21 @@ class BusAndTramJourneysViewModelTest {
     )
 
     @Test
+    fun `onCreate should set correct view state`() {
+        collector.test { states, _ ->
+            // GIVEN
+            val journeyCount = 2
+
+            // WHEN
+            viewModel.onCreate(journeyCount)
+
+            // THEN
+            val expected = BusAndTramJourneysViewState(journeyCount)
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
     fun `increaseBusAndTramJourneyCount should set correct state`() {
         collector.test { states, _ ->
             // WHEN

@@ -4,7 +4,7 @@ import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 
 internal sealed class FaresViewAction {
 
-    object NavigateToSearch : FaresViewAction()
+    object NavigateToHome : FaresViewAction()
 
     data class ShowErrorDialogue(val error: UiFaresError) : FaresViewAction()
 
