@@ -109,21 +109,21 @@ internal class HomeActivity : AppCompatActivity() {
         btCalculate.isVisible = state.showCalculateButton
         groupFabs.isVisible = state.isAddButtonExpanded
         btAdd.isExtended = state.isAddButtonExpanded
-        txtEmptyState.isVisible = state.journeys.isNullOrEmpty()
+        groupEmptyState.isVisible = state.showEmptyState
 
         if (state.showAddRailJourneyButton) {
-            btAddRailJourney.show()
+            btAddRailJourney.isVisible = true
             labelRailJourney.isVisible = true
         } else {
-            btAddRailJourney.hide()
+            btAddRailJourney.isVisible = false
             labelRailJourney.isVisible = false
         }
 
         if (state.showAddBusAndTramJourneyButton) {
-            btAddBusAndTramJourney.show()
+            btAddBusAndTramJourney.isVisible = true
             labelBusAndTramJourney.isVisible = true
         } else {
-            btAddBusAndTramJourney.hide()
+            btAddBusAndTramJourney.isVisible = false
             labelBusAndTramJourney.isVisible = false
         }
     }

@@ -10,6 +10,7 @@
     <string name="rail">Rail</string>
     <string name="bus_tram">Bus/tram</string>
     <string name="no_journeys">You have no journeys yet. To add one, click here</string>
+    <string name="no_journeys_accessible">You have no journeys yet. To add one, click on the add journey button</string>
     <string name="first_access_title">Welcome!</string>
     <string name="first_access_message">Let\'s make sure you\'re happy with the way your data is handled.\n\nYou can always change it later if you want.</string>
     <string name="not_now">Not now</string>

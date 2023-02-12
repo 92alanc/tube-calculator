@@ -8,7 +8,8 @@ internal data class HomeViewState(
     val showCalculateButton: Boolean = false,
     val isAddButtonExpanded: Boolean = false,
     val showAddBusAndTramJourneyButton: Boolean = false,
-    val showAddRailJourneyButton: Boolean = false
+    val showAddRailJourneyButton: Boolean = false,
+    val showEmptyState: Boolean = true
 ) {
 
     fun onJourneysUpdated(journeys: List<Journey>): HomeViewState {
@@ -21,19 +22,22 @@ internal data class HomeViewState(
         return copy(
             journeys = journeys,
             showCalculateButton = journeys.isNotEmpty(),
-            showAddButton = !areJourneysFull
+            showAddButton = !areJourneysFull,
+            showEmptyState = journeys.isEmpty()
         )
     }
 
     fun expandAddButton() = copy(
         isAddButtonExpanded = true,
         showAddRailJourneyButton = journeys?.none { it is Journey.Rail } ?: true,
-        showAddBusAndTramJourneyButton = journeys?.none { it is Journey.BusAndTram } ?: true
+        showAddBusAndTramJourneyButton = journeys?.none { it is Journey.BusAndTram } ?: true,
+        showEmptyState = false
     )
 
     fun collapseAddButton() = copy(
         isAddButtonExpanded = false,
         showAddRailJourneyButton = false,
-        showAddBusAndTramJourneyButton = false
+        showAddBusAndTramJourneyButton = false,
+        showEmptyState = journeys.isNullOrEmpty()
     )
 }

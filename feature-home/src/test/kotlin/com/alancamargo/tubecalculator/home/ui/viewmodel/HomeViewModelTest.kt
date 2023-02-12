@@ -187,7 +187,8 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 journeys = listOf(journey),
                 showAddButton = true,
-                showCalculateButton = true
+                showCalculateButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -208,7 +209,8 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 journeys = listOf(rail, busAndTram),
                 showAddButton = false,
-                showCalculateButton = true
+                showCalculateButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -228,7 +230,8 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 journeys = listOf(rail),
                 showAddButton = true,
-                showCalculateButton = true
+                showCalculateButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -248,7 +251,8 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 journeys = listOf(busAndTram),
                 showAddButton = true,
-                showCalculateButton = true
+                showCalculateButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -323,7 +327,8 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = true,
-                showAddRailJourneyButton = true
+                showAddRailJourneyButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -345,7 +350,8 @@ class HomeViewModelTest {
                 showCalculateButton = true,
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = true,
-                showAddRailJourneyButton = false
+                showAddRailJourneyButton = false,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
@@ -367,7 +373,8 @@ class HomeViewModelTest {
                 showCalculateButton = true,
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = false,
-                showAddRailJourneyButton = true
+                showAddRailJourneyButton = true,
+                showEmptyState = false
             )
             assertThat(states).contains(expected)
         }
