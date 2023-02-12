@@ -97,6 +97,16 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun onJourneyReceived(journey: Journey) {
+        if (journey is Journey.Rail) {
+            journeys.find { it is Journey.Rail }?.let { existingRailJourney ->
+                journeys = journeys - existingRailJourney
+            }
+        } else {
+            journeys.find { it is Journey.BusAndTram }?.let { existingBusAndTramJourney ->
+                journeys = journeys - existingBusAndTramJourney
+            }
+        }
+
         journeys = journeys + journey
         _state.update { it.onJourneysUpdated(journeys) }
     }

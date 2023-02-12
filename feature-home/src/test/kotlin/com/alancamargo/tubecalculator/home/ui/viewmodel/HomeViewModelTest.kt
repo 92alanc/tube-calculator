@@ -215,6 +215,46 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `with existing rail journey onJourneyReceived should set correct state`() {
+        collector.test { states, _ ->
+            // GIVEN
+            val rail = stubRailJourney()
+
+            // WHEN
+            viewModel.onJourneyReceived(rail)
+            viewModel.onJourneyReceived(rail)
+
+            // THEN
+            val expected = HomeViewState(
+                journeys = listOf(rail),
+                showAddButton = true,
+                showCalculateButton = true
+            )
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
+    fun `with existing bus and tram journey onJourneyReceived should set correct state`() {
+        collector.test { states, _ ->
+            // GIVEN
+            val busAndTram = stubBusAndTramJourney()
+
+            // WHEN
+            viewModel.onJourneyReceived(busAndTram)
+            viewModel.onJourneyReceived(busAndTram)
+
+            // THEN
+            val expected = HomeViewState(
+                journeys = listOf(busAndTram),
+                showAddButton = true,
+                showCalculateButton = true
+            )
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
     fun `onJourneyRemoved should track event`() {
         // WHEN
         viewModel.onJourneyRemoved(journey = stubBusAndTramJourney())
