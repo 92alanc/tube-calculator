@@ -5,10 +5,8 @@ import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
-import com.alancamargo.tubecalculator.search.testtools.MIN_QUERY_LENGTH
-import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
-import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulStationListResultFlow
-import com.alancamargo.tubecalculator.search.testtools.stubUiStationList
+import com.alancamargo.tubecalculator.search.testtools.*
+import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -46,12 +44,19 @@ class StationSearchViewModelTest {
         collector.test { states, _ ->
             // GIVEN
             every { mockGetMinQueryLengthUseCase() } returns MIN_QUERY_LENGTH
+            val searchType = SearchType.ORIGIN
+            val station = stubUiStation()
 
             // WHEN
-            viewModel.onCreate()
+            viewModel.onCreate(searchType, station)
 
             // THEN
-            val expected = StationSearchViewState(minQueryLength = MIN_QUERY_LENGTH)
+            val expected = StationSearchViewState(
+                minQueryLength = MIN_QUERY_LENGTH,
+                selectedStation = station,
+                labelRes = searchType.labelRes,
+                hintRes = searchType.hintRes
+            )
             assertThat(states).contains(expected)
         }
     }

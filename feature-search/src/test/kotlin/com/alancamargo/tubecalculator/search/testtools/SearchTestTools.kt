@@ -46,7 +46,7 @@ internal fun stubRailJourney() = Journey.Rail(
 
 internal fun stubBusAndTramJourney() = Journey.BusAndTram(journeyCount = 2)
 
-private fun stubUiStation() = UiStation(
+internal fun stubUiStation() = UiStation(
     id = "123",
     name = "Maida Vale Underground Station",
     modes = listOf(UiMode.OVERGROUND)

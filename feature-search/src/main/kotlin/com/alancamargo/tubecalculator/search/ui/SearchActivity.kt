@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
@@ -41,9 +42,9 @@ internal class SearchActivity : AppCompatActivity() {
     private val args by args<Args>()
     private val viewModel by viewModels<SearchViewModel>()
 
-    private val originFragment = StationSearchFragment.newInstance(SearchType.ORIGIN)
-    private val destinationFragment = StationSearchFragment.newInstance(SearchType.DESTINATION)
-    private val busAndTramJourneysFragment = BusAndTramJourneysFragment()
+    private var originFragment: StationSearchFragment? = null
+    private var destinationFragment: StationSearchFragment? = null
+    private var busAndTramJourneysFragment: BusAndTramJourneysFragment? = null
 
     @Inject
     lateinit var faresActivityNavigation: FaresActivityNavigation
@@ -76,10 +77,22 @@ internal class SearchActivity : AppCompatActivity() {
     private fun handleAction(action: SearchViewAction) {
         when (action) {
             is SearchViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
-            is SearchViewAction.AttachBlankRailJourneyFragments -> TODO()
-            is SearchViewAction.AttachBlankBusAndTramJourneyFragment -> TODO()
-            is SearchViewAction.AttachPreFilledRailJourneyFragments -> TODO()
-            is SearchViewAction.AttachPreFilledBusAndTramJourneyFragment -> TODO()
+
+            is SearchViewAction.AttachBlankRailJourneyFragments -> {
+                attachRailJourneyFragments(journey = null)
+            }
+
+            is SearchViewAction.AttachBlankBusAndTramJourneyFragment -> {
+                attachBusAndTramJourneyFragment(journey = null)
+            }
+
+            is SearchViewAction.AttachPreFilledRailJourneyFragments -> {
+                attachRailJourneyFragments(action.journey)
+            }
+
+            is SearchViewAction.AttachPreFilledBusAndTramJourneyFragment -> {
+                attachBusAndTramJourneyFragment(action.journey)
+            }
         }
     }
 
@@ -89,6 +102,38 @@ internal class SearchActivity : AppCompatActivity() {
             titleRes = R2.string.error,
             messageRes = error.messageRes
         )
+    }
+
+    private fun attachRailJourneyFragments(journey: Journey.Rail?) {
+        val originFragment = StationSearchFragment.newInstance(
+            searchType = SearchType.ORIGIN,
+            station = journey?.origin
+        )
+
+        val destinationFragment = StationSearchFragment.newInstance(
+            searchType = SearchType.DESTINATION,
+            station = journey?.destination
+        )
+
+        supportFragmentManager.commit {
+            replace(binding.topContainer.id, originFragment, TAG_ORIGIN)
+            replace(binding.bottomContainer.id, destinationFragment, TAG_DESTINATION)
+        }
+
+        this.originFragment = originFragment
+        this.destinationFragment = destinationFragment
+    }
+
+    private fun attachBusAndTramJourneyFragment(journey: Journey.BusAndTram?) {
+        val busAndTramJourneysFragment = BusAndTramJourneysFragment.newInstance(
+            journeyCount = journey?.journeyCount ?: 0
+        )
+
+        supportFragmentManager.commit {
+            replace(binding.topContainer.id, busAndTramJourneysFragment, TAG_BUS_AND_TRAM_JOURNEYS)
+        }
+
+        this.busAndTramJourneysFragment = busAndTramJourneysFragment
     }
 
     @Parcelize

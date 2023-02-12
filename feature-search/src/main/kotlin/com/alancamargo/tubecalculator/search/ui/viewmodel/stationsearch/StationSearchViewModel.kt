@@ -9,6 +9,7 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
+import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,9 +34,11 @@ internal class StationSearchViewModel @Inject constructor(
     var selectedStation: UiStation? = null
         private set
 
-    fun onCreate() {
+    fun onCreate(searchType: SearchType, station: UiStation?) {
+        _state.update { it.onReceivedSearchType(searchType) }
         val minQueryLength = getMinQueryLengthUseCase()
         _state.update { it.onReceivedMinQueryLength(minQueryLength) }
+        onStationSelected(station)
     }
 
     fun onQueryChanged(query: String) {
@@ -55,6 +58,7 @@ internal class StationSearchViewModel @Inject constructor(
 
     fun onStationSelected(station: UiStation?) {
         this.selectedStation = station
+        _state.update { it.onStationSelected(station) }
     }
 
     private suspend fun handleResult(result: StationListResult) {
