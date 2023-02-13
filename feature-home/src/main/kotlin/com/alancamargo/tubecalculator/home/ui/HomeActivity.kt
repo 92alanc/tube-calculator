@@ -110,22 +110,8 @@ internal class HomeActivity : AppCompatActivity() {
         groupFabs.isVisible = state.isAddButtonExpanded
         btAdd.isExtended = state.isAddButtonExpanded
         groupEmptyState.isVisible = state.showEmptyState
-
-        if (state.showAddRailJourneyButton) {
-            btAddRailJourney.isVisible = true
-            labelRailJourney.isVisible = true
-        } else {
-            btAddRailJourney.isVisible = false
-            labelRailJourney.isVisible = false
-        }
-
-        if (state.showAddBusAndTramJourneyButton) {
-            btAddBusAndTramJourney.isVisible = true
-            labelBusAndTramJourney.isVisible = true
-        } else {
-            btAddBusAndTramJourney.isVisible = false
-            labelBusAndTramJourney.isVisible = false
-        }
+        setAddRailJourneyButtonVisibility(state.showAddRailJourneyButton)
+        setAddBusAndTramJourneyButtonVisibility(state.showAddBusAndTramJourneyButton)
     }
 
     private fun handleAction(action: HomeViewAction) {
@@ -269,6 +255,20 @@ internal class HomeActivity : AppCompatActivity() {
     private fun handleResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.getArguments<Journey>()?.let(viewModel::onJourneyReceived)
+        }
+    }
+
+    private fun setAddRailJourneyButtonVisibility(isVisible: Boolean) {
+        with(binding.appBar.content) {
+            btAddRailJourney.isVisible = isVisible
+            labelRailJourney.isVisible = isVisible
+        }
+    }
+
+    private fun setAddBusAndTramJourneyButtonVisibility(isVisible: Boolean) {
+        with(binding.appBar.content) {
+            btAddBusAndTramJourney.isVisible = isVisible
+            labelBusAndTramJourney.isVisible = isVisible
         }
     }
 
