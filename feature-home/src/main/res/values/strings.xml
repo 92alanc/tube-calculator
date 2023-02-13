@@ -14,4 +14,6 @@
     <string name="first_access_title">Welcome!</string>
     <string name="first_access_message">Let\'s make sure you\'re happy with the way your data is handled.\n\nYou can always change it later if you want.</string>
     <string name="not_now">Not now</string>
+    <string name="deleting_journeys">Deleting journeys</string>
+    <string name="deleting_journeys_message">To delete a journey, swipe the card to the left</string>
 </resources>

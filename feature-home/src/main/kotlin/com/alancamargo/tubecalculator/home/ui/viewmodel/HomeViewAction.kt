@@ -19,4 +19,8 @@ internal sealed class HomeViewAction {
     object AddRailJourney : HomeViewAction()
 
     object AddBusAndTramJourney : HomeViewAction()
+
+    data class ShowDeleteJourneyTutorial(
+        val illustrationAssetName: String
+    ) : HomeViewAction()
 }

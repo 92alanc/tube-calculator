@@ -8,6 +8,7 @@ ext {
     android_hilt_compiler_version = '1.0.0'
     android_material_version = '1.8.0'
     android_test_runner_version = '1.5.2'
+    coil_version = '2.2.2'
     coroutines_test_version = '1.6.4'
     firebase_bom_version = '31.2.0'
     firebase_crashlytics_version = '2.9.4'

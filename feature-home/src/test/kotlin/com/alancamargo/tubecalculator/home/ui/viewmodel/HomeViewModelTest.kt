@@ -2,8 +2,10 @@ package com.alancamargo.tubecalculator.home.ui.viewmodel
 
 import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalytics
+import com.alancamargo.tubecalculator.home.domain.usecase.DisableDeleteJourneyTutorialUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.IsFirstAccessUseCase
+import com.alancamargo.tubecalculator.home.domain.usecase.ShouldShowDeleteJourneyTutorialUseCase
 import com.alancamargo.tubecalculator.home.testtools.stubBusAndTramJourney
 import com.alancamargo.tubecalculator.home.testtools.stubRailJourney
 import com.google.common.truth.Truth.assertThat
@@ -19,6 +21,10 @@ class HomeViewModelTest {
 
     private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
+    private val mockShouldShowDeleteJourneyTutorialUseCase = mockk<ShouldShowDeleteJourneyTutorialUseCase>()
+    private val mockDisableDeleteJourneyTutorialUseCase = mockk<DisableDeleteJourneyTutorialUseCase>(
+        relaxed = true
+    )
     private val mockAnalytics = mockk<HomeAnalytics>(relaxed = true)
     private val appVersionName = "2023.1.0"
     private val uiDelay = 0L
@@ -27,6 +33,8 @@ class HomeViewModelTest {
     private val viewModel = HomeViewModel(
         isFirstAccessUseCase = mockIsFirstAccessUseCase,
         disableFirstAccessUseCase = mockDisableFirstAccessUseCase,
+        shouldShowDeleteJourneyTutorialUseCase = mockShouldShowDeleteJourneyTutorialUseCase,
+        disableDeleteJourneyTutorialUseCase = mockDisableDeleteJourneyTutorialUseCase,
         analytics = mockAnalytics,
         appVersionName = appVersionName,
         uiDelay = uiDelay,
@@ -178,6 +186,7 @@ class HomeViewModelTest {
     fun `onJourneyReceived should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val journey = stubBusAndTramJourney()
 
             // WHEN
@@ -198,6 +207,7 @@ class HomeViewModelTest {
     fun `with rail and bus and tram journeys added onJourneyReceived should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val rail = stubRailJourney()
             val busAndTram = stubBusAndTramJourney()
 
@@ -220,6 +230,7 @@ class HomeViewModelTest {
     fun `with existing rail journey onJourneyReceived should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val rail = stubRailJourney()
 
             // WHEN
@@ -241,6 +252,7 @@ class HomeViewModelTest {
     fun `with existing bus and tram journey onJourneyReceived should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val busAndTram = stubBusAndTramJourney()
 
             // WHEN
@@ -256,6 +268,36 @@ class HomeViewModelTest {
             )
             assertThat(states).contains(expected)
         }
+    }
+
+    @Test
+    fun `when use case returns true onJourneyReceived should send ShowDeleteJourneyTutorial action`() {
+        collector.test { _, actions ->
+            // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns true
+            val journey = stubBusAndTramJourney()
+
+            // WHEN
+            viewModel.onJourneyReceived(journey)
+
+            // THEN
+            val illustrationAssetName = "delete_journey.gif"
+            val expected = HomeViewAction.ShowDeleteJourneyTutorial(illustrationAssetName)
+            assertThat(actions).contains(expected)
+        }
+    }
+
+    @Test
+    fun `when use case returns true onJourneyReceived should disable delete journey tutorial`() {
+        // GIVEN
+        every { mockShouldShowDeleteJourneyTutorialUseCase() } returns true
+        val journey = stubBusAndTramJourney()
+
+        // WHEN
+        viewModel.onJourneyReceived(journey)
+
+        // THEN
+        verify { mockDisableDeleteJourneyTutorialUseCase() }
     }
 
     @Test

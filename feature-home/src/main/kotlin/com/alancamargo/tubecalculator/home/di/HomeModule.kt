@@ -23,21 +23,9 @@ internal abstract class HomeModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindShouldShowEmptyStateTutorialUseCase(
-        impl: ShouldShowEmptyStateTutorialUseCaseImpl
-    ): ShouldShowEmptyStateTutorialUseCase
-
-    @Binds
-    @ViewModelScoped
     abstract fun bindShouldShowDeleteJourneyTutorialUseCase(
         impl: ShouldShowDeleteJourneyTutorialUseCaseImpl
     ): ShouldShowDeleteJourneyTutorialUseCase
-
-    @Binds
-    @ViewModelScoped
-    abstract fun bindDisableEmptyStateTutorialUseCase(
-        impl: DisableEmptyStateTutorialUseCaseImpl
-    ): DisableEmptyStateTutorialUseCase
 
     @Binds
     @ViewModelScoped

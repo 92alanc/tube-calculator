@@ -126,6 +126,9 @@ internal class HomeActivity : AppCompatActivity() {
             is HomeViewAction.NavigateToFares -> navigateToFares(action.journeys)
             is HomeViewAction.AddRailJourney -> addRailJourney()
             is HomeViewAction.AddBusAndTramJourney -> addBusAndTramJourney()
+            is HomeViewAction.ShowDeleteJourneyTutorial -> {
+                showDeleteJourneyTutorial(action.illustrationAssetName)
+            }
         }
     }
 
@@ -257,6 +260,15 @@ internal class HomeActivity : AppCompatActivity() {
                 onResult = ::handleResult
             )
         }
+    }
+
+    private fun showDeleteJourneyTutorial(illustrationAssetName: String) {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R.string.deleting_journeys,
+            messageRes = R.string.deleting_journeys_message,
+            illustrationAssetName = illustrationAssetName
+        )
     }
 
     private fun handleResult(result: ActivityResult) {
