@@ -12,17 +12,17 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.extensions.attachSwipeToDeleteHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.getArguments
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.home.R
 import com.alancamargo.tubecalculator.home.databinding.ActivityHomeBinding
+import com.alancamargo.tubecalculator.home.databinding.ContentHomeBinding
 import com.alancamargo.tubecalculator.home.ui.adapter.JourneyAdapter
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewAction
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewModel
@@ -101,7 +101,7 @@ internal class HomeActivity : AppCompatActivity() {
         appBar.content.btAddBusAndTramJourney.setOnClickListener {
             viewModel.onAddBusAndTramJourneyClicked()
         }
-        setUpRecyclerView()
+        appBar.content.setUpRecyclerView()
         adLoader.loadBannerAds(appBar.content.banner)
     }
 
@@ -135,21 +135,9 @@ internal class HomeActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
     }
 
-    private fun ActivityHomeBinding.setUpRecyclerView() {
-        val callback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean = false
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val journeyPosition = viewHolder.adapterPosition
-                viewModel.onJourneyRemoved(journeyPosition)
-            }
-        }
-        ItemTouchHelper(callback).attachToRecyclerView(appBar.content.recyclerView)
-        appBar.content.recyclerView.adapter = adapter
+    private fun ContentHomeBinding.setUpRecyclerView() {
+        recyclerView.attachSwipeToDeleteHelper(viewModel::onJourneyRemoved)
+        recyclerView.adapter = adapter
     }
 
     private fun setUpCalculateButton() {
