@@ -10,6 +10,8 @@ ext {
     android_hilt_compiler = "androidx.hilt:hilt-compiler:$android_hilt_compiler_version"
     android_material = "com.google.android.material:material:$android_material_version"
     android_test_runner = "androidx.test:runner:$android_test_runner_version"
+    coil = "io.coil-kt:coil:$coil_version"
+    coil_gif = "io.coil-kt:coil-gif:$coil_version"
     coroutines_test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_test_version"
     firebase_analytics = "com.google.firebase:firebase-analytics-ktx"
     firebase_auth = "com.google.firebase:firebase-auth-ktx"

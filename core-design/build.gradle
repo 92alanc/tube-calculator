@@ -24,7 +24,11 @@ android {
 }
 
 dependencies {
+    implementation project(':core')
+
     implementation "$android_material"
+    implementation "$coil"
+    implementation "$coil_gif"
     implementation "$google_ads"
     implementation "$hilt_android"
 

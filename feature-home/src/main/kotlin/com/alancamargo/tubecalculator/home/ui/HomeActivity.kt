@@ -16,11 +16,13 @@ import com.alancamargo.tubecalculator.common.ui.model.Journey
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
+import com.alancamargo.tubecalculator.core.design.extensions.attachSwipeToDeleteHelper
 import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.getArguments
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.home.R
 import com.alancamargo.tubecalculator.home.databinding.ActivityHomeBinding
+import com.alancamargo.tubecalculator.home.databinding.ContentHomeBinding
 import com.alancamargo.tubecalculator.home.ui.adapter.JourneyAdapter
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewAction
 import com.alancamargo.tubecalculator.home.ui.viewmodel.HomeViewModel
@@ -99,7 +101,7 @@ internal class HomeActivity : AppCompatActivity() {
         appBar.content.btAddBusAndTramJourney.setOnClickListener {
             viewModel.onAddBusAndTramJourneyClicked()
         }
-        appBar.content.recyclerView.adapter = adapter
+        appBar.content.setUpRecyclerView()
         adLoader.loadBannerAds(appBar.content.banner)
     }
 
@@ -110,22 +112,8 @@ internal class HomeActivity : AppCompatActivity() {
         groupFabs.isVisible = state.isAddButtonExpanded
         btAdd.isExtended = state.isAddButtonExpanded
         groupEmptyState.isVisible = state.showEmptyState
-
-        if (state.showAddRailJourneyButton) {
-            btAddRailJourney.isVisible = true
-            labelRailJourney.isVisible = true
-        } else {
-            btAddRailJourney.isVisible = false
-            labelRailJourney.isVisible = false
-        }
-
-        if (state.showAddBusAndTramJourneyButton) {
-            btAddBusAndTramJourney.isVisible = true
-            labelBusAndTramJourney.isVisible = true
-        } else {
-            btAddBusAndTramJourney.isVisible = false
-            labelBusAndTramJourney.isVisible = false
-        }
+        setAddRailJourneyButtonVisibility(state.showAddRailJourneyButton)
+        setAddBusAndTramJourneyButtonVisibility(state.showAddBusAndTramJourneyButton)
     }
 
     private fun handleAction(action: HomeViewAction) {
@@ -138,6 +126,9 @@ internal class HomeActivity : AppCompatActivity() {
             is HomeViewAction.NavigateToFares -> navigateToFares(action.journeys)
             is HomeViewAction.AddRailJourney -> addRailJourney()
             is HomeViewAction.AddBusAndTramJourney -> addBusAndTramJourney()
+            is HomeViewAction.ShowDeleteJourneyTutorial -> {
+                showDeleteJourneyTutorial(action.illustrationAssetName)
+            }
         }
     }
 
@@ -145,6 +136,11 @@ internal class HomeActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
         navigationView.setNavigationItemSelectedListener(::onNavigationItemSelected)
+    }
+
+    private fun ContentHomeBinding.setUpRecyclerView() {
+        recyclerView.attachSwipeToDeleteHelper(viewModel::onJourneyRemoved)
+        recyclerView.adapter = adapter
     }
 
     private fun setUpCalculateButton() {
@@ -266,9 +262,32 @@ internal class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDeleteJourneyTutorial(illustrationAssetName: String) {
+        dialogueHelper.showDialogue(
+            context = this,
+            titleRes = R.string.deleting_journeys,
+            messageRes = R.string.deleting_journeys_message,
+            illustrationAssetName = illustrationAssetName
+        )
+    }
+
     private fun handleResult(result: ActivityResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.getArguments<Journey>()?.let(viewModel::onJourneyReceived)
+        }
+    }
+
+    private fun setAddRailJourneyButtonVisibility(isVisible: Boolean) {
+        with(binding.appBar.content) {
+            btAddRailJourney.isVisible = isVisible
+            labelRailJourney.isVisible = isVisible
+        }
+    }
+
+    private fun setAddBusAndTramJourneyButtonVisibility(isVisible: Boolean) {
+        with(binding.appBar.content) {
+            btAddBusAndTramJourney.isVisible = isVisible
+            labelBusAndTramJourney.isVisible = isVisible
         }
     }
 
