@@ -26,6 +26,13 @@ interface DialogueHelper {
         context: Context,
         @StringRes titleRes: Int,
         @StringRes messageRes: Int,
+        illustrationAssetName: String
+    )
+
+    fun showDialogue(
+        context: Context,
+        @StringRes titleRes: Int,
+        @StringRes messageRes: Int,
         @StringRes positiveButtonTextRes: Int,
         onPositiveButtonClick: () -> Unit,
         @StringRes negativeButtonTextRes: Int,

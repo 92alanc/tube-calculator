@@ -1,9 +1,6 @@
 package com.alancamargo.tubecalculator.home.di
 
-import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
-import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCaseImpl
-import com.alancamargo.tubecalculator.home.domain.usecase.IsFirstAccessUseCase
-import com.alancamargo.tubecalculator.home.domain.usecase.IsFirstAccessUseCaseImpl
+import com.alancamargo.tubecalculator.home.domain.usecase.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,4 +20,16 @@ internal abstract class HomeModule {
     abstract fun bindDisableFirstAccessUseCase(
         impl: DisableFirstAccessUseCaseImpl
     ): DisableFirstAccessUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindShouldShowDeleteJourneyTutorialUseCase(
+        impl: ShouldShowDeleteJourneyTutorialUseCaseImpl
+    ): ShouldShowDeleteJourneyTutorialUseCase
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindDisableDeleteJourneyTutorialUseCase(
+        impl: DisableDeleteJourneyTutorialUseCaseImpl
+    ): DisableDeleteJourneyTutorialUseCase
 }

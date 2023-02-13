@@ -7,8 +7,10 @@ import com.alancamargo.tubecalculator.core.di.AppVersionName
 import com.alancamargo.tubecalculator.core.di.IoDispatcher
 import com.alancamargo.tubecalculator.core.di.UiDelay
 import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalytics
+import com.alancamargo.tubecalculator.home.domain.usecase.DisableDeleteJourneyTutorialUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.IsFirstAccessUseCase
+import com.alancamargo.tubecalculator.home.domain.usecase.ShouldShowDeleteJourneyTutorialUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -20,6 +22,8 @@ import javax.inject.Inject
 internal class HomeViewModel @Inject constructor(
     private val isFirstAccessUseCase: IsFirstAccessUseCase,
     private val disableFirstAccessUseCase: DisableFirstAccessUseCase,
+    private val shouldShowDeleteJourneyTutorialUseCase: ShouldShowDeleteJourneyTutorialUseCase,
+    private val disableDeleteJourneyTutorialUseCase: DisableDeleteJourneyTutorialUseCase,
     private val analytics: HomeAnalytics,
     @AppVersionName private val appVersionName: String,
     @UiDelay private val uiDelay: Long,
@@ -109,12 +113,20 @@ internal class HomeViewModel @Inject constructor(
 
         journeys = journeys + journey
         _state.update { it.onJourneysUpdated(journeys) }
+
+        viewModelScope.launch(dispatcher) {
+            if (shouldShowDeleteJourneyTutorialUseCase()) {
+                val illustrationAssetName = "delete_journey.gif"
+                _action.emit(HomeViewAction.ShowDeleteJourneyTutorial(illustrationAssetName))
+                disableDeleteJourneyTutorialUseCase()
+            }
+        }
     }
 
-    fun onJourneyRemoved(journey: Journey) {
+    fun onJourneyRemoved(journeyPosition: Int) {
         analytics.trackJourneyRemoved()
 
-        journeys = journeys - journey
+        journeys = journeys - journeys[journeyPosition]
         _state.update { it.onJourneysUpdated(journeys) }
     }
 

@@ -8,6 +8,8 @@ import com.alancamargo.tubecalculator.core.database.local.LocalDatabaseProviderI
 import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.core.network.ApiProvider
 import com.alancamargo.tubecalculator.core.network.ApiProviderImpl
+import com.alancamargo.tubecalculator.core.tools.FileHelper
+import com.alancamargo.tubecalculator.core.tools.FileHelperImpl
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -40,4 +42,10 @@ internal object CoreModule {
     ): AuthenticationManager {
         return AuthenticationManagerImpl(firebaseAuth, logger)
     }
+
+    @Provides
+    @Singleton
+    fun provideFileHelper(
+        @ApplicationContext context: Context
+    ): FileHelper = FileHelperImpl(context)
 }

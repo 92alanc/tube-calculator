@@ -1,13 +1,18 @@
 package com.alancamargo.tubecalculator.core.design.dialogue
 
 import android.content.Context
+import android.widget.ImageView
 import androidx.annotation.VisibleForTesting
 import com.alancamargo.tubecalculator.core.design.R
+import com.alancamargo.tubecalculator.core.design.extensions.loadGif
+import com.alancamargo.tubecalculator.core.tools.FileHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import javax.inject.Inject
 
 @VisibleForTesting(otherwise = VisibleForTesting.PACKAGE_PRIVATE)
-class DialogueHelperImpl @Inject internal constructor() : DialogueHelper {
+class DialogueHelperImpl @Inject internal constructor(
+    private val fileHelper: FileHelper
+) : DialogueHelper {
 
     override fun showDialogue(
         context: Context,
@@ -52,6 +57,33 @@ class DialogueHelperImpl @Inject internal constructor() : DialogueHelper {
             }
         } ?: run {
             builder.setNeutralButton(R.string.ok, null)
+        }
+
+        builder.show()
+    }
+
+    override fun showDialogue(
+        context: Context,
+        titleRes: Int,
+        messageRes: Int,
+        illustrationAssetName: String
+    ) {
+        val title = context.getString(titleRes)
+        val message = context.getString(messageRes)
+
+        val builder = getBuilder(
+            context = context,
+            title = title,
+            message = message
+        ).apply {
+            val gifBytes = fileHelper.getBytesFromAsset(illustrationAssetName)
+
+            val imageView = ImageView(context).also {
+                it.loadGif(gifBytes)
+            }
+
+            setView(imageView)
+            setNeutralButton(R.string.ok, null)
         }
 
         builder.show()
