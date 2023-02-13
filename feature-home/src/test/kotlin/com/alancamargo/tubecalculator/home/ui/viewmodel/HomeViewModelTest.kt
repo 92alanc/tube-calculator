@@ -260,8 +260,12 @@ class HomeViewModelTest {
 
     @Test
     fun `onJourneyRemoved should track event`() {
+        // GIVEN
+        val journey = stubRailJourney()
+        viewModel.onJourneyReceived(journey)
+
         // WHEN
-        viewModel.onJourneyRemoved(journey = stubBusAndTramJourney())
+        viewModel.onJourneyRemoved(journeyPosition = 0)
 
         // THEN
         verify { mockAnalytics.trackJourneyRemoved() }
@@ -275,7 +279,7 @@ class HomeViewModelTest {
             viewModel.onJourneyReceived(journey)
 
             // WHEN
-            viewModel.onJourneyRemoved(journey)
+            viewModel.onJourneyRemoved(journeyPosition = 0)
 
             // THEN
             val expected = HomeViewState(

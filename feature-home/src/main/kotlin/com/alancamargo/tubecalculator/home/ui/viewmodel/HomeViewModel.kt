@@ -111,10 +111,10 @@ internal class HomeViewModel @Inject constructor(
         _state.update { it.onJourneysUpdated(journeys) }
     }
 
-    fun onJourneyRemoved(journey: Journey) {
+    fun onJourneyRemoved(journeyPosition: Int) {
         analytics.trackJourneyRemoved()
 
-        journeys = journeys - journey
+        journeys = journeys - journeys[journeyPosition]
         _state.update { it.onJourneysUpdated(journeys) }
     }
 
