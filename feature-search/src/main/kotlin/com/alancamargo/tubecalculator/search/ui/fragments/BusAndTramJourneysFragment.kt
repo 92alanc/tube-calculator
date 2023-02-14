@@ -89,11 +89,6 @@ internal class BusAndTramJourneysFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(onJourneyCountSelected: (Int) -> Unit): BusAndTramJourneysFragment {
-            val args = Args(journeyCount = 0, onJourneyCountSelected)
-            return newInstance(args)
-        }
-
         fun newInstance(
             journeyCount: Int,
             onJourneyCountSelected: (Int) -> Unit

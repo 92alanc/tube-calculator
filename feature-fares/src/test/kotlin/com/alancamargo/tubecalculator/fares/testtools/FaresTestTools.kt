@@ -5,10 +5,7 @@ import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.DbRailFare
 import com.alancamargo.tubecalculator.fares.data.model.responses.*
-import com.alancamargo.tubecalculator.fares.domain.model.Fare
-import com.alancamargo.tubecalculator.fares.domain.model.FareOption
-import com.alancamargo.tubecalculator.fares.domain.model.Ticket
-import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
+import com.alancamargo.tubecalculator.fares.domain.model.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -51,7 +48,7 @@ internal fun stubRailFaresWithAlternativeRoute() = listOf(
                 passengerType = "Adult",
                 tickets = listOf(
                     Ticket(
-                        type = "Pay as you go",
+                        type = TicketType.PAY_AS_YOU_GO,
                         time = TicketTime(
                             label = "Off Peak",
                             description = "At all other times including public holidays"
@@ -59,7 +56,7 @@ internal fun stubRailFaresWithAlternativeRoute() = listOf(
                         cost = "3.50"
                     ),
                     Ticket(
-                        type = "Pay as you go",
+                        type = TicketType.PAY_AS_YOU_GO,
                         time = TicketTime(
                             label = "Peak",
                             description = "Monday to Friday from 0630 to 0930 and from 1600 to 1900"
@@ -82,7 +79,7 @@ internal fun stubRailFaresWithAlternativeRoute() = listOf(
                 passengerType = "Adult",
                 tickets = listOf(
                     Ticket(
-                        type = "Pay as you go",
+                        type = TicketType.PAY_AS_YOU_GO,
                         time = TicketTime(
                             label = "Off Peak",
                             description = "At all other times including public holidays"
@@ -90,7 +87,7 @@ internal fun stubRailFaresWithAlternativeRoute() = listOf(
                         cost = "2.70"
                     ),
                     Ticket(
-                        type = "Pay as you go",
+                        type = TicketType.PAY_AS_YOU_GO,
                         time = TicketTime(
                             label = "Peak",
                             description = "Monday to Friday from 0630 to 0930 and from 1600 to 1900"
@@ -123,7 +120,7 @@ private fun stubFareResponseList() = listOf(
 
 private fun stubTicketResponseList() = listOf(
     TicketResponse(
-        type = stubTicketTypeResponse(),
+        typeWrapper = stubTicketTypeResponse(),
         time = stubTicketTimeResponse(),
         cost = "3.50"
     )
@@ -134,7 +131,9 @@ private fun stubFareMessageResponseList() = listOf(
     FareMessageResponse(message = "")
 )
 
-private fun stubTicketTypeResponse() = TicketTypeResponse(label = "Pay as you go")
+private fun stubTicketTypeResponse() = TicketTypeResponseWrapper(
+    type = TicketTypeResponse.PAY_AS_YOU_GO
+)
 
 private fun stubTicketTimeResponse() = TicketTimeResponse(
     label = "Off Peak",

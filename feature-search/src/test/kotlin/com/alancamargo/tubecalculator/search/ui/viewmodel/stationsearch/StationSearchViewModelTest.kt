@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,11 +40,15 @@ class StationSearchViewModelTest {
         dispatcher = dispatcher
     )
 
+    @Before
+    fun setUp() {
+        every { mockGetMinQueryLengthUseCase() } returns MIN_QUERY_LENGTH
+    }
+
     @Test
     fun `onCreate should set correct state`() {
         collector.test { states, _ ->
             // GIVEN
-            every { mockGetMinQueryLengthUseCase() } returns MIN_QUERY_LENGTH
             val searchType = SearchType.ORIGIN
             val station = stubUiStation()
 
@@ -52,7 +57,6 @@ class StationSearchViewModelTest {
 
             // THEN
             val expected = StationSearchViewState(
-                minQueryLength = MIN_QUERY_LENGTH,
                 selectedStation = station,
                 labelRes = searchType.labelRes,
                 hintRes = searchType.hintRes
@@ -65,6 +69,27 @@ class StationSearchViewModelTest {
     fun `when query is blank onQueryChanged should not search station`() {
         // WHEN
         viewModel.onQueryChanged(query = "")
+
+        // THEN
+        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+    }
+
+    @Test
+    fun `when query is too short onQueryChanged should not search station`() {
+        // WHEN
+        viewModel.onQueryChanged(query = "ma")
+
+        // THEN
+        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+    }
+
+    @Test
+    fun `with selected station onQueryChanged should not search station`() {
+        // GIVEN
+        viewModel.onStationSelected(station = stubUiStation())
+
+        // WHEN
+        viewModel.onQueryChanged(query = "Marylebone")
 
         // THEN
         verify(exactly = 0) { mockSearchStationUseCase(query = any()) }

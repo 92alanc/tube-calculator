@@ -30,9 +30,9 @@
         <com.alancamargo.tubecalculator.core.design.view.CustomAutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/spacing_16"
-            android:lines="1"/>
+            android:maxLines="1"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>

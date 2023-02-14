@@ -17,9 +17,10 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/txtType"
-            style="@style/TextAppearance.MaterialComponents.Body2"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
             tools:text="@sample/tickets.json/data/type"/>
 
         <com.google.android.material.textview.MaterialTextView

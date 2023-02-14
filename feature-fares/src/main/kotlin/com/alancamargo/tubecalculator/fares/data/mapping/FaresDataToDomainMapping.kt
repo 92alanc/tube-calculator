@@ -1,13 +1,7 @@
 package com.alancamargo.tubecalculator.fares.data.mapping
 
-import com.alancamargo.tubecalculator.fares.data.model.responses.FareOptionResponse
-import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
-import com.alancamargo.tubecalculator.fares.data.model.responses.TicketResponse
-import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTimeResponse
-import com.alancamargo.tubecalculator.fares.domain.model.FareOption
-import com.alancamargo.tubecalculator.fares.domain.model.Fare
-import com.alancamargo.tubecalculator.fares.domain.model.Ticket
-import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
+import com.alancamargo.tubecalculator.fares.data.model.responses.*
+import com.alancamargo.tubecalculator.fares.domain.model.*
 
 internal fun RailFareResponse.toDomain() = Fare.RailFare(
     header = header,
@@ -25,7 +19,7 @@ private fun FareOptionResponse.toDomain() = FareOption(
 )
 
 private fun TicketResponse.toDomain() = Ticket(
-    type = type.label,
+    type = typeWrapper.type.toDomain(),
     time = time.toDomain(),
     cost = cost
 )
@@ -34,3 +28,8 @@ private fun TicketTimeResponse.toDomain() = TicketTime(
     label = label,
     description = description
 )
+
+private fun TicketTypeResponse.toDomain() = when (this) {
+    TicketTypeResponse.PAY_AS_YOU_GO -> TicketType.PAY_AS_YOU_GO
+    TicketTypeResponse.CASH -> TicketType.CASH
+}
