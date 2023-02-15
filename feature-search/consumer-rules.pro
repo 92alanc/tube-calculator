@@ -24,3 +24,6 @@
 
 # @Serializable and @Polymorphic are used at runtime for polymorphic serialization.
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+
+-keep class com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment$Args
+-keep class com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment$Args
