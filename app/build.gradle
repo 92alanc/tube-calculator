@@ -22,11 +22,18 @@ android {
     }
 
     signingConfigs {
-        release {
+        staging {
             keyAlias "${tube_calculator_key_alias}"
             keyPassword "${tube_calculator_key_password}"
             storeFile file("${tube_calculator_store_file}")
             storePassword "${tube_calculator_store_password}"
+        }
+
+        release {
+            keyAlias System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
+            keyPassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
+            storeFile file(System.getenv("HOME") + "/keystores/tube-calculator.jks")
+            storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
         }
     }
 
@@ -34,6 +41,14 @@ android {
         debug {
             applicationIdSuffix '.debug'
             debuggable true
+        }
+
+        staging {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.staging
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
