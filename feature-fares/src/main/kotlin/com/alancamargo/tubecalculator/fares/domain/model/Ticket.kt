@@ -1,7 +1,7 @@
 package com.alancamargo.tubecalculator.fares.domain.model
 
 internal data class Ticket(
-    val type: String,
+    val type: TicketType,
     val time: TicketTime,
     val cost: String
 )

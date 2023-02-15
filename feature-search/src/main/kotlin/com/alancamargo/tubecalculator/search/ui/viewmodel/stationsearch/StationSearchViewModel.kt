@@ -31,16 +31,21 @@ internal class StationSearchViewModel @Inject constructor(
     val state: StateFlow<StationSearchViewState> = _state
     val action: SharedFlow<StationSearchViewAction> = _action
 
+    private var hasSelectedStation = false
+
     fun onCreate(searchType: SearchType, station: UiStation?) {
         _state.update { it.onReceivedSearchType(searchType) }
-        val minQueryLength = getMinQueryLengthUseCase()
-        _state.update { it.onReceivedMinQueryLength(minQueryLength) }
         onStationSelected(station)
     }
 
     fun onQueryChanged(query: String) {
         if (query.isBlank()) {
             onStationSelected(station = null)
+            return
+        }
+
+        val minQueryLength = getMinQueryLengthUseCase()
+        if (hasSelectedStation || query.length < minQueryLength) {
             return
         }
 
@@ -54,6 +59,7 @@ internal class StationSearchViewModel @Inject constructor(
     }
 
     fun onStationSelected(station: UiStation?) {
+        hasSelectedStation = station != null
         _state.update { it.onStationSelected(station) }
     }
 

@@ -81,10 +81,6 @@ internal class StationSearchFragment : Fragment() {
             binding.autoCompleteTextView.hint = getString(it)
         }
 
-        minQueryLength?.let {
-            binding.autoCompleteTextView.threshold = it
-        }
-
         args.onStationSelected(selectedStation)
 
         selectedStation?.let {

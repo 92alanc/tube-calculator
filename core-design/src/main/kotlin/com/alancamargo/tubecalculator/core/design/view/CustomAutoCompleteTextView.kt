@@ -12,14 +12,18 @@ class CustomAutoCompleteTextView(
     attributeSet: AttributeSet?
 ) : MaterialAutoCompleteTextView(context, attributeSet) {
 
+    init {
+        setHorizontallyScrolling(true)
+    }
+
     override fun onFilterComplete(count: Int) {
         val itemCount = if (count > DROPDOWN_ITEM_MAX_COUNT) {
             DROPDOWN_ITEM_MAX_COUNT
         } else {
             count
         }
-        val individualItemHeight = (height / 2) + PADDING
 
+        val individualItemHeight = (height / 2) + PADDING
         dropDownHeight = itemCount * individualItemHeight
         super.onFilterComplete(count)
     }
