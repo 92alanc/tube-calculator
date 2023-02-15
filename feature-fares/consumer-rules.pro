@@ -1,0 +1,1 @@
+-keep class com.alancamargo.tubecalculator.fares.ui.FaresActivity$Args
