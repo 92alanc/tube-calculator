@@ -14,9 +14,9 @@ android {
         minSdk min_sdk_version
         targetSdk target_sdk_version
 
-        buildConfigField "String", "APP_ID", "\"${System.getenv("TUBE_CALCULATOR_APP_ID")}\""
-        buildConfigField "String", "APP_KEY", "\"${System.getenv("TUBE_CALCULATOR_APP_KEY")}\""
-        buildConfigField "String", "BASE_URL", "\"${System.getenv("TUBE_CALCULATOR_BASE_URL")}\""
+        buildConfigField "String", "APP_ID", "\"$tube_calculator_app_id\""
+        buildConfigField "String", "APP_KEY", "\"$tube_calculator_app_key\""
+        buildConfigField "String", "BASE_URL", "\"$tube_calculator_base_url\""
     }
 
     buildTypes {
