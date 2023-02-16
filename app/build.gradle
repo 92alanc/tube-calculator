@@ -28,6 +28,13 @@ android {
             storeFile file(System.getenv("HOME") + "/keystores/tube-calculator.jks")
             storePassword System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
         }
+
+        /*release {
+            keyAlias "$tube_calculator_key_alias"
+            keyPassword "$tube_calculator_key_password"
+            storeFile file("$tube_calculator_store_file")
+            storePassword "$tube_calculator_store_password"
+        }*/
     }
 
     buildTypes {
