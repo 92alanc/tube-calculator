@@ -27,3 +27,5 @@
 
 -keep class com.alancamargo.tubecalculator.search.ui.fragments.BusAndTramJourneysFragment$Args
 -keep class com.alancamargo.tubecalculator.search.ui.fragments.StationSearchFragment$Args
+
+-keep class com.alancamargo.tubecalculator.core.design.R.**
