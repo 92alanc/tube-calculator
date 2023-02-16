@@ -1,0 +1,1 @@
+-keep class com.alancamargo.tubecalculator.core.design.R.**
