@@ -8,7 +8,5 @@ internal sealed class FaresViewAction {
 
     data class ShowErrorDialogue(val error: UiFaresError) : FaresViewAction()
 
-    object Finish : FaresViewAction()
-
     data class ShowMessagesDialogue(val text: CharSequence) : FaresViewAction()
 }

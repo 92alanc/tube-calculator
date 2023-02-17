@@ -463,13 +463,13 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onDismissErrorDialogue should send Finish action`() {
+    fun `onDismissErrorDialogue should send NavigateToHome action`() {
         collector.test { _, actions ->
             // WHEN
             viewModel.onDismissErrorDialogue()
 
             // THEN
-            assertThat(actions).contains(FaresViewAction.Finish)
+            assertThat(actions).contains(FaresViewAction.NavigateToHome)
         }
     }
 

@@ -67,7 +67,7 @@ internal class FaresViewModel @Inject constructor(
 
     fun onDismissErrorDialogue() {
         viewModelScope.launch(dispatcher) {
-            _action.emit(FaresViewAction.Finish)
+            _action.emit(FaresViewAction.NavigateToHome)
         }
     }
 
