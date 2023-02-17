@@ -7,7 +7,7 @@
     <string name="fares_cost_format">£%s</string>
     <string name="fares_new_search">New search</string>
     <string name="fares_bus_and_tram_fares">Bus and/or tram fares</string>
-    <string name="fares_message_invalid_query_error">You can\'t directly reach this destination from your chosen starting point. Please make a different search.</string>
+    <string name="fares_message_invalid_query_error">The TfL service couldn\'t find the fares for this route. Please make a different search.</string>
     <string name="fares_cheapest_total_fare_format">Cheapest total fare: £%s</string>
     <string name="fares_pay_as_you_go">Oyster or contactless card</string>
     <string name="fares_cash">Cash</string>

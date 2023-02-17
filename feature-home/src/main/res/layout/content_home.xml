@@ -61,12 +61,31 @@
         style="@style/TubeCalculator.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
         android:text="@string/calculate"
         app:layout_constraintTop_toBottomOf="@id/recyclerView"
-        app:layout_constraintBottom_toTopOf="@+id/banner"
+        app:layout_constraintBottom_toTopOf="@+id/txtPoweredBy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/txtPoweredBy"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:text="@string/powered_by"
+        app:layout_constraintTop_toBottomOf="@id/btCalculate"
+        app:layout_constraintBottom_toTopOf="@+id/banner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupCalculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btCalculate, txtPoweredBy" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btAdd"

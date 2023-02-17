@@ -94,7 +94,6 @@ internal class FaresActivity : AppCompatActivity() {
     private fun handleAction(action: FaresViewAction) {
         when (action) {
             is FaresViewAction.NavigateToHome -> navigateToHome()
-            is FaresViewAction.Finish -> finish()
             is FaresViewAction.ShowErrorDialogue -> showErrorDialogue(action.error)
             is FaresViewAction.ShowMessagesDialogue -> showMessagesDialogue(action.text)
         }

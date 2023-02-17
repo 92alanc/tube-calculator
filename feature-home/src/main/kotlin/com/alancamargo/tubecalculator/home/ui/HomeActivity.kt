@@ -108,7 +108,7 @@ internal class HomeActivity : AppCompatActivity() {
     private fun handleState(state: HomeViewState) = with(binding.appBar.content) {
         state.journeys?.let(adapter::submitList)
         btAdd.isVisible = state.showAddButton
-        btCalculate.isVisible = state.showCalculateButton
+        groupCalculate.isVisible = state.showCalculateButton
         groupFabs.isVisible = state.isAddButtonExpanded
         btAdd.isExtended = state.isAddButtonExpanded
         groupEmptyState.isVisible = state.showEmptyState
