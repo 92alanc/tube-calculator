@@ -15,4 +15,9 @@
 
         <item name="fontFamily">@font/johnston</item>
     </style>
+
+    <style name="Theme.Startup" parent="@style/Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.TubeCalculator</item>
+    </style>
 </resources>
