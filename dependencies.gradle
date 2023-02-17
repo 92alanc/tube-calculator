@@ -22,7 +22,7 @@ ext {
     google_ads = "com.google.android.gms:play-services-ads:$google_ads_version"
     hilt_android = "com.google.dagger:hilt-android:$hilt_version"
     hilt_compiler = "com.google.dagger:hilt-compiler:$hilt_version"
-    hilt_testing = "com.google.dagger:hilt-android-testing:$hilt_testing_version"
+    hilt_testing = "com.google.dagger:hilt-android-testing:$hilt_version"
     hilt_work = "androidx.hilt:hilt-work:$hilt_work_version"
     junit = "junit:junit:$junit_version"
     kotlin_serialisation = "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialisation_version"
