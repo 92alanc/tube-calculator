@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@drawable/ic_splash" />
-    </item>
+    <item
+        android:width="@dimen/size_splash_icon"
+        android:height="@dimen/size_splash_icon"
+        android:drawable="@drawable/ic_splash"
+        android:gravity="center"/>
 </layer-list>
