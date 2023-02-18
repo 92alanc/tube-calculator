@@ -8,4 +8,5 @@
     <dimen name="spacing_48">48dp</dimen>
 
     <dimen name="height_nav_header">176dp</dimen>
+    <dimen name="size_splash_icon">100dp</dimen>
 </resources>
