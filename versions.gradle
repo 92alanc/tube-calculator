@@ -7,7 +7,7 @@ ext {
     android_fragment_version = '1.5.5'
     android_hilt_compiler_version = '1.0.0'
     android_material_version = '1.8.0'
-    android_splash_screen_version = '1.0.0-beta02'
+    android_splash_screen_version = '1.0.0'
     android_test_runner_version = '1.5.2'
     coil_version = '2.2.2'
     coroutines_test_version = '1.6.4'
@@ -36,6 +36,6 @@ ext {
     min_sdk_version = 23
     target_sdk_version = 33
 
-    version_code = 12
-    version_name = '2023.1.8'
+    version_code = 13
+    version_name = '2023.1.9'
 }
