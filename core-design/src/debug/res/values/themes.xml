@@ -12,4 +12,10 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <item name="fontFamily">@font/johnston</item>
     </style>
+
+    <style name="Theme.Startup" parent="@style/Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_background</item>
+        <item name="windowSplashScreenBackground">@color/red</item>
+        <item name="postSplashScreenTheme">@style/DebugTheme</item>
+    </style>
 </resources>

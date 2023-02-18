@@ -32,5 +32,7 @@ dependencies {
     implementation "$google_ads"
     implementation "$hilt_android"
 
+    api "$android_splash_screen"
+
     kapt "$hilt_compiler"
 }

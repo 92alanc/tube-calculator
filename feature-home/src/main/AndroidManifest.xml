@@ -4,7 +4,8 @@
         <activity android:name=".ui.HomeActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:configChanges="screenSize|orientation">
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/Theme.Startup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
