@@ -36,6 +36,6 @@ ext {
     min_sdk_version = 23
     target_sdk_version = 33
 
-    version_code = 13
-    version_name = '2023.1.9'
+    version_code = 14
+    version_name = '2023.1.10'
 }
