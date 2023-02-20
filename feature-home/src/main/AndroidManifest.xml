@@ -3,7 +3,6 @@
     <application>
         <activity android:name=".ui.HomeActivity"
             android:exported="true"
-            android:launchMode="singleTask"
             android:configChanges="screenSize|orientation"
             android:theme="@style/Theme.Startup">
             <intent-filter>
