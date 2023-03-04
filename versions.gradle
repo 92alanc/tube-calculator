@@ -1,5 +1,5 @@
 ext {
-    android_version = '7.4.1'
+    android_version = '7.4.2'
     android_activity_version = '1.6.1'
     android_appcompat_version = '1.6.1'
     android_core_version = '1.9.0'
