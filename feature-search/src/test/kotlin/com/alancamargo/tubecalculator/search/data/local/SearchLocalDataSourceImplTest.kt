@@ -31,16 +31,12 @@ class SearchLocalDataSourceImplTest {
         assertThat(actual).isEqualTo(expected)
     }
 
-    @Test
-    fun `when database throws exception searchStation should return GenericError`() {
+    @Test(expected = IOException::class)
+    fun `when database throws exception searchStation should throw exception`() {
         // GIVEN
         coEvery { mockDao.searchStation(SEARCH_QUERY) } throws IOException()
 
-        // WHEN
-        val actual = runBlocking { localDataSource.searchStation(SEARCH_QUERY) }
-
         // THEN
-        val expected = StationListResult.GenericError
-        assertThat(actual).isEqualTo(expected)
+        runBlocking { localDataSource.searchStation(SEARCH_QUERY) }
     }
 }
