@@ -11,4 +11,5 @@
     <string name="fares_cheapest_total_fare_format">Cheapest total fare: £%s</string>
     <string name="fares_pay_as_you_go">Oyster or contactless card</string>
     <string name="fares_cash">Cash</string>
+    <string name="fares">Fares</string>
 </resources>
