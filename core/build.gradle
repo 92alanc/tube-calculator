@@ -60,6 +60,7 @@ dependencies {
     kapt "$hilt_compiler"
     kapt "$room_compiler"
 
+    testImplementation "$coroutines_test"
     testImplementation "$junit"
     testImplementation "$mockk_android"
     testImplementation "$truth"

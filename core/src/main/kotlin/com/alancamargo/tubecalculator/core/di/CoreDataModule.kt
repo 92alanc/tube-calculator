@@ -13,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
 
 @Module
@@ -22,9 +23,10 @@ object CoreDataModule {
     @Provides
     @Singleton
     fun provideRemoteConfigManager(
-        firebaseRemoteConfig: FirebaseRemoteConfig
+        firebaseRemoteConfig: FirebaseRemoteConfig,
+        @IoDispatcher dispatcher: CoroutineDispatcher
     ): RemoteConfigManager {
-        return RemoteConfigManagerImpl(firebaseRemoteConfig)
+        return RemoteConfigManagerImpl(firebaseRemoteConfig, dispatcher)
     }
 
     @Provides
