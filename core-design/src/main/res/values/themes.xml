@@ -1,19 +1,14 @@
 <resources>
-    <style name="Theme.TubeCalculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.TubeCalculator" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/red</item>
-        <item name="colorPrimaryVariant">@color/red</item>
         <item name="colorOnPrimary">@color/white</item>
 
         <item name="colorSecondary">@color/black</item>
-        <item name="colorSecondaryVariant">@color/grey_dark</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <item name="appBarLayoutStyle">@style/TubeCalculator.ActionBarLayout</item>
-        <item name="toolbarStyle">@style/TubeCalculator.Toolbar</item>
-        <item name="drawerArrowStyle">@style/TubeCalculator.DrawerArrow</item>
-
         <item name="fontFamily">@font/johnston</item>
+        <item name="android:statusBarColor">?colorSurface</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.Startup" parent="@style/Theme.SplashScreen">

@@ -2,11 +2,11 @@
 <defaults>
   <entry>
     <key>bus_and_tram_base_fare</key>
-    <value>1.65</value>
+    <value>1.75</value>
   </entry>
   <entry>
     <key>should_clear_cache</key>
-    <value>false</value>
+    <value>true</value>
   </entry>
   <entry>
     <key>min_query_length</key>
@@ -14,6 +14,6 @@
   </entry>
   <entry>
     <key>bus_and_tram_fare_daily_cap</key>
-    <value>4.95</value>
+    <value>5.25</value>
   </entry>
 </defaults>

@@ -51,6 +51,7 @@ internal class HomeViewModel @Inject constructor(
             if (isFirstAccessUseCase()) {
                 delay(uiDelay)
                 _action.emit(HomeViewAction.ShowFirstAccessDialogue)
+                _state.update { it.showAddJourneyTutorial() }
             }
         }
     }

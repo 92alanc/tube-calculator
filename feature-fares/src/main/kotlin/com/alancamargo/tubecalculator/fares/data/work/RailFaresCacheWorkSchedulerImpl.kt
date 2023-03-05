@@ -16,7 +16,7 @@ internal class RailFaresCacheWorkSchedulerImpl @Inject constructor(
     override fun scheduleRailFaresCacheBackgroundWork() {
         val workManager = WorkManager.getInstance(context)
         val request = PeriodicWorkRequestBuilder<RailFaresCacheWorker>(
-            30,
+            1,
             TimeUnit.DAYS
         ).build()
 

@@ -21,7 +21,9 @@ class HomeViewModelTest {
 
     private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
-    private val mockShouldShowDeleteJourneyTutorialUseCase = mockk<ShouldShowDeleteJourneyTutorialUseCase>()
+    private val mockShouldShowDeleteJourneyTutorialUseCase = mockk<ShouldShowDeleteJourneyTutorialUseCase>(
+        relaxed = true
+    )
     private val mockDisableDeleteJourneyTutorialUseCase = mockk<DisableDeleteJourneyTutorialUseCase>(
         relaxed = true
     )
@@ -71,6 +73,21 @@ class HomeViewModelTest {
     }
 
     @Test
+    fun `on first launch and on first access onCreate should show add journey tutorial`() {
+        collector.test { states, _ ->
+            // GIVEN
+            every { mockIsFirstAccessUseCase() } returns true
+
+            // WHEN
+            viewModel.onCreate(isFirstLaunch = true)
+
+            // THEN
+            val expected = HomeViewState(showAddJourneyTutorial = true)
+            assertThat(states).contains(expected)
+        }
+    }
+
+    @Test
     fun `on first launch and not on first access onStart should not send ShowFirstAccessDialogue action`() {
         collector.test { _, actions ->
             // GIVEN
@@ -81,6 +98,21 @@ class HomeViewModelTest {
 
             // THEN
             assertThat(actions).doesNotContain(HomeViewAction.ShowFirstAccessDialogue)
+        }
+    }
+
+    @Test
+    fun `on first launch and not on first access onCreate should not show add journey tutorial`() {
+        collector.test { states, _ ->
+            // GIVEN
+            every { mockIsFirstAccessUseCase() } returns false
+
+            // WHEN
+            viewModel.onCreate(isFirstLaunch = true)
+
+            // THEN
+            val expected = HomeViewState(showAddJourneyTutorial = true)
+            assertThat(states).doesNotContain(expected)
         }
     }
 
@@ -196,8 +228,7 @@ class HomeViewModelTest {
             val expected = HomeViewState(
                 journeys = listOf(journey),
                 showAddButton = true,
-                showCalculateButton = true,
-                showEmptyState = false
+                showCalculateButton = true
             )
             assertThat(states).contains(expected)
         }
@@ -220,7 +251,7 @@ class HomeViewModelTest {
                 journeys = listOf(rail, busAndTram),
                 showAddButton = false,
                 showCalculateButton = true,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }
@@ -242,7 +273,7 @@ class HomeViewModelTest {
                 journeys = listOf(rail),
                 showAddButton = true,
                 showCalculateButton = true,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }
@@ -264,7 +295,7 @@ class HomeViewModelTest {
                 journeys = listOf(busAndTram),
                 showAddButton = true,
                 showCalculateButton = true,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }
@@ -374,7 +405,7 @@ class HomeViewModelTest {
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = true,
                 showAddRailJourneyButton = true,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }
@@ -397,7 +428,7 @@ class HomeViewModelTest {
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = true,
                 showAddRailJourneyButton = false,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }
@@ -420,7 +451,7 @@ class HomeViewModelTest {
                 isAddButtonExpanded = true,
                 showAddBusAndTramJourneyButton = false,
                 showAddRailJourneyButton = true,
-                showEmptyState = false
+                showAddJourneyTutorial = false
             )
             assertThat(states).contains(expected)
         }

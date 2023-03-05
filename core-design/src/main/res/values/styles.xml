@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="TubeCalculator"/>
-    <style name="TubeCalculator.ActionBarLayout" parent="ThemeOverlay.MaterialComponents.ActionBar">
-        <item name="android:background">?colorPrimary</item>
-    </style>
-    <style name="TubeCalculator.Toolbar" parent="Widget.MaterialComponents.Toolbar">
-        <item name="titleTextColor">@color/white</item>
-    </style>
-    <style name="TubeCalculator.Button" parent="Widget.MaterialComponents.Button">
+    <style name="TubeCalculator.Button" parent="Widget.Material3.Button">
         <item name="android:textColor">@color/white</item>
-    </style>
-    <style name="TubeCalculator.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@color/white</item>
     </style>
 </resources>

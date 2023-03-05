@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:navigationIcon="@drawable/ic_arrow_left"
+            app:titleCentered="true"
             app:title="@string/search" />
     </com.google.android.material.appbar.AppBarLayout>
 
