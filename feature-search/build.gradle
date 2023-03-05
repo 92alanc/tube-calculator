@@ -16,6 +16,7 @@ android {
         targetSdk target_sdk_version
 
         testInstrumentationRunner "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles "consumer-rules.pro"
     }
 
@@ -32,6 +33,7 @@ android {
 
     testOptions {
         animationsDisabled true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     packagingOptions {
