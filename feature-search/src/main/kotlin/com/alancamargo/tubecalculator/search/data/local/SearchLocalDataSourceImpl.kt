@@ -10,12 +10,8 @@ internal class SearchLocalDataSourceImpl @Inject constructor(
 ) : SearchLocalDataSource {
 
     override suspend fun searchStation(query: String): StationListResult {
-        return try {
-            val dbStations = dao.searchStation(query)
-            val stations = dbStations.map { it.toDomain() }
-            StationListResult.Success(stations)
-        } catch (t: Throwable) {
-            StationListResult.GenericError
-        }
+        val dbStations = dao.searchStation(query)
+        val stations = dbStations.map { it.toDomain() }
+        return StationListResult.Success(stations)
     }
 }

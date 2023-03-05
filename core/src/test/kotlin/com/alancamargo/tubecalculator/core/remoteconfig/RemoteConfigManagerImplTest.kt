@@ -4,14 +4,21 @@ import com.google.common.truth.Truth.assertThat
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import org.junit.Test
 
 private const val KEY = "test_key"
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RemoteConfigManagerImplTest {
 
     private val mockFirebaseRemoteConfig = mockk<FirebaseRemoteConfig>()
-    private val remoteConfigManager = RemoteConfigManagerImpl(mockFirebaseRemoteConfig)
+    private val testDispatcher = StandardTestDispatcher()
+    private val remoteConfigManager = RemoteConfigManagerImpl(
+        mockFirebaseRemoteConfig,
+        testDispatcher
+    )
 
     @Test
     fun `getDouble should get double value from firebase`() {

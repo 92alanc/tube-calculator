@@ -16,12 +16,12 @@ android {
         targetSdk target_sdk_version
 
         testInstrumentationRunner "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
+        testInstrumentationRunnerArguments clearPackageData: 'true'
         consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
-            debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
