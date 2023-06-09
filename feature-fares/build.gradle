@@ -47,6 +47,15 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
+
+    compileOptions {
+        sourceCompatibility java_version
+        targetCompatibility java_version
+    }
+
+    kotlinOptions {
+        jvmTarget = "$java_version"
+    }
 }
 
 dependencies {
