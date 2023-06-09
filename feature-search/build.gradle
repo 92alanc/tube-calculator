@@ -84,5 +84,7 @@ dependencies {
     androidTestImplementation "$mockk_android"
     androidTestImplementation "$truth"
 
+    androidTestUtil "$android_test_orchestrator"
+
     kaptAndroidTest "$hilt_compiler"
 }
