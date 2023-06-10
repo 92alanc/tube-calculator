@@ -27,6 +27,10 @@ android {
     kotlinOptions {
         jvmTarget = "$java_version"
     }
+
+    kotlin {
+        jvmToolchain(java_version)
+    }
 }
 
 dependencies {
