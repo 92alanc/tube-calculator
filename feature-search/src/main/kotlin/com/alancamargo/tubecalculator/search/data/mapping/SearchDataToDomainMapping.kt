@@ -6,8 +6,10 @@ import com.alancamargo.tubecalculator.search.data.model.DbStation
 import com.alancamargo.tubecalculator.search.data.model.ModeResponse
 import kotlinx.serialization.json.Json
 
+private val json = Json { isLenient = true }
+
 internal fun DbStation.toDomain(): Station {
-    val modeResponseList = Json.decodeFromString<List<ModeResponse>>(modesJson)
+    val modeResponseList = json.decodeFromString<List<ModeResponse>>(modesJson)
     val modes = modeResponseList.map { it.toDomain() }
 
     return Station(
