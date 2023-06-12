@@ -1,38 +1,21 @@
 package com.alancamargo.tubecalculator.search.data.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+internal enum class ModeResponse(val string: String) {
 
-@Serializable
-internal enum class ModeResponse {
+    DLR(string = "dlr"),
+    ELIZABETH_LINE(string = "elizabeth-line"),
+    NATIONAL_RAIL(string = "national-rail"),
+    OVERGROUND(string = "overground"),
+    UNDERGROUND(string = "tube");
 
-    @SerialName("bus")
-    BUS,
-
-    @SerialName("cable-car")
-    CABLE_CAR,
-
-    @SerialName("dlr")
-    DLR,
-
-    @SerialName("elizabeth-line")
-    ELIZABETH_LINE,
-
-    @SerialName("international-rail")
-    INTERNATIONAL_RAIL,
-
-    @SerialName("national-rail")
-    NATIONAL_RAIL,
-
-    @SerialName("overground")
-    OVERGROUND,
-
-    @SerialName("plane")
-    PLANE,
-
-    @SerialName("tram")
-    TRAM,
-
-    @SerialName("tube")
-    UNDERGROUND
+    companion object {
+        fun fromString(string: String) = when (string) {
+            DLR.string -> DLR
+            ELIZABETH_LINE.string -> ELIZABETH_LINE
+            NATIONAL_RAIL.string -> NATIONAL_RAIL
+            OVERGROUND.string -> OVERGROUND
+            UNDERGROUND.string -> UNDERGROUND
+            else -> throw IllegalArgumentException("Invalid mode")
+        }
+    }
 }

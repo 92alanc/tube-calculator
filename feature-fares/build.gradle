@@ -47,6 +47,19 @@ android {
     packagingOptions {
         resources.excludes.add("META-INF/*")
     }
+
+    compileOptions {
+        sourceCompatibility java_version
+        targetCompatibility java_version
+    }
+
+    kotlinOptions {
+        jvmTarget = "$java_version"
+    }
+
+    kotlin {
+        jvmToolchain(java_version)
+    }
 }
 
 dependencies {
@@ -83,6 +96,8 @@ dependencies {
     androidTestImplementation "$coroutines_test"
     androidTestImplementation "$mockk_android"
     androidTestImplementation "$truth"
+
+    androidTestUtil "$android_test_orchestrator"
 
     kaptAndroidTest "$hilt_compiler"
 }
