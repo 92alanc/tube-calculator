@@ -53,8 +53,8 @@ internal fun stubUiStation() = UiStation(
 )
 
 private fun Station.toDb(): DbStation {
-    val modeResponseList = modes.map { it.toResponse() }
-    val modesJson = Json.encodeToString(modeResponseList)
+    val modeStringList = modes.map { it.toResponse().string }
+    val modesJson = Json.encodeToString(modeStringList)
 
     return DbStation(
         id = id,
