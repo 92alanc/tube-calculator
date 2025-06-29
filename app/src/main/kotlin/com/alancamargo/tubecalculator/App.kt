@@ -21,17 +21,16 @@ class App : Application(), Configuration.Provider {
     @Inject
     lateinit var remoteConfigManager: RemoteConfigManager
 
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.INFO)
+            .setWorkerFactory(hiltWorkerFactory)
+            .build()
+
     override fun onCreate() {
         super.onCreate()
         MobileAds.initialize(this)
         authenticationManager.authenticateAnonymously()
         remoteConfigManager.init()
-    }
-
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setMinimumLoggingLevel(android.util.Log.INFO)
-            .setWorkerFactory(hiltWorkerFactory)
-            .build()
     }
 }

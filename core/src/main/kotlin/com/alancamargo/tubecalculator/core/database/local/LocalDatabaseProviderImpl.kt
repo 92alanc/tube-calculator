@@ -36,6 +36,6 @@ internal class LocalDatabaseProviderImpl @Inject constructor(
             context,
             clazz.java,
             databaseName
-        ).fallbackToDestructiveMigration()
+        ).fallbackToDestructiveMigration(dropAllTables = true)
     }
 }

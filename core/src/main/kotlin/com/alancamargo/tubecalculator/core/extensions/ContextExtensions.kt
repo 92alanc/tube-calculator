@@ -19,5 +19,5 @@ fun Context.getVersionName(): String {
         packageManager.getPackageInfo(packageName, 0)
     }
 
-    return packageInfo.versionName
+    return packageInfo.versionName.orEmpty()
 }

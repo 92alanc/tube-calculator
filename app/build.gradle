@@ -57,10 +57,6 @@ android {
         targetCompatibility java_version
     }
 
-    kotlinOptions {
-        jvmTarget = "$java_version"
-    }
-
     kotlin {
         jvmToolchain(java_version)
     }
