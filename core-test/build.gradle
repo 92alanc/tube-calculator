@@ -41,4 +41,5 @@ dependencies {
 
     api "$hilt_testing"
     api "$mock_web_server"
+    api "$turbine"
 }

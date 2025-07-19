@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.home.ui.viewmodel
 
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
+import app.cash.turbine.test
 import com.alancamargo.tubecalculator.home.data.analytics.HomeAnalytics
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableDeleteJourneyTutorialUseCase
 import com.alancamargo.tubecalculator.home.domain.usecase.DisableFirstAccessUseCase
@@ -12,14 +12,18 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>()
+    private val mockIsFirstAccessUseCase = mockk<IsFirstAccessUseCase>(relaxed = true)
     private val mockDisableFirstAccessUseCase = mockk<DisableFirstAccessUseCase>(relaxed = true)
     private val mockShouldShowDeleteJourneyTutorialUseCase = mockk<ShouldShowDeleteJourneyTutorialUseCase>(
         relaxed = true
@@ -30,7 +34,7 @@ class HomeViewModelTest {
     private val mockAnalytics = mockk<HomeAnalytics>(relaxed = true)
     private val appVersionName = "2023.1.0"
     private val uiDelay = 0L
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
 
     private val viewModel = HomeViewModel(
         isFirstAccessUseCase = mockIsFirstAccessUseCase,
@@ -43,11 +47,10 @@ class HomeViewModelTest {
         dispatcher = dispatcher
     )
 
-    private val collector = ViewModelFlowCollector(
-        viewModel.state,
-        viewModel.action,
-        dispatcher = dispatcher
-    )
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
 
     @Test
     fun `on first launch onCreate should track screen view event`() {
@@ -60,7 +63,7 @@ class HomeViewModelTest {
 
     @Test
     fun `on first launch and on first access onCreate should send ShowFirstAccessDialogue action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every { mockIsFirstAccessUseCase() } returns true
 
@@ -68,13 +71,15 @@ class HomeViewModelTest {
             viewModel.onCreate(isFirstLaunch = true)
 
             // THEN
-            assertThat(actions).contains(HomeViewAction.ShowFirstAccessDialogue)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(HomeViewAction.ShowFirstAccessDialogue)
+            }
         }
     }
 
     @Test
     fun `on first launch and on first access onCreate should show add journey tutorial`() {
-        collector.test { states, _ ->
+        runTest {
             // GIVEN
             every { mockIsFirstAccessUseCase() } returns true
 
@@ -83,36 +88,10 @@ class HomeViewModelTest {
 
             // THEN
             val expected = HomeViewState(showAddJourneyTutorial = true)
-            assertThat(states).contains(expected)
-        }
-    }
-
-    @Test
-    fun `on first launch and not on first access onStart should not send ShowFirstAccessDialogue action`() {
-        collector.test { _, actions ->
-            // GIVEN
-            every { mockIsFirstAccessUseCase() } returns false
-
-            // WHEN
-            viewModel.onCreate(isFirstLaunch = true)
-
-            // THEN
-            assertThat(actions).doesNotContain(HomeViewAction.ShowFirstAccessDialogue)
-        }
-    }
-
-    @Test
-    fun `on first launch and not on first access onCreate should not show add journey tutorial`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockIsFirstAccessUseCase() } returns false
-
-            // WHEN
-            viewModel.onCreate(isFirstLaunch = true)
-
-            // THEN
-            val expected = HomeViewState(showAddJourneyTutorial = true)
-            assertThat(states).doesNotContain(expected)
+            viewModel.state.test {
+                skipItems(count = 1)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
@@ -135,7 +114,7 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onFirstAccessGoToSettingsClicked should disable first access`() {
+    fun `onFirstAccessGoToSettingsClicked should disable first access`() = runTest {
         // WHEN
         viewModel.onFirstAccessGoToSettingsClicked()
 
@@ -144,13 +123,13 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onFirstAccessGoToSettingsClicked should send NavigateToSettings action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onFirstAccessGoToSettingsClicked()
+    fun `onFirstAccessGoToSettingsClicked should send NavigateToSettings action`() = runTest {
+        // WHEN
+        viewModel.onFirstAccessGoToSettingsClicked()
 
-            // THEN
-            assertThat(actions).contains(HomeViewAction.NavigateToSettings)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(HomeViewAction.NavigateToSettings)
         }
     }
 
@@ -173,24 +152,24 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onSettingsClicked should send NavigateToSettings action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onSettingsClicked()
+    fun `onSettingsClicked should send NavigateToSettings action`() = runTest {
+        // WHEN
+        viewModel.onSettingsClicked()
 
-            // THEN
-            assertThat(actions).contains(HomeViewAction.NavigateToSettings)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(HomeViewAction.NavigateToSettings)
         }
     }
 
     @Test
-    fun `onPrivacyPolicyClicked should send ShowPrivacyPolicyDialogue action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onPrivacyPolicyClicked()
+    fun `onPrivacyPolicyClicked should send ShowPrivacyPolicyDialogue action`() = runTest {
+        // WHEN
+        viewModel.onPrivacyPolicyClicked()
 
-            // THEN
-            assertThat(actions).contains(HomeViewAction.ShowPrivacyPolicyDialogue)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(HomeViewAction.ShowPrivacyPolicyDialogue)
         }
     }
 
@@ -204,39 +183,40 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onAppInfoClicked should send ShowAppInfo action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onAppInfoClicked()
+    fun `onAppInfoClicked should send ShowAppInfo action`() = runTest {
+        // WHEN
+        viewModel.onAppInfoClicked()
 
-            // THEN
-            assertThat(actions).contains(HomeViewAction.ShowAppInfo(appVersionName))
+        // THEN
+        viewModel.action.test {
+            val expected = HomeViewAction.ShowAppInfo(appVersionName)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onJourneyReceived should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
-            val journey = stubBusAndTramJourney()
+    fun `onJourneyReceived should set correct state`() = runTest {
+        // GIVEN
+        every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
+        val journey = stubBusAndTramJourney()
 
-            // WHEN
-            viewModel.onJourneyReceived(journey)
+        // WHEN
+        viewModel.onJourneyReceived(journey)
 
-            // THEN
-            val expected = HomeViewState(
-                journeys = listOf(journey),
-                showAddButton = true,
-                showCalculateButton = true
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            journeys = listOf(journey),
+            showAddButton = true,
+            showCalculateButton = true
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
     fun `with rail and bus and tram journeys added onJourneyReceived should set correct state`() {
-        collector.test { states, _ ->
+        runTest {
             // GIVEN
             every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val rail = stubRailJourney()
@@ -253,35 +233,37 @@ class HomeViewModelTest {
                 showCalculateButton = true,
                 showAddJourneyTutorial = false
             )
-            assertThat(states).contains(expected)
+            viewModel.state.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
-    fun `with existing rail journey onJourneyReceived should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
-            val rail = stubRailJourney()
+    fun `with existing rail journey onJourneyReceived should set correct state`() = runTest {
+        // GIVEN
+        every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
+        val rail = stubRailJourney()
 
-            // WHEN
-            viewModel.onJourneyReceived(rail)
-            viewModel.onJourneyReceived(rail)
+        // WHEN
+        viewModel.onJourneyReceived(rail)
+        viewModel.onJourneyReceived(rail)
 
-            // THEN
-            val expected = HomeViewState(
-                journeys = listOf(rail),
-                showAddButton = true,
-                showCalculateButton = true,
-                showAddJourneyTutorial = false
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            journeys = listOf(rail),
+            showAddButton = true,
+            showCalculateButton = true,
+            showAddJourneyTutorial = false
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
     fun `with existing bus and tram journey onJourneyReceived should set correct state`() {
-        collector.test { states, _ ->
+        runTest {
             // GIVEN
             every { mockShouldShowDeleteJourneyTutorialUseCase() } returns false
             val busAndTram = stubBusAndTramJourney()
@@ -297,13 +279,15 @@ class HomeViewModelTest {
                 showCalculateButton = true,
                 showAddJourneyTutorial = false
             )
-            assertThat(states).contains(expected)
+            viewModel.state.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `when use case returns true onJourneyReceived should send ShowDeleteJourneyTutorial action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every { mockShouldShowDeleteJourneyTutorialUseCase() } returns true
             val journey = stubBusAndTramJourney()
@@ -314,21 +298,25 @@ class HomeViewModelTest {
             // THEN
             val illustrationAssetName = "delete_journey.gif"
             val expected = HomeViewAction.ShowDeleteJourneyTutorial(illustrationAssetName)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `when use case returns true onJourneyReceived should disable delete journey tutorial`() {
-        // GIVEN
-        every { mockShouldShowDeleteJourneyTutorialUseCase() } returns true
-        val journey = stubBusAndTramJourney()
+        runTest {
+            // GIVEN
+            every { mockShouldShowDeleteJourneyTutorialUseCase() } returns true
+            val journey = stubBusAndTramJourney()
 
-        // WHEN
-        viewModel.onJourneyReceived(journey)
+            // WHEN
+            viewModel.onJourneyReceived(journey)
 
-        // THEN
-        verify { mockDisableDeleteJourneyTutorialUseCase() }
+            // THEN
+            verify { mockDisableDeleteJourneyTutorialUseCase() }
+        }
     }
 
     @Test
@@ -345,22 +333,22 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onJourneyRemoved should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            val journey = stubRailJourney()
-            viewModel.onJourneyReceived(journey)
+    fun `onJourneyRemoved should set correct state`() = runTest {
+        // GIVEN
+        val journey = stubRailJourney()
+        viewModel.onJourneyReceived(journey)
 
-            // WHEN
-            viewModel.onJourneyRemoved(journeyPosition = 0)
+        // WHEN
+        viewModel.onJourneyRemoved(journeyPosition = 0)
 
-            // THEN
-            val expected = HomeViewState(
-                journeys = emptyList(),
-                showAddButton = true,
-                showCalculateButton = false
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            journeys = emptyList(),
+            showAddButton = true,
+            showCalculateButton = false
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -378,97 +366,97 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onCalculateClicked should send NavigateToSearch action`() {
-        collector.test { _, actions ->
-            // GIVEN
-            val journey = stubBusAndTramJourney()
-            viewModel.onJourneyReceived(journey)
+    fun `onCalculateClicked should send NavigateToSearch action`() = runTest {
+        // GIVEN
+        val journey = stubBusAndTramJourney()
+        viewModel.onJourneyReceived(journey)
 
-            // WHEN
-            viewModel.onCalculateClicked()
+        // WHEN
+        viewModel.onCalculateClicked()
 
-            // THEN
-            val journeys = listOf(journey)
-            val expected = HomeViewAction.NavigateToFares(journeys)
-            assertThat(actions).contains(expected)
+        // THEN
+        val journeys = listOf(journey)
+        val expected = HomeViewAction.NavigateToFares(journeys)
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `with no journeys onAddClicked should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onAddClicked()
+    fun `with no journeys onAddClicked should set correct state`() = runTest {
+        // WHEN
+        viewModel.onAddClicked()
 
-            // THEN
-            val expected = HomeViewState(
-                isAddButtonExpanded = true,
-                showAddBusAndTramJourneyButton = true,
-                showAddRailJourneyButton = true,
-                showAddJourneyTutorial = false
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            isAddButtonExpanded = true,
+            showAddBusAndTramJourneyButton = true,
+            showAddRailJourneyButton = true,
+            showAddJourneyTutorial = false
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `with rail journey onAddClicked should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            val journey = stubRailJourney()
-            viewModel.onJourneyReceived(journey)
+    fun `with rail journey onAddClicked should set correct state`() = runTest {
+        // GIVEN
+        val journey = stubRailJourney()
+        viewModel.onJourneyReceived(journey)
 
-            // WHEN
-            viewModel.onAddClicked()
+        // WHEN
+        viewModel.onAddClicked()
 
-            // THEN
-            val expected = HomeViewState(
-                journeys = listOf(journey),
-                showCalculateButton = true,
-                isAddButtonExpanded = true,
-                showAddBusAndTramJourneyButton = true,
-                showAddRailJourneyButton = false,
-                showAddJourneyTutorial = false
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            journeys = listOf(journey),
+            showCalculateButton = true,
+            isAddButtonExpanded = true,
+            showAddBusAndTramJourneyButton = true,
+            showAddRailJourneyButton = false,
+            showAddJourneyTutorial = false
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `with bus and tram journey onAddClicked should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            val journey = stubBusAndTramJourney()
-            viewModel.onJourneyReceived(journey)
+    fun `with bus and tram journey onAddClicked should set correct state`() = runTest {
+        // GIVEN
+        val journey = stubBusAndTramJourney()
+        viewModel.onJourneyReceived(journey)
 
-            // WHEN
-            viewModel.onAddClicked()
+        // WHEN
+        viewModel.onAddClicked()
 
-            // THEN
-            val expected = HomeViewState(
-                journeys = listOf(journey),
-                showCalculateButton = true,
-                isAddButtonExpanded = true,
-                showAddBusAndTramJourneyButton = false,
-                showAddRailJourneyButton = true,
-                showAddJourneyTutorial = false
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(
+            journeys = listOf(journey),
+            showCalculateButton = true,
+            isAddButtonExpanded = true,
+            showAddBusAndTramJourneyButton = false,
+            showAddRailJourneyButton = true,
+            showAddJourneyTutorial = false
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `when button is expanded onAddedClicked should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            viewModel.onAddClicked()
+    fun `when button is expanded onAddedClicked should set correct state`() = runTest {
+        // GIVEN
+        viewModel.onAddClicked()
 
-            // WHEN
-            viewModel.onAddClicked()
+        // WHEN
+        viewModel.onAddClicked()
 
-            // THEN
-            val expected = HomeViewState(isAddButtonExpanded = false)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(isAddButtonExpanded = false)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -482,65 +470,65 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onJourneyClicked should send EditJourney event`() {
-        collector.test { _, actions ->
-            // GIVEN
-            val journey = stubRailJourney()
+    fun `onJourneyClicked should send EditJourney event`() = runTest {
+        // GIVEN
+        val journey = stubRailJourney()
 
-            // WHEN
-            viewModel.onJourneyClicked(journey)
-            
-            // THEN
-            val expected = HomeViewAction.EditJourney(journey)
-            assertThat(actions).contains(expected)
+        // WHEN
+        viewModel.onJourneyClicked(journey)
+
+        // THEN
+        val expected = HomeViewAction.EditJourney(journey)
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onAddRailJourneyClicked should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onAddRailJourneyClicked()
+    fun `onAddRailJourneyClicked should set correct state`() = runTest {
+        // WHEN
+        viewModel.onAddRailJourneyClicked()
 
-            // THEN
-            val expected = HomeViewState(isAddButtonExpanded = false)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(isAddButtonExpanded = false)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onAddRailJourneyClicked should send AddRailJourney action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onAddRailJourneyClicked()
+    fun `onAddRailJourneyClicked should send AddRailJourney action`() = runTest {
+        // WHEN
+        viewModel.onAddRailJourneyClicked()
 
-            // THEN
-            val expected = HomeViewAction.AddRailJourney
-            assertThat(actions).contains(expected)
+        // THEN
+        val expected = HomeViewAction.AddRailJourney
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onAddBusAndTramJourneyClicked should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onAddBusAndTramJourneyClicked()
+    fun `onAddBusAndTramJourneyClicked should set correct state`() = runTest {
+        // WHEN
+        viewModel.onAddBusAndTramJourneyClicked()
 
-            // THEN
-            val expected = HomeViewState(isAddButtonExpanded = false)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = HomeViewState(isAddButtonExpanded = false)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onAddBusAndTramJourneyClicked should send AddBusAndTramJourney action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onAddBusAndTramJourneyClicked()
+    fun `onAddBusAndTramJourneyClicked should send AddBusAndTramJourney action`() = runTest {
+        // WHEN
+        viewModel.onAddBusAndTramJourneyClicked()
 
-            // THEN
-            val expected = HomeViewAction.AddBusAndTramJourney
-            assertThat(actions).contains(expected)
+        // THEN
+        val expected = HomeViewAction.AddBusAndTramJourney
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 }

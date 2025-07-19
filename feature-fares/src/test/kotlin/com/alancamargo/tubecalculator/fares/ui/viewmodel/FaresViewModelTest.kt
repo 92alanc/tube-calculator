@@ -1,9 +1,9 @@
 package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
+import app.cash.turbine.test
 import com.alancamargo.tubecalculator.common.ui.mapping.toUi
 import com.alancamargo.tubecalculator.core.design.text.BulletListFormatter
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.fares.data.analytics.FaresAnalytics
 import com.alancamargo.tubecalculator.fares.data.work.RailFaresCacheWorkScheduler
 import com.alancamargo.tubecalculator.fares.domain.model.Fare
@@ -11,16 +11,23 @@ import com.alancamargo.tubecalculator.fares.domain.model.RailFaresResult
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateBusAndTramFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.CalculateCheapestTotalFareUseCase
 import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
-import com.alancamargo.tubecalculator.fares.testtools.*
+import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_FARE
+import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_JOURNEY_COUNT
+import com.alancamargo.tubecalculator.fares.testtools.CHEAPEST_TOTAL_FARE
+import com.alancamargo.tubecalculator.fares.testtools.stubRailFare
+import com.alancamargo.tubecalculator.fares.testtools.stubStation
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
@@ -35,7 +42,7 @@ class FaresViewModelTest {
     private val mockRailFaresCacheWorkScheduler = mockk<RailFaresCacheWorkScheduler>(relaxed = true)
     private val mockAnalytics = mockk<FaresAnalytics>(relaxed = true)
     private val mockLogger = mockk<Logger>(relaxed = true)
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
 
     private val viewModel = FaresViewModel(
         mockGetRailFaresUseCase,
@@ -45,12 +52,6 @@ class FaresViewModelTest {
         mockRailFaresCacheWorkScheduler,
         mockAnalytics,
         mockLogger,
-        dispatcher
-    )
-
-    private val collector = ViewModelFlowCollector(
-        viewModel.state,
-        viewModel.action,
         dispatcher
     )
 
@@ -66,6 +67,8 @@ class FaresViewModelTest {
         every {
             mockCalculateCheapestTotalFareUseCase(fares = any())
         } returns CHEAPEST_TOTAL_FARE
+
+        Dispatchers.setMain(dispatcher)
     }
 
     @Test
@@ -184,32 +187,32 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns Success onCreate should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every {
-                mockGetRailFaresUseCase(origin = station, destination = station)
-            } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
+    fun `when use case returns Success onCreate should set correct state`() = runTest {
+        // GIVEN
+        every {
+            mockGetRailFaresUseCase(origin = station, destination = station)
+        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
 
-            // WHEN
-            viewModel.onCreate(
-                origin = uiStation,
-                destination = uiStation,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
-                isFirstLaunch = true
-            )
+        // WHEN
+        viewModel.onCreate(
+            origin = uiStation,
+            destination = uiStation,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
+        )
 
-            // THEN
-            val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(
-                    isLoading = false,
-                    fares = fares,
-                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
-                )
+        // THEN
+        val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
+        viewModel.state.test {
+            skipItems(count = 1)
+            val loadingState = FaresViewState(isLoading = true)
+            assertThat(awaitItem()).isEqualTo(loadingState)
+            val readyState = loadingState.copy(
+                isLoading = false,
+                fares = fares,
+                cheapestTotalFare = CHEAPEST_TOTAL_FARE
             )
-            assertThat(states).containsAtLeastElementsIn(expected)
+            assertThat(awaitItem()).isEqualTo(readyState)
         }
     }
 
@@ -233,22 +236,23 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `with only bus and tram fare onCreate should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onCreate(
-                origin = null,
-                destination = null,
-                busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
-                isFirstLaunch = true
-            )
+    fun `with only bus and tram fare onCreate should set correct state`() = runTest {
+        // WHEN
+        viewModel.onCreate(
+            origin = null,
+            destination = null,
+            busAndTramJourneyCount = BUS_AND_TRAM_JOURNEY_COUNT,
+            isFirstLaunch = true
+        )
 
-            // THEN
-            val expected = FaresViewState(
-                fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
-                cheapestTotalFare = CHEAPEST_TOTAL_FARE
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = FaresViewState(
+            fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+            cheapestTotalFare = CHEAPEST_TOTAL_FARE
+        )
+        viewModel.state.test {
+            skipItems(count = 1)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -268,7 +272,7 @@ class FaresViewModelTest {
 
     @Test
     fun `when use case returns InvalidQueryError onCreate should set correct state and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+        runTest {
             // GIVEN
             every {
                 mockGetRailFaresUseCase(origin = station, destination = station)
@@ -283,24 +287,28 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(
+            viewModel.state.test {
+                skipItems(count = 1)
+                val loadingState = FaresViewState(isLoading = true)
+                assertThat(awaitItem()).isEqualTo(loadingState)
+                val readyState = loadingState.copy(
                     isLoading = false,
                     fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
                     cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-            assertThat(actions).contains(
-                FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
-            )
+                assertThat(awaitItem()).isEqualTo(readyState)
+            }
+
+            viewModel.action.test {
+                val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `when use case returns NetworkError onCreate should set correct state and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+        runTest {
             // GIVEN
             every {
                 mockGetRailFaresUseCase(origin = station, destination = station)
@@ -315,16 +323,22 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(
+            viewModel.state.test {
+                skipItems(count = 1)
+                val loadingState = FaresViewState(isLoading = true)
+                assertThat(awaitItem()).isEqualTo(loadingState)
+                val readyState = FaresViewState(
                     isLoading = false,
                     fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
                     cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-            assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK))
+                assertThat(awaitItem()).isEqualTo(readyState)
+            }
+
+            viewModel.action.test {
+                val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
@@ -349,7 +363,7 @@ class FaresViewModelTest {
 
     @Test
     fun `when use case returns GenericError onCreate should set correct state and send ShowErrorDialogue action`() {
-        collector.test { states, actions ->
+        runTest {
             // GIVEN
             every {
                 mockGetRailFaresUseCase(origin = station, destination = station)
@@ -364,21 +378,28 @@ class FaresViewModelTest {
             )
 
             // THEN
-            val expected = listOf(
-                FaresViewState(isLoading = true),
-                FaresViewState(
+            viewModel.state.test {
+                skipItems(count = 1)
+                val loadingState = FaresViewState(isLoading = true)
+                assertThat(awaitItem()).isEqualTo(loadingState)
+                skipItems(count = 1)
+                val readyState = loadingState.copy(
                     isLoading = false,
                     fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
                     cheapestTotalFare = CHEAPEST_TOTAL_FARE
                 )
-            )
-            assertThat(states).containsAtLeastElementsIn(expected)
-            assertThat(actions).contains(FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC))
+                assertThat(awaitItem()).isEqualTo(readyState)
+            }
+
+            viewModel.action.test {
+                val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
-    fun `when use case returns GenericError onCreate should log result`() {
+    fun `when use case returns GenericError onCreate should log result`() = runTest {
         // GIVEN
         every {
             mockGetRailFaresUseCase(origin = station, destination = station)
@@ -400,7 +421,7 @@ class FaresViewModelTest {
 
     @Test
     fun `when use case throws IOException onCreate should send ShowErrorDialogue action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every {
                 mockGetRailFaresUseCase(origin = station, destination = station)
@@ -416,13 +437,15 @@ class FaresViewModelTest {
 
             // THEN
             val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `when use case throws generic exception onCreate should send ShowErrorDialogue action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every {
                 mockGetRailFaresUseCase(origin = station, destination = station)
@@ -438,7 +461,9 @@ class FaresViewModelTest {
 
             // THEN
             val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
@@ -463,13 +488,13 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onDismissErrorDialogue should send NavigateToHome action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onDismissErrorDialogue()
+    fun `onDismissErrorDialogue should send NavigateToHome action`() = runTest {
+        // WHEN
+        viewModel.onDismissErrorDialogue()
 
-            // THEN
-            assertThat(actions).contains(FaresViewAction.NavigateToHome)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(FaresViewAction.NavigateToHome)
         }
     }
 
@@ -483,13 +508,13 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onNewSearchClicked should send NavigateToHome action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onNewSearchClicked()
+    fun `onNewSearchClicked should send NavigateToHome action`() = runTest {
+        // WHEN
+        viewModel.onNewSearchClicked()
 
-            // THEN
-            assertThat(actions).contains(FaresViewAction.NavigateToHome)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(FaresViewAction.NavigateToHome)
         }
     }
 
@@ -506,18 +531,18 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onMessagesButtonClicked should send ShowMessagesDialogue action`() {
-        collector.test { _, actions ->
-            // GIVEN
-            val messages = listOf("Message 1", "Message 2", "Message 3")
-            val expected = "Bullet list"
-            every { mockBulletListFormatter.getBulletList(messages) } returns expected
+    fun `onMessagesButtonClicked should send ShowMessagesDialogue action`() = runTest {
+        // GIVEN
+        val messages = listOf("Message 1", "Message 2", "Message 3")
+        val expected = "Bullet list"
+        every { mockBulletListFormatter.getBulletList(messages) } returns expected
 
-            // WHEN
-            viewModel.onMessagesButtonClicked(messages)
+        // WHEN
+        viewModel.onMessagesButtonClicked(messages)
 
-            // THEN
-            assertThat(actions).contains(FaresViewAction.ShowMessagesDialogue(expected))
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(FaresViewAction.ShowMessagesDialogue(expected))
         }
     }
 }

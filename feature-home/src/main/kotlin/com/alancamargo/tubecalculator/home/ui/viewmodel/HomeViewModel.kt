@@ -14,7 +14,11 @@ import com.alancamargo.tubecalculator.home.domain.usecase.ShouldShowDeleteJourne
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -57,48 +61,32 @@ internal class HomeViewModel @Inject constructor(
     }
 
     fun onFirstAccessGoToSettingsClicked() {
-        viewModelScope.launch(dispatcher) {
-            disableFirstAccessUseCase()
-            _action.emit(HomeViewAction.NavigateToSettings)
-        }
+        disableFirstAccessUseCase()
+        sendAction(HomeViewAction.NavigateToSettings)
     }
 
     fun onFirstAccessNotNowClicked() {
-        viewModelScope.launch(dispatcher) {
-            disableFirstAccessUseCase()
-        }
+        disableFirstAccessUseCase()
     }
 
     fun onSettingsClicked() {
         analytics.trackSettingsClicked()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.NavigateToSettings)
-        }
+        sendAction(HomeViewAction.NavigateToSettings)
     }
 
     fun onPrivacyPolicyClicked() {
         analytics.trackPrivacyPolicyClicked()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.ShowPrivacyPolicyDialogue)
-        }
+        sendAction(HomeViewAction.ShowPrivacyPolicyDialogue)
     }
 
     fun onAppInfoClicked() {
         analytics.trackAppInfoClicked()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.ShowAppInfo(appVersionName))
-        }
+        sendAction(HomeViewAction.ShowAppInfo(appVersionName))
     }
 
     fun onCalculateClicked() {
         analytics.trackCalculateClicked(journeys)
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.NavigateToFares(journeys))
-        }
+        sendAction(HomeViewAction.NavigateToFares(journeys))
     }
 
     fun onJourneyReceived(journey: Journey) {
@@ -115,12 +103,10 @@ internal class HomeViewModel @Inject constructor(
         journeys = journeys + journey
         _state.update { it.onJourneysUpdated(journeys) }
 
-        viewModelScope.launch(dispatcher) {
-            if (shouldShowDeleteJourneyTutorialUseCase()) {
-                val illustrationAssetName = "delete_journey.gif"
-                _action.emit(HomeViewAction.ShowDeleteJourneyTutorial(illustrationAssetName))
-                disableDeleteJourneyTutorialUseCase()
-            }
+        if (shouldShowDeleteJourneyTutorialUseCase()) {
+            val illustrationAssetName = "delete_journey.gif"
+            sendAction(HomeViewAction.ShowDeleteJourneyTutorial(illustrationAssetName))
+            disableDeleteJourneyTutorialUseCase()
         }
     }
 
@@ -141,26 +127,21 @@ internal class HomeViewModel @Inject constructor(
 
     fun onJourneyClicked(journey: Journey) {
         analytics.trackJourneyClicked()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.EditJourney(journey))
-        }
+        sendAction(HomeViewAction.EditJourney(journey))
     }
 
     fun onAddRailJourneyClicked() {
         collapseAddButton()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.AddRailJourney)
-        }
+        sendAction(HomeViewAction.AddRailJourney)
     }
 
     fun onAddBusAndTramJourneyClicked() {
         collapseAddButton()
+        sendAction(HomeViewAction.AddBusAndTramJourney)
+    }
 
-        viewModelScope.launch(dispatcher) {
-            _action.emit(HomeViewAction.AddBusAndTramJourney)
-        }
+    private fun sendAction(action: HomeViewAction) = viewModelScope.launch(dispatcher) {
+        _action.emit(action)
     }
 
     private fun expandAddButton() {
