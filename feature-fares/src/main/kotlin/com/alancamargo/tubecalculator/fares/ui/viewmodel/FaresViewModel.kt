@@ -17,7 +17,14 @@ import com.alancamargo.tubecalculator.fares.ui.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -54,41 +61,37 @@ internal class FaresViewModel @Inject constructor(
 
         analytics.trackScreenViewed()
 
-        viewModelScope.launch(dispatcher) {
-            if (origin != null && destination != null) {
-                getRailFares(origin, destination)
+        if (origin != null && destination != null) {
+            viewModelScope.launch(dispatcher) {
+                getRailFares(origin, destination, busAndTramJourneyCount)
             }
-
+        } else {
             calculateBusAndTramFare(busAndTramJourneyCount)
             calculateCheapestTotalFare()
-            railFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork()
         }
     }
 
     fun onDismissErrorDialogue() {
-        viewModelScope.launch(dispatcher) {
-            _action.emit(FaresViewAction.NavigateToHome)
-        }
+        sendAction(FaresViewAction.NavigateToHome)
     }
 
     fun onNewSearchClicked() {
         analytics.trackNewSearchClicked()
-
-        viewModelScope.launch(dispatcher) {
-            _action.emit(FaresViewAction.NavigateToHome)
-        }
+        sendAction(FaresViewAction.NavigateToHome)
     }
 
     fun onMessagesButtonClicked(messages: List<String>) {
         analytics.trackMessagesClicked()
 
-        viewModelScope.launch(dispatcher) {
-            val text = bulletListFormatter.getBulletList(messages)
-            _action.emit(FaresViewAction.ShowMessagesDialogue(text))
-        }
+        val text = bulletListFormatter.getBulletList(messages)
+        sendAction(FaresViewAction.ShowMessagesDialogue(text))
     }
 
-    private suspend fun getRailFares(origin: UiStation, destination: UiStation) {
+    private suspend fun getRailFares(
+        origin: UiStation,
+        destination: UiStation,
+        busAndTramJourneyCount: Int
+    ) {
         getRailFaresUseCase.invoke(
             origin = origin.toDomain(),
             destination = destination.toDomain()
@@ -105,7 +108,7 @@ internal class FaresViewModel @Inject constructor(
                 logger.debug(message)
             }
 
-            handleRailFaresResult(result)
+            handleRailFaresResult(result, busAndTramJourneyCount)
         }
     }
 
@@ -121,37 +124,45 @@ internal class FaresViewModel @Inject constructor(
         _state.update { it.onReceivedCheapestTotalFare(cheapestTotalFare) }
     }
 
-    private suspend fun handleRailFaresError(throwable: Throwable) {
+    private fun handleRailFaresError(throwable: Throwable) {
         val error = if (throwable is IOException) {
             UiFaresError.NETWORK
         } else {
             UiFaresError.GENERIC
         }
 
-        _action.emit(FaresViewAction.ShowErrorDialogue(error))
+        sendAction(FaresViewAction.ShowErrorDialogue(error))
     }
 
-    private suspend fun handleRailFaresResult(result: RailFaresResult) {
+    private fun handleRailFaresResult(result: RailFaresResult, busAndTramJourneyCount: Int) {
         when (result) {
             is RailFaresResult.Success -> {
                 fares.addAll(result.railFares)
                 _state.update { it.onReceivedRailFares(result.railFares) }
+
+                calculateBusAndTramFare(busAndTramJourneyCount)
+                calculateCheapestTotalFare()
+                railFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork()
             }
 
             is RailFaresResult.InvalidQueryError -> {
                 val error = UiFaresError.INVALID_QUERY
-                _action.emit(FaresViewAction.ShowErrorDialogue(error))
+                sendAction(FaresViewAction.ShowErrorDialogue(error))
             }
 
             is RailFaresResult.NetworkError -> {
                 val error = UiFaresError.NETWORK
-                _action.emit(FaresViewAction.ShowErrorDialogue(error))
+                sendAction(FaresViewAction.ShowErrorDialogue(error))
             }
 
             is RailFaresResult.GenericError -> {
                 val error = UiFaresError.GENERIC
-                _action.emit(FaresViewAction.ShowErrorDialogue(error))
+                sendAction(FaresViewAction.ShowErrorDialogue(error))
             }
         }
+    }
+
+    private fun sendAction(action: FaresViewAction) = viewModelScope.launch(dispatcher) {
+        _action.emit(action)
     }
 }

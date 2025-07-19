@@ -113,6 +113,7 @@ class FaresViewModelTest {
 
         // THEN
         verify(exactly = 0) {
+            @Suppress("UnusedFlow")
             mockGetRailFaresUseCase(
                 origin = any(),
                 destination = any()
@@ -168,11 +169,11 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `onCreate should schedule fares cache background work`() {
+    fun `onCreate should schedule fares cache background work`() = runTest {
         // GIVEN
         every {
             mockGetRailFaresUseCase(origin = any(), destination = any())
-        } returns flowOf(RailFaresResult.NetworkError)
+        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
 
         // WHEN
         viewModel.onCreate(
@@ -204,15 +205,13 @@ class FaresViewModelTest {
         // THEN
         val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
         viewModel.state.test {
-            skipItems(count = 1)
-            val loadingState = FaresViewState(isLoading = true)
-            assertThat(awaitItem()).isEqualTo(loadingState)
-            val readyState = loadingState.copy(
+            skipItems(count = 5)
+            val expected = FaresViewState(
                 isLoading = false,
                 fares = fares,
                 cheapestTotalFare = CHEAPEST_TOTAL_FARE
             )
-            assertThat(awaitItem()).isEqualTo(readyState)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -251,7 +250,6 @@ class FaresViewModelTest {
             cheapestTotalFare = CHEAPEST_TOTAL_FARE
         )
         viewModel.state.test {
-            skipItems(count = 1)
             assertThat(awaitItem()).isEqualTo(expected)
         }
     }
@@ -271,7 +269,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns InvalidQueryError onCreate should set correct state and send ShowErrorDialogue action`() {
+    fun `when use case returns InvalidQueryError onCreate should send ShowErrorDialogue action`() {
         runTest {
             // GIVEN
             every {
@@ -287,18 +285,6 @@ class FaresViewModelTest {
             )
 
             // THEN
-            viewModel.state.test {
-                skipItems(count = 1)
-                val loadingState = FaresViewState(isLoading = true)
-                assertThat(awaitItem()).isEqualTo(loadingState)
-                val readyState = loadingState.copy(
-                    isLoading = false,
-                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
-                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
-                )
-                assertThat(awaitItem()).isEqualTo(readyState)
-            }
-
             viewModel.action.test {
                 val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.INVALID_QUERY)
                 assertThat(awaitItem()).isEqualTo(expected)
@@ -307,7 +293,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns NetworkError onCreate should set correct state and send ShowErrorDialogue action`() {
+    fun `when use case returns NetworkError onCreate should and send ShowErrorDialogue action`() {
         runTest {
             // GIVEN
             every {
@@ -323,18 +309,6 @@ class FaresViewModelTest {
             )
 
             // THEN
-            viewModel.state.test {
-                skipItems(count = 1)
-                val loadingState = FaresViewState(isLoading = true)
-                assertThat(awaitItem()).isEqualTo(loadingState)
-                val readyState = FaresViewState(
-                    isLoading = false,
-                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
-                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
-                )
-                assertThat(awaitItem()).isEqualTo(readyState)
-            }
-
             viewModel.action.test {
                 val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.NETWORK)
                 assertThat(awaitItem()).isEqualTo(expected)
@@ -362,7 +336,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case returns GenericError onCreate should set correct state and send ShowErrorDialogue action`() {
+    fun `when use case returns GenericError onCreate should send ShowErrorDialogue action`() {
         runTest {
             // GIVEN
             every {
@@ -378,19 +352,6 @@ class FaresViewModelTest {
             )
 
             // THEN
-            viewModel.state.test {
-                skipItems(count = 1)
-                val loadingState = FaresViewState(isLoading = true)
-                assertThat(awaitItem()).isEqualTo(loadingState)
-                skipItems(count = 1)
-                val readyState = loadingState.copy(
-                    isLoading = false,
-                    fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
-                    cheapestTotalFare = CHEAPEST_TOTAL_FARE
-                )
-                assertThat(awaitItem()).isEqualTo(readyState)
-            }
-
             viewModel.action.test {
                 val expected = FaresViewAction.ShowErrorDialogue(UiFaresError.GENERIC)
                 assertThat(awaitItem()).isEqualTo(expected)
@@ -468,7 +429,7 @@ class FaresViewModelTest {
     }
 
     @Test
-    fun `when use case throws exception onCreate should log exception`() {
+    fun `when use case throws exception onCreate should log exception`() = runTest {
         // GIVEN
         val exception = Throwable()
         every {
