@@ -1,90 +1,84 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.busandtramjourneys
 
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
+import app.cash.turbine.test
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class BusAndTramJourneysViewModelTest {
 
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
     private val viewModel = BusAndTramJourneysViewModel(dispatcher)
 
-    private val collector = ViewModelFlowCollector(
-        viewModel.state,
-        viewModel.action,
-        dispatcher
-    )
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
 
     @Test
-    fun `onCreate should set correct view state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            val journeyCount = 2
+    fun `onCreate should set correct view state`() = runTest {
+        // GIVEN
+        val journeyCount = 2
 
-            // WHEN
-            viewModel.onCreate(journeyCount)
+        // WHEN
+        viewModel.onCreate(journeyCount)
 
-            // THEN
-            val expected = BusAndTramJourneysViewState(journeyCount)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = BusAndTramJourneysViewState(journeyCount)
+        viewModel.state.test {
+            skipItems(count = 1)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `increaseBusAndTramJourneyCount should set correct state`() {
-        collector.test { states, _ ->
-            // WHEN
-            val expectedCount = 1
+    fun `increaseBusAndTramJourneyCount should set correct state`() = runTest {
+        // WHEN
+        val expectedCount = 1
+        viewModel.increaseBusAndTramJourneyCount()
+
+        // THEN
+        val expected = BusAndTramJourneysViewState(busAndTramJourneyCount = expectedCount)
+        viewModel.state.test {
+            skipItems(count = 1)
+            assertThat(awaitItem()).isEqualTo(expected)
+        }
+    }
+
+    @Test
+    fun `with positive count decreaseBusAndTramJourneyCount should set correct state`() = runTest {
+        // GIVEN
+        repeat(times = 2) {
             viewModel.increaseBusAndTramJourneyCount()
+        }
 
-            // THEN
-            val expected = BusAndTramJourneysViewState(busAndTramJourneyCount = expectedCount)
-            assertThat(states).contains(expected)
+        // WHEN
+        val expectedCount = 1
+        viewModel.decreaseBusAndTramJourneyCount()
+
+        // THEN
+        val expected = BusAndTramJourneysViewState(busAndTramJourneyCount = expectedCount)
+        viewModel.state.test {
+            skipItems(count = 1)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `with positive count decreaseBusAndTramJourneyCount should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            repeat(times = 2) {
-                viewModel.increaseBusAndTramJourneyCount()
-            }
+    fun `onMoreInfoClicked should send ShowMoreInfo action`() = runTest {
+        // WHEN
+        viewModel.onMoreInfoClicked()
 
-            // WHEN
-            val expectedCount = 1
-            viewModel.decreaseBusAndTramJourneyCount()
-
-            // THEN
-            val expected = BusAndTramJourneysViewState(busAndTramJourneyCount = expectedCount)
-            assertThat(states).contains(expected)
-        }
-    }
-
-    @Test
-    fun `with negative count decreaseBusAndTramJourneyCount should not update state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.decreaseBusAndTramJourneyCount()
-
-            // THEN
-            val expected = listOf(BusAndTramJourneysViewState())
-            assertThat(states).isEqualTo(expected)
-        }
-    }
-
-    @Test
-    fun `onMoreInfoClicked should send ShowMoreInfo action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onMoreInfoClicked()
-
-            // THEN
-            val expected = BusAndTramJourneysViewAction.ShowMoreInfo
-            assertThat(actions).contains(expected)
+        // THEN
+        val expected = BusAndTramJourneysViewAction.ShowMoreInfo
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 }

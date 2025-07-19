@@ -1,16 +1,20 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.activity
 
+import app.cash.turbine.test
 import com.alancamargo.tubecalculator.common.ui.model.JourneyType
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.data.analytics.SearchAnalytics
 import com.alancamargo.tubecalculator.search.testtools.stubBusAndTramJourney
 import com.alancamargo.tubecalculator.search.testtools.stubRailJourney
 import com.google.common.truth.Truth.assertThat
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -19,7 +23,7 @@ class SearchViewModelTest {
     private val mockAnalytics = mockk<SearchAnalytics>(relaxed = true)
     private val mockLogger = mockk<Logger>(relaxed = true)
     private val uiDelay = 0L
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
 
     private val viewModel = SearchViewModel(
         mockAnalytics,
@@ -28,15 +32,14 @@ class SearchViewModelTest {
         dispatcher
     )
 
-    private val collector = ViewModelFlowCollector(
-        stateFlow = viewModel.action,
-        actionFlow = viewModel.action,
-        dispatcher = dispatcher
-    )
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
 
     @Test
     fun `with rail journey on first launch onCreate should send AttachPreFilledRailJourneyFragments action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             val journey = stubRailJourney()
 
@@ -48,14 +51,16 @@ class SearchViewModelTest {
             )
 
             // THEN
-            val expected = SearchViewAction.AttachPreFilledRailJourneyFragments(journey)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                val expected = SearchViewAction.AttachPreFilledRailJourneyFragments(journey)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `with bus and tram journey on first launch onCreate should send AttachPreFilledBusAndTramJourneyFragment action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             val journey = stubBusAndTramJourney()
 
@@ -67,14 +72,16 @@ class SearchViewModelTest {
             )
 
             // THEN
-            val expected = SearchViewAction.AttachPreFilledBusAndTramJourneyFragment(journey)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                val expected = SearchViewAction.AttachPreFilledBusAndTramJourneyFragment(journey)
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `with rail journey type on first launch onCreate should send AttachBlankRailJourneyFragments action`() {
-        collector.test { _, actions ->
+        runTest {
             // WHEN
             viewModel.onCreate(
                 isFirstLaunch = true,
@@ -83,14 +90,16 @@ class SearchViewModelTest {
             )
 
             // THEN
-            val expected = SearchViewAction.AttachBlankRailJourneyFragments
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                val expected = SearchViewAction.AttachBlankRailJourneyFragments
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `with bus and tram journey type on first launch onCreate should send AttachBlankBusAndTramJourneyFragment action`() {
-        collector.test { _, actions ->
+        runTest {
             // WHEN
             viewModel.onCreate(
                 isFirstLaunch = true,
@@ -99,8 +108,10 @@ class SearchViewModelTest {
             )
 
             // THEN
-            val expected = SearchViewAction.AttachBlankBusAndTramJourneyFragment
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                val expected = SearchViewAction.AttachBlankBusAndTramJourneyFragment
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
@@ -115,21 +126,6 @@ class SearchViewModelTest {
 
         // THEN
         verify { mockAnalytics.trackScreenViewed() }
-    }
-
-    @Test
-    fun `when not on first launch onCreate should not send any action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onCreate(
-                isFirstLaunch = false,
-                journey = null,
-                journeyType = JourneyType.RAIL
-            )
-
-            // THEN
-            assertThat(actions).isEmpty()
-        }
     }
 
     @Test

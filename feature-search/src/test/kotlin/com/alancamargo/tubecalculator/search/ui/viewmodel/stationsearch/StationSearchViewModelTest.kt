@@ -1,21 +1,29 @@
 package com.alancamargo.tubecalculator.search.ui.viewmodel.stationsearch
 
+import app.cash.turbine.test
 import com.alancamargo.tubecalculator.core.log.Logger
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
-import com.alancamargo.tubecalculator.search.testtools.*
+import com.alancamargo.tubecalculator.search.testtools.MIN_QUERY_LENGTH
+import com.alancamargo.tubecalculator.search.testtools.SEARCH_QUERY
+import com.alancamargo.tubecalculator.search.testtools.stubSuccessfulStationListResultFlow
+import com.alancamargo.tubecalculator.search.testtools.stubUiStation
+import com.alancamargo.tubecalculator.search.testtools.stubUiStationList
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 
@@ -25,7 +33,7 @@ class StationSearchViewModelTest {
     private val mockSearchStationUseCase = mockk<SearchStationUseCase>()
     private val mockGetMinQueryLengthUseCase = mockk<GetMinQueryLengthUseCase>()
     private val mockLogger = mockk<Logger>(relaxed = true)
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
 
     private val viewModel = StationSearchViewModel(
         mockSearchStationUseCase,
@@ -34,34 +42,29 @@ class StationSearchViewModelTest {
         dispatcher
     )
 
-    private val collector = ViewModelFlowCollector(
-        stateFlow = viewModel.state,
-        actionFlow = viewModel.action,
-        dispatcher = dispatcher
-    )
-
     @Before
     fun setUp() {
+        Dispatchers.setMain(dispatcher)
         every { mockGetMinQueryLengthUseCase() } returns MIN_QUERY_LENGTH
     }
 
     @Test
-    fun `onCreate should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            val searchType = SearchType.ORIGIN
-            val station = stubUiStation()
+    fun `onCreate should set correct state`() = runTest {
+        // GIVEN
+        val searchType = SearchType.ORIGIN
+        val station = stubUiStation()
 
-            // WHEN
-            viewModel.onCreate(searchType, station)
+        // WHEN
+        viewModel.onCreate(searchType, station)
 
-            // THEN
-            val expected = StationSearchViewState(
-                selectedStation = station,
-                labelRes = searchType.labelRes,
-                hintRes = searchType.hintRes
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = StationSearchViewState(
+            selectedStation = station,
+            labelRes = searchType.labelRes,
+            hintRes = searchType.hintRes
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -71,7 +74,10 @@ class StationSearchViewModelTest {
         viewModel.onQueryChanged(query = "")
 
         // THEN
-        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+        verify(exactly = 0) {
+            @Suppress("UnusedFlow")
+            mockSearchStationUseCase(query = any())
+        }
     }
 
     @Test
@@ -80,7 +86,10 @@ class StationSearchViewModelTest {
         viewModel.onQueryChanged(query = "ma")
 
         // THEN
-        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+        verify(exactly = 0) {
+            @Suppress("UnusedFlow")
+            mockSearchStationUseCase(query = any())
+        }
     }
 
     @Test
@@ -92,30 +101,34 @@ class StationSearchViewModelTest {
         viewModel.onQueryChanged(query = "Marylebone")
 
         // THEN
-        verify(exactly = 0) { mockSearchStationUseCase(query = any()) }
+        verify(exactly = 0) {
+            @Suppress("UnusedFlow")
+            mockSearchStationUseCase(query = any())
+        }
     }
 
     @Test
-    fun `when use case returns Success onQueryChanged should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every {
-                mockSearchStationUseCase(SEARCH_QUERY)
-            } returns stubSuccessfulStationListResultFlow()
+    fun `when use case returns Success onQueryChanged should set correct state`() = runTest {
+        // GIVEN
+        every {
+            mockSearchStationUseCase(SEARCH_QUERY)
+        } returns stubSuccessfulStationListResultFlow()
 
-            // WHEN
-            viewModel.onQueryChanged(SEARCH_QUERY)
+        // WHEN
+        viewModel.onQueryChanged(SEARCH_QUERY)
 
-            // THEN
-            val stations = stubUiStationList()
-            val expected = StationSearchViewState(stations = stations)
-            assertThat(states).contains(expected)
+        // THEN
+        val stations = stubUiStationList()
+        val expected = StationSearchViewState(stations = stations)
+        viewModel.state.test {
+            skipItems(count = 1)
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
     fun `when use case returns GenericError onQueryChanged should send ShowErrorDialogue action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every {
                 mockSearchStationUseCase(SEARCH_QUERY)
@@ -126,13 +139,15 @@ class StationSearchViewModelTest {
 
             // THEN
             val expected = StationSearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
     fun `when use case throws exception onQueryChanged should send ShowErrorDialogue action`() {
-        collector.test { _, actions ->
+        runTest {
             // GIVEN
             every { mockSearchStationUseCase(SEARCH_QUERY) } returns flow { throw Throwable() }
 
@@ -141,22 +156,23 @@ class StationSearchViewModelTest {
 
             // THEN
             val expected = StationSearchViewAction.ShowErrorDialogue(UiSearchError.GENERIC)
-            assertThat(actions).contains(expected)
+            viewModel.action.test {
+                assertThat(awaitItem()).isEqualTo(expected)
+            }
         }
     }
 
     @Test
-    fun `when use case throws exception onQueryChanged should log exception`() {
-        collector.test { _, _ ->
-            // GIVEN
-            val exception = Throwable()
-            every { mockSearchStationUseCase(SEARCH_QUERY) } returns flow { throw exception }
+    fun `when use case throws exception onQueryChanged should log exception`() = runTest {
+        // GIVEN
+        val exception = Throwable()
+        every { mockSearchStationUseCase(SEARCH_QUERY) } returns flow { throw exception }
 
-            // WHEN
-            viewModel.onQueryChanged(SEARCH_QUERY)
+        // WHEN
+        viewModel.onQueryChanged(SEARCH_QUERY)
 
-            // THEN
-            verify { mockLogger.error(exception) }
-        }
+        // THEN
+        advanceUntilIdle()
+        verify { mockLogger.error(exception) }
     }
 }
