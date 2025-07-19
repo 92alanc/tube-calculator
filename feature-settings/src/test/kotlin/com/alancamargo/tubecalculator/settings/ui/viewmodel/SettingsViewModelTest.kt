@@ -1,6 +1,6 @@
 package com.alancamargo.tubecalculator.settings.ui.viewmodel
 
-import com.alancamargo.tubecalculator.core.test.viewmodel.ViewModelFlowCollector
+import app.cash.turbine.test
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.IsAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.ads.SetAdPersonalisationEnabledUseCase
 import com.alancamargo.tubecalculator.settings.domain.usecase.analytics.IsAnalyticsEnabledUseCase
@@ -11,8 +11,12 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,7 +35,7 @@ class SettingsViewModelTest {
     private val mockIsAnalyticsEnabledUseCase = mockk<IsAnalyticsEnabledUseCase>()
     private val mockSetAnalyticsEnabledUseCase = mockk<SetAnalyticsEnabledUseCase>(relaxed = true)
 
-    private val dispatcher = TestCoroutineDispatcher()
+    private val dispatcher = StandardTestDispatcher()
 
     private val viewModel = SettingsViewModel(
         mockIsCrashLoggingEnabledUseCase,
@@ -43,42 +47,41 @@ class SettingsViewModelTest {
         dispatcher
     )
 
-    private val collector = ViewModelFlowCollector(
-        viewModel.state,
-        viewModel.action,
-        dispatcher
-    )
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(dispatcher)
+    }
 
     @Test
-    fun `onCreate should set correct state`() {
-        collector.test { states, _ ->
-            // GIVEN
-            every { mockIsCrashLoggingEnabledUseCase() } returns true
-            every { mockIsAdPersonalisationEnabledUseCase() } returns true
-            every { mockIsAnalyticsEnabledUseCase() } returns true
+    fun `onCreate should set correct state`() = runTest {
+        // GIVEN
+        every { mockIsCrashLoggingEnabledUseCase() } returns true
+        every { mockIsAdPersonalisationEnabledUseCase() } returns true
+        every { mockIsAnalyticsEnabledUseCase() } returns true
 
-            // WHEN
-            viewModel.onCreate()
+        // WHEN
+        viewModel.onCreate()
 
-            // THEN
-            val expected = SettingsViewState(
-                isCrashLoggingEnabled = true,
-                isAdPersonalisationEnabled = true,
-                isAnalyticsEnabled = true
-            )
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = SettingsViewState(
+            isCrashLoggingEnabled = true,
+            isAdPersonalisationEnabled = true,
+            isAnalyticsEnabled = true
+        )
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
     @Test
-    fun `onCrashLoggingToggled should update state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onCrashLoggingToggled(isEnabled = true)
+    fun `onCrashLoggingToggled should update state`() = runTest {
+        // WHEN
+        viewModel.onCrashLoggingToggled(isEnabled = true)
 
-            // THEN
-            val expected = SettingsViewState(isCrashLoggingEnabled = true)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = SettingsViewState(isCrashLoggingEnabled = true)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -92,14 +95,14 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `onAdPersonalisationToggled should update state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onAdPersonalisationToggled(isEnabled = true)
+    fun `onAdPersonalisationToggled should update state`() = runTest {
+        // WHEN
+        viewModel.onAdPersonalisationToggled(isEnabled = true)
 
-            // THEN
-            val expected = SettingsViewState(isAdPersonalisationEnabled = true)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = SettingsViewState(isAdPersonalisationEnabled = true)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -113,14 +116,14 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `onAnalyticsToggled should update state`() {
-        collector.test { states, _ ->
-            // WHEN
-            viewModel.onAnalyticsToggled(isEnabled = true)
+    fun `onAnalyticsToggled should update state`() = runTest {
+        // WHEN
+        viewModel.onAnalyticsToggled(isEnabled = true)
 
-            // THEN
-            val expected = SettingsViewState(isAnalyticsEnabled = true)
-            assertThat(states).contains(expected)
+        // THEN
+        val expected = SettingsViewState(isAnalyticsEnabled = true)
+        viewModel.state.test {
+            assertThat(awaitItem()).isEqualTo(expected)
         }
     }
 
@@ -134,13 +137,13 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun `onBackClicked should send Finish action`() {
-        collector.test { _, actions ->
-            // WHEN
-            viewModel.onBackClicked()
+    fun `onBackClicked should send Finish action`() = runTest {
+        // WHEN
+        viewModel.onBackClicked()
 
-            // THEN
-            assertThat(actions).contains(SettingsViewAction.Finish)
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(SettingsViewAction.Finish)
         }
     }
 }
