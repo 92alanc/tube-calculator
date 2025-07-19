@@ -92,7 +92,7 @@ internal class FaresViewModel @Inject constructor(
         destination: UiStation,
         busAndTramJourneyCount: Int
     ) {
-        getRailFaresUseCase.invoke(
+        getRailFaresUseCase(
             origin = origin.toDomain(),
             destination = destination.toDomain()
         ).onStart {

@@ -26,6 +26,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Before
@@ -184,6 +185,7 @@ class FaresViewModelTest {
         )
 
         // WHEN
+        advanceUntilIdle()
         verify { mockRailFaresCacheWorkScheduler.scheduleRailFaresCacheBackgroundWork() }
     }
 
@@ -375,6 +377,7 @@ class FaresViewModelTest {
         )
 
         // THEN
+        advanceUntilIdle()
         val message =
             "Origin: ${uiStation.name}. Destination: ${uiStation.name}. Result: ${RailFaresResult.GenericError}"
         verify { mockLogger.debug(message) }
@@ -445,6 +448,7 @@ class FaresViewModelTest {
         )
 
         // THEN
+        advanceUntilIdle()
         verify { mockLogger.error(exception) }
     }
 
