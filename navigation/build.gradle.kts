@@ -5,15 +5,15 @@ plugins {
 
 android {
     namespace = "com.alancamargo.tubecalculator.navigation"
-    compileSdk = 36
+    compileSdk = Config.Build.TARGET_SDK
 
     defaultConfig {
-        minSdk = 24
+        minSdk = Config.Build.MIN_SDK
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = Config.Build.IS_MINIFY_ENABLED
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -22,17 +22,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = Config.Build.javaVersion
+        targetCompatibility = Config.Build.javaVersion
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(Config.Build.javaVersionInt)
     }
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(Config.Modules.COMMON))
 
     implementation(libs.android.appcompat)
 }

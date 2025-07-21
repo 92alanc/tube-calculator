@@ -6,15 +6,15 @@ plugins {
 
 android {
     namespace = "com.alancamargo.tubecalculator.common"
-    compileSdk = 36
+    compileSdk = Config.Build.TARGET_SDK
 
     defaultConfig {
-        minSdk = 24
+        minSdk = Config.Build.MIN_SDK
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = Config.Build.IS_MINIFY_ENABLED
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -23,17 +23,17 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = Config.Build.javaVersion
+        targetCompatibility = Config.Build.javaVersion
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(Config.Build.javaVersionInt)
     }
 }
 
 dependencies {
-    implementation(project(":core-design"))
+    implementation(project(Config.Modules.CORE_DESIGN))
 
     implementation(libs.android.core)
 }

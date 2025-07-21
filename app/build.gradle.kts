@@ -9,28 +9,26 @@ plugins {
 
 android {
     namespace = "com.alancamargo.tubecalculator"
-    compileSdk = 36
+    compileSdk = Config.Build.TARGET_SDK
 
     defaultConfig {
         applicationId = "com.alancamargo.tubecalculator"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 17
-        versionName = "2025.3.0"
-
-        testInstrumentationRunner =
-            "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
+        minSdk = Config.Build.MIN_SDK
+        targetSdk = Config.Build.TARGET_SDK
+        versionCode = Config.Build.VERSION_CODE
+        versionName = Config.Build.VERSION_NAME
+        testInstrumentationRunner = Config.Testing.CUSTOM_TEST_RUNNER
     }
 
     signingConfigs {
-        create("release") {
+        create(Config.Build.RELEASE_BUILD_TYPE) {
             keyAlias = System.getenv("BITRISEIO_ANDROID_KEYSTORE_ALIAS")
             keyPassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD")
             storeFile = file(System.getenv("HOME") + "/keystores/tube-calculator.jks")
             storePassword = System.getenv("BITRISEIO_ANDROID_KEYSTORE_PASSWORD")
         }
 
-        /*create("release") {
+        /*create(Config.Build.RELEASE_BUILD_TYPE) {
             keyAlias = properties["$tube_calculator_key_alias"] as String
             keyPassword = properties["$tube_calculator_key_password"] as String
             storeFile = file(path = properties["$tube_calculator_store_file"] as String)
@@ -46,9 +44,9 @@ android {
 
         release {
             isDebuggable = false
-            isMinifyEnabled = true
+            isMinifyEnabled = Config.Build.IS_MINIFY_ENABLED
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName(Config.Build.RELEASE_BUILD_TYPE)
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -57,22 +55,22 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = Config.Build.javaVersion
+        targetCompatibility = Config.Build.javaVersion
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(Config.Build.javaVersionInt)
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":core-design"))
-    implementation(project(":feature-home"))
-    implementation(project(":feature-search"))
-    implementation(project(":feature-fares"))
-    implementation(project(":feature-settings"))
+    implementation(project(Config.Modules.CORE))
+    implementation(project(Config.Modules.CORE_DESIGN))
+    implementation(project(Config.Modules.FEATURE_HOME))
+    implementation(project(Config.Modules.FEATURE_SEARCH))
+    implementation(project(Config.Modules.FEATURE_FARES))
+    implementation(project(Config.Modules.FEATURE_SETTINGS))
 
     implementation(libs.google.ads)
     implementation(libs.hilt.android)

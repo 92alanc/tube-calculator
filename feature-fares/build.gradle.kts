@@ -9,20 +9,20 @@ plugins {
 
 android {
     namespace = "com.alancamargo.tubecalculator.fares"
-    compileSdk = 36
+    compileSdk = Config.Build.TARGET_SDK
 
     defaultConfig {
-        minSdk = 24
+        minSdk = Config.Build.MIN_SDK
 
-        testInstrumentationRunner =
-            "com.alancamargo.tubecalculator.core.test.runner.InstrumentedTestRunner"
-        testInstrumentationRunnerArguments["clearPackageData"] = "true"
+        testInstrumentationRunner = Config.Testing.CUSTOM_TEST_RUNNER
+        testInstrumentationRunnerArguments[Config.Testing.KEY_CLEAR_PACKAGE_DATA] =
+            Config.Testing.VALUE_CLEAR_PACKAGE_DATA
         consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = Config.Build.IS_MINIFY_ENABLED
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -31,7 +31,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
+        viewBinding = Config.Build.IS_VIEW_BINDING_ENABLED
     }
 
     sourceSets {
@@ -41,29 +41,29 @@ android {
     }
 
     testOptions {
-        animationsDisabled = true
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
+        animationsDisabled = Config.Testing.ANIMATIONS_DISABLED
+        execution = Config.Testing.ANDROID_TEST_ORCHESTRATOR_NAME
     }
 
     packaging {
-        resources.excludes.add("META-INF/*")
+        resources.excludes.add(Config.Build.META_INF_DIR)
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = Config.Build.javaVersion
+        targetCompatibility = Config.Build.javaVersion
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(Config.Build.javaVersionInt)
     }
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":core-design"))
-    implementation(project(":common"))
-    implementation(project(":navigation"))
+    implementation(project(Config.Modules.CORE))
+    implementation(project(Config.Modules.CORE_DESIGN))
+    implementation(project(Config.Modules.COMMON))
+    implementation(project(Config.Modules.NAVIGATION))
 
     implementation(libs.android.activity)
     implementation(libs.android.appcompat)
@@ -79,14 +79,14 @@ dependencies {
     ksp(libs.hilt.compiler)
     ksp(libs.room.compiler)
 
-    testImplementation(project(":core-test"))
+    testImplementation(project(Config.Modules.CORE_TEST))
 
     testImplementation(libs.coroutines.test)
     testImplementation(libs.mockk.android)
     testImplementation(libs.truth)
     testImplementation(libs.turbine)
 
-    androidTestImplementation(project(":core-test"))
+    androidTestImplementation(project(Config.Modules.CORE_TEST))
 
     androidTestImplementation(libs.android.espresso.core)
     androidTestImplementation(libs.coroutines.test)
