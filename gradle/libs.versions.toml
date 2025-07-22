@@ -2,6 +2,7 @@
 androidGradlePlugin = "8.11.1"
 androidActivity = "1.10.1"
 androidAppcompat = "1.7.1"
+androidCompose = "2025.07.00"
 androidCore = "1.16.0"
 androidEspresso = "3.6.1"
 androidFragment = "1.8.8"
@@ -10,6 +11,7 @@ androidSplashScreen = "1.0.1"
 androidTestOrchestrator = "1.5.1"
 androidTestRunner = "1.6.2"
 coil = "2.7.0"
+coilCompose = "3.2.0"
 coroutinesTest = "1.10.2"
 firebaseBom = "34.0.0"
 firebaseCrashlytics = "3.0.5"
@@ -35,6 +37,10 @@ work = "2.10.2"
 [libraries]
 android-activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidActivity" }
 android-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidAppcompat" }
+android-compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "androidActivity" }
+android-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidCompose" }
+android-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+android-compose-preview = { group = "androidx.compose.ui", name = "ui-tooling" }
 android-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidCore" }
 android-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "androidEspresso" }
 android-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidEspresso" }
@@ -44,6 +50,7 @@ android-splashscreen = { group = "androidx.core", name = "core-splashscreen", ve
 android-test-orchestrator = { group = "androidx.test", name = "orchestrator", version.ref = "androidTestOrchestrator" }
 android-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidTestRunner" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coilCompose" }
 coil-gif = { group = "io.coil-kt", name = "coil-gif", version.ref = "coil" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
@@ -76,6 +83,7 @@ work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinPlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

@@ -9,6 +9,7 @@ object Config {
         const val VERSION_CODE = 17
         const val VERSION_NAME = "2025.3.0"
         const val IS_MINIFY_ENABLED = true
+        const val IS_COMPOSE_ENABLED = true
         const val RELEASE_BUILD_TYPE = "release"
         const val IS_VIEW_BINDING_ENABLED = true
         const val META_INF_DIR = "META-INF/*"
