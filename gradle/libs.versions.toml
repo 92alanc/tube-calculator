@@ -11,8 +11,8 @@ androidTestOrchestrator = "1.5.1"
 androidTestRunner = "1.6.2"
 coil = "2.7.0"
 coroutinesTest = "1.10.2"
-firebaseBom = "33.16.0"
-firebaseCrashlytics = "3.0.4"
+firebaseBom = "34.0.0"
+firebaseCrashlytics = "3.0.5"
 googleAds = "24.4.0"
 googleServices = "4.4.3"
 hilt = "2.57"
@@ -80,7 +80,7 @@ android-library = { id = "com.android.library", version.ref = "androidGradlePlug
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-kotlin-serialisation = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialisation" }
+kotlin-serialisation = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinPlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinPlugin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinPlugin" }
 kotlin-parcelise = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlinPlugin" }
