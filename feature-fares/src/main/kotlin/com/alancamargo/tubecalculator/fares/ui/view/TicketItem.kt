@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -25,6 +26,7 @@ import com.alancamargo.tubecalculator.fares.ui.model.UiTicketType
 internal fun TicketItem(ticket: UiTicket) {
     Card(
         modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = colorResource(R.color.white)),
         shape = RoundedCornerShape(size = dimensionResource(R.dimen.spacing_8)),
         border = BorderStroke(
             width = 1.dp,
@@ -32,7 +34,8 @@ internal fun TicketItem(ticket: UiTicket) {
         )
     ) {
         Column(
-            modifier = Modifier.padding(dimensionResource(R.dimen.spacing_8)),
+            modifier = Modifier.fillMaxWidth()
+                .padding(dimensionResource(R.dimen.spacing_8)),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.spacing_8)
             )
