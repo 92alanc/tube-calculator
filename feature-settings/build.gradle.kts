@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.android.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
@@ -29,7 +30,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = Config.Build.IS_VIEW_BINDING_ENABLED
+        compose = Config.Build.IS_COMPOSE_ENABLED
     }
 
     testOptions {
@@ -58,7 +59,10 @@ dependencies {
 
     implementation(libs.android.activity)
     implementation(libs.android.appcompat)
-    implementation(libs.android.material)
+    implementation(libs.android.compose.activity)
+    implementation(platform(libs.android.compose.bom))
+    implementation(libs.android.compose.material3)
+    implementation(libs.android.compose.preview)
     implementation(libs.google.ads)
     implementation(libs.hilt.android)
 
