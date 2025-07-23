@@ -30,7 +30,7 @@ internal fun TicketItem(ticket: UiTicket) {
         shape = RoundedCornerShape(size = dimensionResource(R.dimen.spacing_8)),
         border = BorderStroke(
             width = 1.dp,
-            color = colorResource(R.color.grey)
+            color = colorResource(R.color.grey_dark)
         )
     ) {
         Column(
