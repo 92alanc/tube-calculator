@@ -35,6 +35,9 @@ android {
 
     kotlin {
         jvmToolchain(Config.Build.javaVersionInt)
+        compilerOptions {
+            freeCompilerArgs.add("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+        }
     }
 }
 
