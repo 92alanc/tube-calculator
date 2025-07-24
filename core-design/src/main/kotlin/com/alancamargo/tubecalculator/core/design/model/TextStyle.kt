@@ -12,11 +12,12 @@ enum class TextStyle(
     @ColorRes val textColourRes: Int = R.color.black,
 ) {
 
-    HEADLINE_1(
+    HEADLINE_1(fontSize = 20.sp),
+    HEADLINE_2(
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp
     ),
-    HEADLINE_2(
+    HEADLINE_3(
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp
     ),
