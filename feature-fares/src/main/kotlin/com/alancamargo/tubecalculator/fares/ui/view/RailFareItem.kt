@@ -68,33 +68,7 @@ internal fun RailFareItem(
             ) {
                 items(fare.fareOptions.size) { fareOptionIndex ->
                     val fareOption = fare.fareOptions[fareOptionIndex]
-
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(dimensionResource(CoreR.dimen.spacing_8)),
-                        verticalArrangement = Arrangement.spacedBy(
-                            dimensionResource(CoreR.dimen.spacing_8)
-                        )
-                    ) {
-                        CustomFontText(text = fareOption.label, textStyle = TextStyle.HEADLINE_2)
-                        CustomFontText(text = fareOption.description, textStyle = TextStyle.CAPTION)
-                        CustomFontText(
-                            text = stringResource(
-                                R.string.fares_from_format,
-                                fareOption.origin
-                            )
-                        )
-                        CustomFontText(
-                            text = stringResource(
-                                R.string.fares_to_format,
-                                fareOption.destination
-                            )
-                        )
-
-                        fareOption.tickets.forEach { ticket ->
-                            TicketItem(ticket)
-                        }
-                    }
+                    RailFareOptionItem(fareOption)
                 }
             }
         }
