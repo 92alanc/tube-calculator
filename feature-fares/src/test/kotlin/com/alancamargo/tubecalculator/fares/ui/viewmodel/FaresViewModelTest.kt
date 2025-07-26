@@ -14,8 +14,10 @@ import com.alancamargo.tubecalculator.fares.domain.usecase.GetRailFaresUseCase
 import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_FARE
 import com.alancamargo.tubecalculator.fares.testtools.BUS_AND_TRAM_JOURNEY_COUNT
 import com.alancamargo.tubecalculator.fares.testtools.CHEAPEST_TOTAL_FARE
-import com.alancamargo.tubecalculator.fares.testtools.stubRailFare
 import com.alancamargo.tubecalculator.fares.testtools.stubStation
+import com.alancamargo.tubecalculator.fares.testtools.stubUiRailFare
+import com.alancamargo.tubecalculator.fares.ui.mapping.toDomain
+import com.alancamargo.tubecalculator.fares.ui.model.UiFare
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
@@ -174,7 +176,9 @@ class FaresViewModelTest {
         // GIVEN
         every {
             mockGetRailFaresUseCase(origin = any(), destination = any())
-        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
+        } returns flowOf(RailFaresResult.Success(
+            listOf(stubUiRailFare().toDomain() as Fare.RailFare))
+        )
 
         // WHEN
         viewModel.onCreate(
@@ -194,7 +198,9 @@ class FaresViewModelTest {
         // GIVEN
         every {
             mockGetRailFaresUseCase(origin = station, destination = station)
-        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
+        } returns flowOf(RailFaresResult.Success(
+            listOf(stubUiRailFare().toDomain() as Fare.RailFare))
+        )
 
         // WHEN
         viewModel.onCreate(
@@ -205,7 +211,7 @@ class FaresViewModelTest {
         )
 
         // THEN
-        val fares = listOf(stubRailFare(), Fare.BusAndTramFare(BUS_AND_TRAM_FARE))
+        val fares = listOf(stubUiRailFare(), UiFare.UiBusAndTramFare(BUS_AND_TRAM_FARE))
         viewModel.state.test {
             skipItems(count = 5)
             val expected = FaresViewState(
@@ -222,7 +228,9 @@ class FaresViewModelTest {
         // GIVEN
         every {
             mockGetRailFaresUseCase(origin = station, destination = station)
-        } returns flowOf(RailFaresResult.Success(listOf(stubRailFare())))
+        } returns flowOf(RailFaresResult.Success(
+            listOf(stubUiRailFare().toDomain() as Fare.RailFare))
+        )
 
         // WHEN
         viewModel.onCreate(
@@ -248,7 +256,7 @@ class FaresViewModelTest {
 
         // THEN
         val expected = FaresViewState(
-            fares = listOf(Fare.BusAndTramFare(BUS_AND_TRAM_FARE)),
+            fares = listOf(UiFare.UiBusAndTramFare(BUS_AND_TRAM_FARE)),
             cheapestTotalFare = CHEAPEST_TOTAL_FARE
         )
         viewModel.state.test {
@@ -508,6 +516,26 @@ class FaresViewModelTest {
         // THEN
         viewModel.action.test {
             assertThat(awaitItem()).isEqualTo(FaresViewAction.ShowMessagesDialogue(expected))
+        }
+    }
+
+    @Test
+    fun `onBackClicked should track button click event`() {
+        // WHEN
+        viewModel.onBackClicked()
+
+        // THEN
+        verify { mockAnalytics.trackBackClicked() }
+    }
+
+    @Test
+    fun `onBackClicked should send NavigateToHome action`() = runTest {
+        // WHEN
+        viewModel.onBackClicked()
+
+        // THEN
+        viewModel.action.test {
+            assertThat(awaitItem()).isEqualTo(FaresViewAction.NavigateToHome)
         }
     }
 }

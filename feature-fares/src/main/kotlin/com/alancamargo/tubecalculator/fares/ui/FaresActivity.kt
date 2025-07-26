@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
+import androidx.compose.runtime.mutableStateOf
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.dialogue.DialogueHelper
@@ -15,9 +16,9 @@ import com.alancamargo.tubecalculator.core.extensions.createIntent
 import com.alancamargo.tubecalculator.core.extensions.observeViewModelFlow
 import com.alancamargo.tubecalculator.core.extensions.putArguments
 import com.alancamargo.tubecalculator.fares.R
-import com.alancamargo.tubecalculator.fares.databinding.ActivityFaresBinding
-import com.alancamargo.tubecalculator.fares.ui.adapter.fareroot.FareRootAdapter
+import com.alancamargo.tubecalculator.fares.ui.model.UiFare
 import com.alancamargo.tubecalculator.fares.ui.model.UiFaresError
+import com.alancamargo.tubecalculator.fares.ui.view.FaresScreen
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewAction
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewModel
 import com.alancamargo.tubecalculator.fares.ui.viewmodel.FaresViewState
@@ -30,13 +31,8 @@ import com.alancamargo.tubecalculator.core.design.R as R2
 @AndroidEntryPoint
 internal class FaresActivity : AppCompatActivity() {
 
-    private var _binding: ActivityFaresBinding? = null
-    private val binding: ActivityFaresBinding
-        get() = _binding!!
-
     private val args by args<Args>()
     private val viewModel by viewModels<FaresViewModel>()
-    private val adapter by lazy { FareRootAdapter(viewModel::onMessagesButtonClicked) }
 
     @Inject
     lateinit var homeActivityNavigation: HomeActivityNavigation
@@ -47,11 +43,24 @@ internal class FaresActivity : AppCompatActivity() {
     @Inject
     lateinit var adLoader: AdLoader
 
+    private val isLoadingState = mutableStateOf(false)
+    private val faresState = mutableStateOf<List<UiFare>?>(null)
+    private val cheapestTotalFareState = mutableStateOf<String?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityFaresBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setUpUi()
+        setContent {
+            FaresScreen(
+                adUnitId = getString(R.string.ads_banner_fares),
+                adLoader = adLoader,
+                isLoading = isLoadingState.value,
+                fares = faresState.value,
+                cheapestTotalFare = cheapestTotalFareState.value,
+                onMessagesClicked = viewModel::onMessagesButtonClicked,
+                onBackClicked = viewModel::onBackClicked,
+                onNewSearchClicked = viewModel::onNewSearchClicked
+            )
+        }
         observeViewStateAndAction()
 
         viewModel.onCreate(
@@ -62,33 +71,15 @@ internal class FaresActivity : AppCompatActivity() {
         )
     }
 
-    private fun setUpUi() = with(binding) {
-        setSupportActionBar(toolbar)
-        rootRecyclerView.adapter = adapter
-        btNewSearch.setOnClickListener { viewModel.onNewSearchClicked() }
-        adLoader.loadBannerAds(banner)
-        adLoader.loadInterstitialAds(
-            activity = this@FaresActivity,
-            adIdRes = R.string.ads_interstitial_fares
-        )
-    }
-
     private fun observeViewStateAndAction() {
         observeViewModelFlow(viewModel.state, ::handleState)
         observeViewModelFlow(viewModel.action, ::handleAction)
     }
 
     private fun handleState(state: FaresViewState) = with(state) {
-        binding.shimmerContainer.isVisible = isLoading
-        binding.rootRecyclerView.isVisible = fares != null && !isLoading
-        binding.txtCheapestTotalFare.isVisible = cheapestTotalFare != null
-        cheapestTotalFare?.let {
-            binding.txtCheapestTotalFare.text = getString(
-                R.string.fares_cheapest_total_fare_format,
-                it
-            )
-        }
-        fares?.let(adapter::submitList)
+        isLoadingState.value = isLoading
+        faresState.value = fares
+        cheapestTotalFareState.value = cheapestTotalFare
     }
 
     private fun handleAction(action: FaresViewAction) {

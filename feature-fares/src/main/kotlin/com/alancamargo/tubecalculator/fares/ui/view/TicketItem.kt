@@ -9,22 +9,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.alancamargo.tubecalculator.core.design.R
 import com.alancamargo.tubecalculator.core.design.model.TextStyle
 import com.alancamargo.tubecalculator.core.design.view.CustomCard
 import com.alancamargo.tubecalculator.core.design.view.CustomFontText
+import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.ui.model.UiTicket
 import com.alancamargo.tubecalculator.fares.ui.model.UiTicketTime
 import com.alancamargo.tubecalculator.fares.ui.model.UiTicketType
+import com.alancamargo.tubecalculator.core.design.R as CoreR
 
 @Composable
 internal fun TicketItem(ticket: UiTicket) {
     CustomCard {
         Column(
             modifier = Modifier.fillMaxWidth()
-                .padding(dimensionResource(R.dimen.spacing_8)),
+                .padding(dimensionResource(CoreR.dimen.spacing_8)),
             verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.spacing_8)
+                dimensionResource(CoreR.dimen.spacing_8)
             )
         ) {
             CustomFontText(
@@ -33,7 +34,13 @@ internal fun TicketItem(ticket: UiTicket) {
             )
             CustomFontText(text = ticket.time.label)
             CustomFontText(text = ticket.time.description, textStyle = TextStyle.CAPTION)
-            CustomFontText(text = ticket.cost, textStyle = TextStyle.HEADLINE_2)
+            CustomFontText(
+                text = stringResource(
+                    R.string.fares_cost_format,
+                    ticket.cost
+                ),
+                textStyle = TextStyle.HEADLINE_2
+            )
         }
     }
 }
@@ -48,7 +55,7 @@ private fun TicketItemPreview() {
                 label = "Off Peak",
                 description = "At all other times including public holidays."
             ),
-            cost = "£3.50"
+            cost = "3.50"
         )
     )
 }

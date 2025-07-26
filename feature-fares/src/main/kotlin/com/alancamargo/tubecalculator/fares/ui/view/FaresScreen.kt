@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
@@ -53,15 +54,21 @@ internal fun FaresScreen(
     adLoader: AdLoader,
     isLoading: Boolean,
     fares: List<UiFare>?,
-    cheapestTotalFare: String,
-    onMessageButtonClicked: () -> Unit,
+    cheapestTotalFare: String?,
+    onMessagesClicked: (List<String>) -> Unit,
     onBackClicked: () -> Unit,
     onNewSearchClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { CustomFontText(text = stringResource(R.string.fares)) },
+                title = {
+                    CustomFontText(
+                        modifier = Modifier.fillMaxWidth(fraction = 0.85f),
+                        text = stringResource(R.string.fares),
+                        textAlign = TextAlign.Center
+                    )
+                },
                 colors = TopAppBarColors(
                     containerColor = colorResource(CoreR.color.white),
                     scrolledContainerColor = colorResource(CoreR.color.white),
@@ -82,19 +89,23 @@ internal fun FaresScreen(
             )
         }
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding).fillMaxSize()) {
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
             when {
                 isLoading -> LoadingShimmer()
 
                 fares != null -> FaresContent(
                     fares,
                     cheapestTotalFare,
-                    onMessageButtonClicked,
+                    onMessagesClicked,
                     onNewSearchClicked
                 )
             }
 
-            Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_16)))
+            Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_24)))
 
             ComposableAdView(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -108,64 +119,118 @@ internal fun FaresScreen(
 @Composable
 private fun LoadingShimmer() {
     Column(
-        Modifier.padding(dimensionResource(CoreR.dimen.spacing_24))
+        Modifier
+            .padding(dimensionResource(CoreR.dimen.spacing_24))
             .fillMaxWidth()
             .fillMaxHeight(fraction = 0.88f)
     ) {
         ShimmerBox(
-            Modifier.width(240.dp)
+            Modifier
+                .width(240.dp)
                 .height(30.dp)
                 .align(Alignment.CenterHorizontally)
         )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_16)))
-        ShimmerBox(Modifier.width(140.dp).height(24.dp))
+        ShimmerBox(
+            Modifier
+                .width(140.dp)
+                .height(24.dp)
+        )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
-        ShimmerBox(Modifier.width(90.dp).height(24.dp))
+        ShimmerBox(
+            Modifier
+                .width(90.dp)
+                .height(24.dp)
+        )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
-        ShimmerBox(Modifier.width(140.dp).height(24.dp))
+        ShimmerBox(
+            Modifier
+                .width(140.dp)
+                .height(24.dp)
+        )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
-        ShimmerBox(Modifier.width(140.dp).height(24.dp))
+        ShimmerBox(
+            Modifier
+                .width(140.dp)
+                .height(24.dp)
+        )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
-        ShimmerBox(Modifier.width(200.dp).height(24.dp))
+        ShimmerBox(
+            Modifier
+                .width(200.dp)
+                .height(24.dp)
+        )
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_24)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(120.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(120.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(60.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(60.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(260.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(260.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(60.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(60.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_24)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(120.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(120.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(60.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(60.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(260.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(260.dp)
+                    .height(24.dp)
+            )
         }
         Spacer(Modifier.height(dimensionResource(CoreR.dimen.spacing_4)))
         Row {
             Spacer(Modifier.width(dimensionResource(CoreR.dimen.spacing_16)))
-            ShimmerBox(Modifier.width(60.dp).height(24.dp))
+            ShimmerBox(
+                Modifier
+                    .width(60.dp)
+                    .height(24.dp)
+            )
         }
     }
 }
@@ -173,21 +238,24 @@ private fun LoadingShimmer() {
 @Composable
 private fun FaresContent(
     fares: List<UiFare>,
-    cheapestTotalFare: String,
-    onMessageButtonClicked: () -> Unit,
+    cheapestTotalFare: String?,
+    onMessagesClicked: (List<String>) -> Unit,
     onNewSearchClicked: () -> Unit
 ) {
     Column(
+        modifier = Modifier.padding(
+            top = dimensionResource(CoreR.dimen.spacing_8),
+            start = dimensionResource(CoreR.dimen.spacing_8),
+            end = dimensionResource(CoreR.dimen.spacing_8)
+        ),
         verticalArrangement = Arrangement.spacedBy(
             dimensionResource(CoreR.dimen.spacing_16)
         )
     ) {
         Column(
-            modifier = Modifier.fillMaxHeight(fraction = 0.7f).padding(
-                top = dimensionResource(CoreR.dimen.spacing_8),
-                start = dimensionResource(CoreR.dimen.spacing_8),
-                end = dimensionResource(CoreR.dimen.spacing_8)
-            ).verticalScroll(rememberScrollState()),
+            modifier = Modifier
+                .fillMaxHeight(fraction = 0.7f)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(CoreR.dimen.spacing_8)
             )
@@ -196,26 +264,30 @@ private fun FaresContent(
                 when (fare) {
                     is UiFare.UiRailFare -> RailFareItem(
                         fare,
-                        onMessageButtonClicked
+                        onMessagesClicked
                     )
+
                     is UiFare.UiBusAndTramFare -> BusAndTramFareItem(fare)
                 }
             }
         }
 
-        HorizontalDivider()
+        cheapestTotalFare?.let {
+            HorizontalDivider()
 
-        CustomFontText(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(
-                R.string.fares_cheapest_total_fare_format,
-                cheapestTotalFare
-            ),
-            textStyle = TextStyle.HEADLINE_1
-        )
+            CustomFontText(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = stringResource(
+                    R.string.fares_cheapest_total_fare_format,
+                    it
+                ),
+                textStyle = TextStyle.HEADLINE_1
+            )
+        }
 
         Button(
-            modifier = Modifier.fillMaxWidth(fraction = 0.9f)
+            modifier = Modifier
+                .fillMaxWidth(fraction = 0.9f)
                 .align(Alignment.CenterHorizontally),
             onClick = onNewSearchClicked,
             colors = ButtonDefaults.buttonColors(
@@ -244,7 +316,7 @@ private fun FaresScreenLoadingPreview() {
         isLoading = true,
         fares = null,
         cheapestTotalFare = "2.70",
-        onMessageButtonClicked = {},
+        onMessagesClicked = {},
         onBackClicked = {},
         onNewSearchClicked = {}
     )
@@ -333,7 +405,7 @@ private fun FaresScreenPreview() {
             UiFare.UiBusAndTramFare(cost = "£1.75")
         ),
         cheapestTotalFare = "2.70",
-        onMessageButtonClicked = {},
+        onMessagesClicked = {},
         onBackClicked = {},
         onNewSearchClicked = {}
     )

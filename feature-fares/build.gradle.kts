@@ -32,7 +32,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = Config.Build.IS_VIEW_BINDING_ENABLED
         compose = Config.Build.IS_COMPOSE_ENABLED
     }
 
@@ -76,7 +75,6 @@ dependencies {
     implementation(platform(libs.android.compose.bom))
     implementation(libs.android.compose.material3)
     implementation(libs.android.compose.preview)
-    implementation(libs.android.material)
     implementation(libs.google.ads)
     implementation(libs.hilt.android)
     implementation(libs.hilt.work)

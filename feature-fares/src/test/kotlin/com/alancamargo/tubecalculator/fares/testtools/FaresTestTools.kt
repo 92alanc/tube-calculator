@@ -4,9 +4,19 @@ import com.alancamargo.tubecalculator.common.domain.model.Mode
 import com.alancamargo.tubecalculator.common.domain.model.Station
 import com.alancamargo.tubecalculator.fares.data.mapping.toDomain
 import com.alancamargo.tubecalculator.fares.data.model.database.DbRailFare
-import com.alancamargo.tubecalculator.fares.data.model.responses.*
-import com.alancamargo.tubecalculator.fares.domain.model.*
-import kotlinx.serialization.encodeToString
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareMessageResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.FareOptionResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.RailFareResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTimeResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTypeResponse
+import com.alancamargo.tubecalculator.fares.data.model.responses.TicketTypeResponseWrapper
+import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.domain.model.FareOption
+import com.alancamargo.tubecalculator.fares.domain.model.Ticket
+import com.alancamargo.tubecalculator.fares.domain.model.TicketTime
+import com.alancamargo.tubecalculator.fares.domain.model.TicketType
+import com.alancamargo.tubecalculator.fares.ui.mapping.toUi
 import kotlinx.serialization.json.Json
 
 internal const val STATION_ID = "12345"
@@ -33,6 +43,8 @@ internal fun stubRailFareResponse() = RailFareResponse(
 )
 
 internal fun stubRailFare() = stubRailFareResponse().toDomain()
+
+internal fun stubUiRailFare() = stubRailFare().toUi()
 
 internal fun stubBusAndTramFare() = Fare.BusAndTramFare(BUS_AND_TRAM_FARE)
 

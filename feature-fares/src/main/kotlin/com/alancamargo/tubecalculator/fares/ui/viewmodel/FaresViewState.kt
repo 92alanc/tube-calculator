@@ -1,10 +1,10 @@
 package com.alancamargo.tubecalculator.fares.ui.viewmodel
 
-import com.alancamargo.tubecalculator.fares.domain.model.Fare
+import com.alancamargo.tubecalculator.fares.ui.model.UiFare
 
 internal data class FaresViewState(
     val isLoading: Boolean = false,
-    val fares: List<Fare>? = null,
+    val fares: List<UiFare>? = null,
     val cheapestTotalFare: String? = null
 ) {
 
@@ -12,11 +12,11 @@ internal data class FaresViewState(
 
     fun onStopLoading() = copy(isLoading = false)
 
-    fun onReceivedRailFares(railFares: List<Fare.RailFare>) = copy(
+    fun onReceivedRailFares(railFares: List<UiFare.UiRailFare>) = copy(
         fares = railFares + (fares ?: emptyList())
     )
 
-    fun onReceivedBusAndTramFare(busAndTramFare: Fare.BusAndTramFare) = copy(
+    fun onReceivedBusAndTramFare(busAndTramFare: UiFare.UiBusAndTramFare) = copy(
         fares = fares?.plus(busAndTramFare) ?: listOf(busAndTramFare)
     )
 

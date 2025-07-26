@@ -29,11 +29,12 @@ import com.alancamargo.tubecalculator.core.design.R as CoreR
 @Composable
 internal fun RailFareItem(
     fare: UiFare.UiRailFare,
-    onMessageButtonClicked: () -> Unit
+    onMessagesClicked: (List<String>) -> Unit
 ) {
     CustomCard {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(dimensionResource(CoreR.dimen.spacing_16)),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(CoreR.dimen.spacing_8)
@@ -50,7 +51,11 @@ internal fun RailFareItem(
                 CustomFontText(text = fare.header, textStyle = TextStyle.HEADLINE_1)
 
                 if (fare.messages.isNotEmpty()) {
-                    IconButton(onClick = onMessageButtonClicked) {
+                    IconButton(
+                        onClick = {
+                            onMessagesClicked(fare.messages)
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = stringResource(R.string.fares_messages)
@@ -104,6 +109,6 @@ private fun RailFareListPreview() {
                 "Message 2"
             )
         ),
-        onMessageButtonClicked = {}
+        onMessagesClicked = {}
     )
 }

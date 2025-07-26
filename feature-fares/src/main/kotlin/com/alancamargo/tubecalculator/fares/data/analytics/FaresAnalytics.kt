@@ -7,4 +7,6 @@ internal interface FaresAnalytics {
     fun trackNewSearchClicked()
 
     fun trackMessagesClicked()
+
+    fun trackBackClicked()
 }
