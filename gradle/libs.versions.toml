@@ -32,6 +32,7 @@ retrofit = "3.0.0"
 r8 = "8.11.18"
 room = "2.7.2"
 shimmer = "0.5.0"
+shimmerCompose = "1.3.3"
 truth = "1.4.4"
 turbine = "1.2.1"
 work = "2.10.2"
@@ -81,6 +82,7 @@ truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 room_runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 shimmer = { group = "com.facebook.shimmer", name = "shimmer", version.ref = "shimmer" }
+shimmer-compose = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "shimmerCompose" }
 work = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work" }
 
 [plugins]

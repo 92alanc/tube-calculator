@@ -7,8 +7,6 @@ import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 
-const val AD_VIEW_FRACTION = 0.88f
-
 @Composable
 fun ComposableAdView(modifier: Modifier, adUnitId: String, adLoader: AdLoader) {
     AndroidView(

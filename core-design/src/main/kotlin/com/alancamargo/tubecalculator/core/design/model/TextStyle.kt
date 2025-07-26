@@ -22,6 +22,7 @@ enum class TextStyle(
         fontSize = 14.sp
     ),
     BODY,
+    BODY_WHITE(textColourRes = R.color.white),
     CAPTION(
         fontWeight = FontWeight.Light,
         fontSize = 12.sp,

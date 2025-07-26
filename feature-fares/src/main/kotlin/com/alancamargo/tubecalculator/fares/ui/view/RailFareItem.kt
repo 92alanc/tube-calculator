@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
@@ -60,16 +59,8 @@ internal fun RailFareItem(
                 }
             }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensionResource(CoreR.dimen.spacing_8)
-                )
-            ) {
-                items(fare.fareOptions.size) { fareOptionIndex ->
-                    val fareOption = fare.fareOptions[fareOptionIndex]
-                    RailFareOptionItem(fareOption)
-                }
+            fare.fareOptions.forEach { fareOption ->
+                RailFareOptionItem(fareOption)
             }
         }
     }

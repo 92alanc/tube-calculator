@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.coil.gif)
     implementation(libs.google.ads)
     implementation(libs.hilt.android)
+    implementation(libs.shimmer.compose)
 
     api(libs.android.splashscreen)
 
