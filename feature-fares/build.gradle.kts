@@ -80,7 +80,6 @@ dependencies {
     implementation(libs.hilt.work)
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
-    implementation(libs.shimmer)
     implementation(libs.work)
 
     ksp(libs.hilt.compiler)

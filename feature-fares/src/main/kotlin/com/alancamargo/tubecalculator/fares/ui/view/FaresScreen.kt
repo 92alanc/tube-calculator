@@ -2,6 +2,7 @@ package com.alancamargo.tubecalculator.fares.ui.view
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -93,6 +94,7 @@ internal fun FaresScreen(
             Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
+                .background(color = colorResource(CoreR.color.white))
         ) {
             when {
                 isLoading -> LoadingShimmer()
