@@ -15,30 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alancamargo.tubecalculator.core.design.ads.AdLoader
 import com.alancamargo.tubecalculator.core.design.model.TextStyle
 import com.alancamargo.tubecalculator.core.design.view.ComposableAdView
 import com.alancamargo.tubecalculator.core.design.view.CustomFontText
+import com.alancamargo.tubecalculator.core.design.view.CustomScaffold
 import com.alancamargo.tubecalculator.core.design.view.ShimmerBox
 import com.alancamargo.tubecalculator.fares.R
 import com.alancamargo.tubecalculator.fares.ui.model.UiFare
@@ -60,35 +53,9 @@ internal fun FaresScreen(
     onBackClicked: () -> Unit,
     onNewSearchClicked: () -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    CustomFontText(
-                        modifier = Modifier.fillMaxWidth(fraction = 0.85f),
-                        text = stringResource(R.string.fares),
-                        textAlign = TextAlign.Center
-                    )
-                },
-                colors = TopAppBarColors(
-                    containerColor = colorResource(CoreR.color.white),
-                    scrolledContainerColor = colorResource(CoreR.color.white),
-                    navigationIconContentColor = colorResource(CoreR.color.black),
-                    titleContentColor = colorResource(CoreR.color.black),
-                    actionIconContentColor = colorResource(CoreR.color.black)
-                ),
-                navigationIcon = {
-                    IconButton(onClick = onBackClicked) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = stringResource(
-                                CoreR.string.content_description_back
-                            )
-                        )
-                    }
-                }
-            )
-        }
+    CustomScaffold(
+        titleRes = R.string.fares,
+        onBackClicked = onBackClicked
     ) { innerPadding ->
         Column(
             Modifier
