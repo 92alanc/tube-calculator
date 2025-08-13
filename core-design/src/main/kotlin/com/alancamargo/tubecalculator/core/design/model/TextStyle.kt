@@ -27,5 +27,6 @@ enum class TextStyle(
         fontWeight = FontWeight.Light,
         fontSize = 12.sp,
         textColourRes = R.color.grey_dark
-    )
+    ),
+    HINT(textColourRes = R.color.grey_dark)
 }

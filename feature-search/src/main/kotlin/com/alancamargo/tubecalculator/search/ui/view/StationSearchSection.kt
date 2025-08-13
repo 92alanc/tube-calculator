@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.alancamargo.tubecalculator.common.ui.model.UiMode
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
+import com.alancamargo.tubecalculator.core.design.model.TextStyle
 import com.alancamargo.tubecalculator.core.design.view.CustomFontText
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.core.design.R as CoreR
@@ -66,7 +67,10 @@ internal fun StationSearchSection(
                         isSearchBarExpanded = isExpanded
                     },
                     placeholder = {
-                        CustomFontText(text = stringResource(searchType.hintRes))
+                        CustomFontText(
+                            text = stringResource(searchType.hintRes),
+                            textStyle = TextStyle.HINT
+                        )
                     },
                     leadingIcon = if (selectedStation == null) {
                         {
