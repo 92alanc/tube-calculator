@@ -16,9 +16,9 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -28,18 +28,12 @@ import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.model.TextStyle
 import com.alancamargo.tubecalculator.core.design.view.CustomFontText
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
+import com.alancamargo.tubecalculator.search.ui.model.StationSearchSectionData
 import com.alancamargo.tubecalculator.core.design.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun StationSearchSection(
-    textFieldState: TextFieldState,
-    searchType: SearchType,
-    searchResults: List<UiStation>?,
-    selectedStation: UiStation?,
-    onQueryChanged: (String) -> Unit,
-    onStationSelected: (UiStation) -> Unit
-) {
+internal fun StationSearchSection(data: StationSearchSectionData) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,19 +42,18 @@ internal fun StationSearchSection(
             dimensionResource(CoreR.dimen.spacing_8)
         )
     ) {
-        CustomFontText(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = stringResource(searchType.labelRes)
-        )
+        CustomFontText(text = stringResource(data.searchType.labelRes))
 
-        val isExpanded = !searchResults.isNullOrEmpty() && selectedStation == null
+        val isExpanded = !data.searchResults.isNullOrEmpty()
+                && data.selectedStationState.value == null
         var isSearchBarExpanded by rememberSaveable { mutableStateOf(isExpanded) }
 
         SearchBar(
             inputField = {
                 SearchBarDefaults.InputField( // TODO: change font
-                    query = selectedStation?.name ?: textFieldState.text.toString(),
-                    onQueryChange = onQueryChanged,
+                    query = data.selectedStationState.value?.name
+                        ?: data.textFieldState.text.toString(),
+                    onQueryChange = data.onQueryChanged,
                     onSearch = {},
                     expanded = isSearchBarExpanded,
                     onExpandedChange = { isExpanded ->
@@ -68,11 +61,11 @@ internal fun StationSearchSection(
                     },
                     placeholder = {
                         CustomFontText(
-                            text = stringResource(searchType.hintRes),
+                            text = stringResource(data.searchType.hintRes),
                             textStyle = TextStyle.HINT
                         )
                     },
-                    leadingIcon = if (selectedStation == null) {
+                    leadingIcon = if (data.selectedStationState.value == null) {
                         {
                             Icon(
                                 imageVector = Icons.Default.Search,
@@ -89,10 +82,10 @@ internal fun StationSearchSection(
                 isSearchBarExpanded = isExpanded
             }
         ) {
-            searchResults?.let { results ->
+            data.searchResults?.let { results ->
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     results.forEach { station ->
-                        SearchResultItem(station, onItemSelected = onStationSelected)
+                        SearchResultItem(station, onItemSelected = data.onStationSelected)
                     }
                 }
             }
@@ -104,38 +97,40 @@ internal fun StationSearchSection(
 @Composable
 private fun StationSearchSectionFilledPreview() {
     StationSearchSection(
-        textFieldState = TextFieldState(initialText = "Black"),
-        searchType = SearchType.ORIGIN,
-        searchResults = listOf(
-            UiStation(
-                id = "12345",
-                name = "Blackhorse Road Rail Station",
-                modes = listOf(UiMode.OVERGROUND)
+        data = StationSearchSectionData(
+            textFieldState = TextFieldState(initialText = "Black"),
+            searchType = SearchType.ORIGIN,
+            searchResults = listOf(
+                UiStation(
+                    id = "12345",
+                    name = "Blackhorse Road Rail Station",
+                    modes = listOf(UiMode.OVERGROUND)
+                ),
+                UiStation(
+                    id = "12345",
+                    name = "Blackwall DLR Station",
+                    modes = listOf(UiMode.DLR)
+                ),
+                UiStation(
+                    id = "12345",
+                    name = "Blackfriars Underground Station",
+                    modes = listOf(UiMode.UNDERGROUND)
+                ),
+                UiStation(
+                    id = "12345",
+                    name = "Blackhorse Road Underground Station",
+                    modes = listOf(UiMode.UNDERGROUND)
+                ),
+                UiStation(
+                    id = "12345",
+                    name = "Blackheath Rail Station",
+                    modes = listOf(UiMode.NATIONAL_RAIL)
+                )
             ),
-            UiStation(
-                id = "12345",
-                name = "Blackwall DLR Station",
-                modes = listOf(UiMode.DLR)
-            ),
-            UiStation(
-                id = "12345",
-                name = "Blackfriars Underground Station",
-                modes = listOf(UiMode.UNDERGROUND)
-            ),
-            UiStation(
-                id = "12345",
-                name = "Blackhorse Road Underground Station",
-                modes = listOf(UiMode.UNDERGROUND)
-            ),
-            UiStation(
-                id = "12345",
-                name = "Blackheath Rail Station",
-                modes = listOf(UiMode.NATIONAL_RAIL)
-            )
-        ),
-        selectedStation = null,
-        onQueryChanged = {},
-        onStationSelected = {}
+            selectedStationState = remember { mutableStateOf(null) },
+            onQueryChanged = {},
+            onStationSelected = {}
+        )
     )
 }
 
@@ -143,12 +138,14 @@ private fun StationSearchSectionFilledPreview() {
 @Composable
 private fun StationSearchSectionEmptyPreview() {
     StationSearchSection(
-        textFieldState = TextFieldState(),
-        searchType = SearchType.ORIGIN,
-        searchResults = null,
-        selectedStation = null,
-        onQueryChanged = {},
-        onStationSelected = {}
+        data = StationSearchSectionData(
+            textFieldState = TextFieldState(),
+            searchType = SearchType.ORIGIN,
+            searchResults = null,
+            selectedStationState = remember { mutableStateOf(null) },
+            onQueryChanged = {},
+            onStationSelected = {}
+        )
     )
 }
 
@@ -156,16 +153,22 @@ private fun StationSearchSectionEmptyPreview() {
 @Composable
 private fun StationSearchSectionSelectedPreview() {
     StationSearchSection(
-        textFieldState = TextFieldState(),
-        searchType = SearchType.ORIGIN,
-        searchResults = null,
-        selectedStation = UiStation(
-            id = "12345",
-            name = "Blackheath Rail Station",
-            modes = listOf(UiMode.NATIONAL_RAIL)
-        ),
-        onQueryChanged = {},
-        onStationSelected = {}
+        data = StationSearchSectionData(
+            textFieldState = TextFieldState(),
+            searchType = SearchType.ORIGIN,
+            searchResults = null,
+            selectedStationState = remember {
+                mutableStateOf(
+                    UiStation(
+                        id = "12345",
+                        name = "Blackheath Rail Station",
+                        modes = listOf(UiMode.NATIONAL_RAIL)
+                    )
+                )
+            },
+            onQueryChanged = {},
+            onStationSelected = {}
+        )
     )
 }
 
@@ -173,11 +176,13 @@ private fun StationSearchSectionSelectedPreview() {
 @Composable
 private fun StationSearchSectionDestinationPreview() {
     StationSearchSection(
-        textFieldState = TextFieldState(),
-        searchType = SearchType.DESTINATION,
-        searchResults = null,
-        selectedStation = null,
-        onQueryChanged = {},
-        onStationSelected = {}
+        data = StationSearchSectionData(
+            textFieldState = TextFieldState(),
+            searchType = SearchType.DESTINATION,
+            searchResults = null,
+            selectedStationState = remember { mutableStateOf(null) },
+            onQueryChanged = {},
+            onStationSelected = {}
+        )
     )
 }
