@@ -4,10 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,7 +39,8 @@ internal fun StationSearchSection(
     onStationSelected: (UiStation) -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(dimensionResource(CoreR.dimen.spacing_16)),
         verticalArrangement = Arrangement.spacedBy(
             dimensionResource(CoreR.dimen.spacing_8)
@@ -57,8 +56,8 @@ internal fun StationSearchSection(
 
         SearchBar(
             inputField = {
-                SearchBarDefaults.InputField(
-                    query = textFieldState.text.toString(),
+                SearchBarDefaults.InputField( // TODO: change font
+                    query = selectedStation?.name ?: textFieldState.text.toString(),
                     onQueryChange = onQueryChanged,
                     onSearch = {},
                     expanded = isSearchBarExpanded,
@@ -68,11 +67,15 @@ internal fun StationSearchSection(
                     placeholder = {
                         CustomFontText(text = stringResource(searchType.hintRes))
                     },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null
-                        )
+                    leadingIcon = if (selectedStation == null) {
+                        {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = null
+                            )
+                        }
+                    } else {
+                        null
                     }
                 )
             },
@@ -81,9 +84,12 @@ internal fun StationSearchSection(
                 isSearchBarExpanded = isExpanded
             }
         ) {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                searchResults?.forEach { station ->
-                    SearchResultItem(station, onStationSelected)
+            searchResults?.let { results ->
+                LazyColumn {
+                    items(count = results.size) { index ->
+                        val station = results[index]
+                        SearchResultItem(station, onItemSelected = onStationSelected)
+                    }
                 }
             }
         }
@@ -92,35 +98,68 @@ internal fun StationSearchSection(
 
 @Preview(showBackground = true)
 @Composable
-private fun StationSearchSectionPreview() {
+private fun StationSearchSectionFilledPreview() {
     StationSearchSection(
-        textFieldState = rememberTextFieldState(),
+        textFieldState = TextFieldState(initialText = "Black"),
         searchType = SearchType.ORIGIN,
         searchResults = listOf(
             UiStation(
                 id = "12345",
-                name = "The busiest station in London",
-                modes = listOf(
-                    UiMode.UNDERGROUND,
-                    UiMode.DLR,
-                    UiMode.ELIZABETH_LINE,
-                    UiMode.OVERGROUND,
-                    UiMode.NATIONAL_RAIL
-                )
+                name = "Blackhorse Road Rail Station",
+                modes = listOf(UiMode.OVERGROUND)
             ),
             UiStation(
                 id = "12345",
-                name = "The busiest station in London",
-                modes = listOf(
-                    UiMode.UNDERGROUND,
-                    UiMode.DLR,
-                    UiMode.ELIZABETH_LINE,
-                    UiMode.OVERGROUND,
-                    UiMode.NATIONAL_RAIL
-                )
+                name = "Blackwall DLR Station",
+                modes = listOf(UiMode.DLR)
+            ),
+            UiStation(
+                id = "12345",
+                name = "Blackfriars Underground Station",
+                modes = listOf(UiMode.UNDERGROUND)
+            ),
+            UiStation(
+                id = "12345",
+                name = "Blackhorse Road Underground Station",
+                modes = listOf(UiMode.UNDERGROUND)
+            ),
+            UiStation(
+                id = "12345",
+                name = "Blackheath Rail Station",
+                modes = listOf(UiMode.NATIONAL_RAIL)
             )
         ),
         selectedStation = null,
+        onQueryChanged = {},
+        onStationSelected = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StationSearchSectionEmptyPreview() {
+    StationSearchSection(
+        textFieldState = TextFieldState(),
+        searchType = SearchType.ORIGIN,
+        searchResults = null,
+        selectedStation = null,
+        onQueryChanged = {},
+        onStationSelected = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StationSearchSectionSelectedPreview() {
+    StationSearchSection(
+        textFieldState = TextFieldState(),
+        searchType = SearchType.ORIGIN,
+        searchResults = null,
+        selectedStation = UiStation(
+            id = "12345",
+            name = "Blackheath Rail Station",
+            modes = listOf(UiMode.NATIONAL_RAIL)
+        ),
         onQueryChanged = {},
         onStationSelected = {}
     )
