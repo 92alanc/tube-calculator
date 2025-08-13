@@ -164,3 +164,16 @@ private fun StationSearchSectionSelectedPreview() {
         onStationSelected = {}
     )
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun StationSearchSectionDestinationPreview() {
+    StationSearchSection(
+        textFieldState = TextFieldState(),
+        searchType = SearchType.DESTINATION,
+        searchResults = null,
+        selectedStation = null,
+        onQueryChanged = {},
+        onStationSelected = {}
+    )
+}
