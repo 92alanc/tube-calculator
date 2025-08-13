@@ -4,8 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -85,9 +86,8 @@ internal fun StationSearchSection(
             }
         ) {
             searchResults?.let { results ->
-                LazyColumn {
-                    items(count = results.size) { index ->
-                        val station = results[index]
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    results.forEach { station ->
                         SearchResultItem(station, onItemSelected = onStationSelected)
                     }
                 }
