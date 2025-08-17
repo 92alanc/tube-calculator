@@ -9,11 +9,15 @@ import com.alancamargo.tubecalculator.core.log.Logger
 import com.alancamargo.tubecalculator.search.domain.model.StationListResult
 import com.alancamargo.tubecalculator.search.domain.usecase.GetMinQueryLengthUseCase
 import com.alancamargo.tubecalculator.search.domain.usecase.SearchStationUseCase
-import com.alancamargo.tubecalculator.search.ui.model.SearchType
 import com.alancamargo.tubecalculator.search.ui.model.UiSearchError
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,8 +37,7 @@ internal class StationSearchViewModel @Inject constructor(
 
     private var hasSelectedStation = false
 
-    fun onCreate(searchType: SearchType, station: UiStation?) {
-        _state.update { it.onReceivedSearchType(searchType) }
+    fun onCreate(station: UiStation?) {
         onStationSelected(station)
     }
 

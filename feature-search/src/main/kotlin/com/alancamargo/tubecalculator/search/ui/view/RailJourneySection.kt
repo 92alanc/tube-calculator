@@ -16,7 +16,6 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,13 +26,13 @@ import com.alancamargo.tubecalculator.common.ui.model.UiMode
 import com.alancamargo.tubecalculator.common.ui.model.UiStation
 import com.alancamargo.tubecalculator.core.design.model.TextStyle
 import com.alancamargo.tubecalculator.core.design.view.CustomFontText
+import com.alancamargo.tubecalculator.search.ui.model.RailJourneySectionData
 import com.alancamargo.tubecalculator.search.ui.model.SearchType
-import com.alancamargo.tubecalculator.search.ui.model.StationSearchSectionData
 import com.alancamargo.tubecalculator.core.design.R as CoreR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun StationSearchSection(data: StationSearchSectionData) {
+internal fun RailJourneySection(data: RailJourneySectionData) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,14 +43,13 @@ internal fun StationSearchSection(data: StationSearchSectionData) {
     ) {
         CustomFontText(text = stringResource(data.searchType.labelRes))
 
-        val isExpanded = !data.searchResults.isNullOrEmpty()
-                && data.selectedStationState.value == null
+        val isExpanded = !data.searchResults.isNullOrEmpty() && data.selectedStation == null
         var isSearchBarExpanded by rememberSaveable { mutableStateOf(isExpanded) }
 
         SearchBar(
             inputField = {
                 SearchBarDefaults.InputField( // TODO: change font
-                    query = data.selectedStationState.value?.name
+                    query = data.selectedStation?.name
                         ?: data.textFieldState.text.toString(),
                     onQueryChange = data.onQueryChanged,
                     onSearch = {},
@@ -65,7 +63,7 @@ internal fun StationSearchSection(data: StationSearchSectionData) {
                             textStyle = TextStyle.HINT
                         )
                     },
-                    leadingIcon = if (data.selectedStationState.value == null) {
+                    leadingIcon = if (data.selectedStation == null) {
                         {
                             Icon(
                                 imageVector = Icons.Default.Search,
@@ -95,9 +93,9 @@ internal fun StationSearchSection(data: StationSearchSectionData) {
 
 @Preview(showBackground = true)
 @Composable
-private fun StationSearchSectionFilledPreview() {
-    StationSearchSection(
-        data = StationSearchSectionData(
+private fun RailJourneySectionResultsPreview() {
+    RailJourneySection(
+        data = RailJourneySectionData(
             textFieldState = TextFieldState(initialText = "Black"),
             searchType = SearchType.ORIGIN,
             searchResults = listOf(
@@ -127,7 +125,7 @@ private fun StationSearchSectionFilledPreview() {
                     modes = listOf(UiMode.NATIONAL_RAIL)
                 )
             ),
-            selectedStationState = remember { mutableStateOf(null) },
+            selectedStation = null,
             onQueryChanged = {},
             onStationSelected = {}
         )
@@ -136,13 +134,13 @@ private fun StationSearchSectionFilledPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun StationSearchSectionEmptyPreview() {
-    StationSearchSection(
-        data = StationSearchSectionData(
+private fun RailJourneySectionEmptyPreview() {
+    RailJourneySection(
+        data = RailJourneySectionData(
             textFieldState = TextFieldState(),
             searchType = SearchType.ORIGIN,
             searchResults = null,
-            selectedStationState = remember { mutableStateOf(null) },
+            selectedStation = null,
             onQueryChanged = {},
             onStationSelected = {}
         )
@@ -151,21 +149,17 @@ private fun StationSearchSectionEmptyPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun StationSearchSectionSelectedPreview() {
-    StationSearchSection(
-        data = StationSearchSectionData(
+private fun RailJourneySectionSelectedPreview() {
+    RailJourneySection(
+        data = RailJourneySectionData(
             textFieldState = TextFieldState(),
             searchType = SearchType.ORIGIN,
             searchResults = null,
-            selectedStationState = remember {
-                mutableStateOf(
-                    UiStation(
-                        id = "12345",
-                        name = "Blackheath Rail Station",
-                        modes = listOf(UiMode.NATIONAL_RAIL)
-                    )
-                )
-            },
+            selectedStation = UiStation(
+                id = "12345",
+                name = "Blackheath Rail Station",
+                modes = listOf(UiMode.NATIONAL_RAIL)
+            ),
             onQueryChanged = {},
             onStationSelected = {}
         )
@@ -174,13 +168,13 @@ private fun StationSearchSectionSelectedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun StationSearchSectionDestinationPreview() {
-    StationSearchSection(
-        data = StationSearchSectionData(
+private fun RailJourneySectionDestinationPreview() {
+    RailJourneySection(
+        data = RailJourneySectionData(
             textFieldState = TextFieldState(),
             searchType = SearchType.DESTINATION,
             searchResults = null,
-            selectedStationState = remember { mutableStateOf(null) },
+            selectedStation = null,
             onQueryChanged = {},
             onStationSelected = {}
         )
