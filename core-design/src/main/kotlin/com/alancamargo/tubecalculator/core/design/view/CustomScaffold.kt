@@ -40,7 +40,8 @@ fun CustomScaffold(
                     scrolledContainerColor = colorResource(R.color.white),
                     navigationIconContentColor = colorResource(R.color.black),
                     titleContentColor = colorResource(R.color.black),
-                    actionIconContentColor = colorResource(R.color.black)
+                    actionIconContentColor = colorResource(R.color.black),
+                    subtitleContentColor = colorResource(R.color.black)
                 ),
                 navigationIcon = {
                     IconButton(onClick = onBackClicked) {

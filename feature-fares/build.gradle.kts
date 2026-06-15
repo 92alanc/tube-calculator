@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.android.compose.activity)
     implementation(platform(libs.android.compose.bom))
     implementation(libs.android.compose.material3)
+    implementation(libs.android.compose.material.icons)
     implementation(libs.android.compose.preview)
     implementation(libs.google.ads)
     implementation(libs.hilt.android)
