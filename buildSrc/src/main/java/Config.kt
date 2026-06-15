@@ -5,9 +5,9 @@ object Config {
     object Build {
 
         const val MIN_SDK = 24
-        const val TARGET_SDK = 36
-        const val VERSION_CODE = 17
-        const val VERSION_NAME = "2025.3.0"
+        const val TARGET_SDK = 37
+        const val VERSION_CODE = 18
+        const val VERSION_NAME = "2026.2.0"
         const val IS_MINIFY_ENABLED = false
         const val IS_COMPOSE_ENABLED = true
         const val RELEASE_BUILD_TYPE = "release"

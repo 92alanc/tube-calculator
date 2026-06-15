@@ -53,7 +53,8 @@ internal fun SettingsScreen(
                     scrolledContainerColor = colorResource(CoreR.color.white),
                     navigationIconContentColor = colorResource(CoreR.color.black),
                     titleContentColor = colorResource(CoreR.color.black),
-                    actionIconContentColor = colorResource(CoreR.color.black)
+                    actionIconContentColor = colorResource(CoreR.color.black),
+                    subtitleContentColor = colorResource(CoreR.color.black)
                 ),
                 navigationIcon = {
                     IconButton(onClick = onBackClicked) {
